@@ -10,11 +10,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Service
-public class CustomersServiceImpl implements CustomersService{
+public class AuthServiceImpl implements AuthService {
 
     private final CustomersRepo customersRepo;
 
-    public CustomersServiceImpl(CustomersRepo customersRepo) {
+    public AuthServiceImpl(CustomersRepo customersRepo) {
         this.customersRepo = customersRepo;
     }
 
@@ -31,10 +31,5 @@ public class CustomersServiceImpl implements CustomersService{
         Customers savedCustomer = customersRepo.save(customer);
 
         return new CustomersResponseDto(savedCustomer);
-    }
-
-    @Override
-    public Object loginCustomer(CustomersRequestDto customersRequestDto) {
-        return null;
     }
 }
