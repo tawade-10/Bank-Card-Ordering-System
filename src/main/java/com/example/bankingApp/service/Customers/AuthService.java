@@ -6,4 +6,6 @@ import jakarta.validation.Valid;
 
 public interface CustomersService {
     CustomersResponseDto registerCustomer(@Valid CustomersRequestDto customersRequestDto);
+
+    Object loginCustomer(CustomersRequestDto customersRequestDto);
 }

@@ -32,4 +32,9 @@ public class CustomersServiceImpl implements CustomersService{
 
         return new CustomersResponseDto(savedCustomer);
     }
+
+    @Override
+    public Object loginCustomer(CustomersRequestDto customersRequestDto) {
+        return null;
+    }
 }
