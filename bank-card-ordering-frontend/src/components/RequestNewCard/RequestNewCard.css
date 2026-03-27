@@ -1,0 +1,138 @@
+.container {
+  width: 100%;
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.form-container {
+  width: 420px;
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+.form-header {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.input-field {
+  width: 100%;
+  background: #f7f7f7;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 18px;
+  outline: none;
+  font-size: 15px;
+}
+
+.input-field:focus {
+  border: 1px solid #3d73ff;
+  background: white;
+}
+
+.radio-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  padding-bottom: 10px;
+}
+
+.radio-box {
+  display: flex;
+  width:50%;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-weight: 500;
+}
+
+.radio-box:hover {
+  border-color: #0077ff;
+  background: #f0f7ff;
+}
+
+.radio-box input[type="radio"] {
+  accent-color: #0077ff;
+  width: 16px;
+  height: 16px;
+}
+
+/* Selected styling */
+.radio-box input[type="radio"]:checked + span,
+.radio-box input[type="radio"]:checked {
+  border-color: #0077ff;
+  background: #e6f2ff;
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.submit-btn, .clear-btn {
+  width: 48%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.submit-btn {
+  background: #3d73ff;
+  color: white;
+}
+
+.submit-btn:hover {
+  background: #2959d4;
+}
+
+.clear-btn {
+  background: #f0f0f0;
+}
+
+.clear-btn:hover {
+  background: #e0e0e0;
+}
+
+/* Styled Select Dropdown */
+.styled-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  margin-top: 8px;
+  outline: none;
+}
+
+.styled-select:hover {
+  border-color: #0077ff;
+  background: #f0f7ff;
+}
+
+.styled-select:focus {
+  border-color: #0077ff;
+  background: #e6f2ff;
+}

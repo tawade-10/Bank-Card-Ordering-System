@@ -2,31 +2,126 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { MdOutlineEmail } from "react-icons/md";
+import { FaLock } from "react-icons/fa6";
+import { IoMdPerson } from "react-icons/io";
 
 export default function LoginForm() {
     const navigate = useNavigate();
-
     const [isLogin, setIsLogin] = useState(true);
-    const [loginEmail, setLoginEmail] = useState("");
-    const [loginPassword, setLoginPassword] = useState("");
 
-    const [signupName, setSignupName] = useState('');
-    const [signupEmail, setSignupEmail] = useState('');
-    const [signupPassword, setSignupPassword] = useState('');
-    const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
+    const [formData, setFormData] = useState({
+        loginEmail: '',
+        loginPassword: '',
+        signupName: '',
+        signupEmail: '',
+        signupRole: '',
+        signupPassword: '',
+        signupConfirmPassword: ''
+    });
+
+    const [errors, setErrors] = useState({});
+
+    const handleLoginReset = () => {
+        setFormData(prev => ({
+            ...prev,
+            loginEmail: "",
+            loginPassword: ""
+        }));
+        setErrors({});
+    };
+
+    const handleSignupReset = () => {
+        setFormData(prev => ({
+            ...prev,
+            signupName: "",
+            signupEmail: "",
+            signupPassword: "",
+            signupRole: "",
+            signupConfirmPassword: ""
+        }));
+        setErrors({});
+    };
+
+    const validateLogin = () => {
+        const loginErrors = {};
+        if (!formData.loginEmail) loginErrors.loginEmail = "Email is required!";
+        else if (!/\S+@\S+\.\S+/.test(formData.loginEmail)) loginErrors.loginEmail = "Invalid Email format!";
+        if (!formData.loginPassword) loginErrors.loginPassword = "Password is required!";
+
+        setErrors(loginErrors);
+        return Object.keys(loginErrors).length === 0;
+    };
+
+    const validateSignup = () => {
+        const signupErrors = {};
+        if (!formData.signupName) signupErrors.signupName = "Name is required!";
+        if (!formData.signupEmail) signupErrors.signupEmail = "Email is required!";
+        else if (!/\S+@\S+\.\S+/.test(formData.signupEmail)) signupErrors.signupEmail = "Invalid Email format!";
+        if (!formData.signupRole) signupErrors.signupRole = "Role is required!";
+        if (!formData.signupPassword) signupErrors.signupPassword = "Password is required!";
+        else if (formData.signupPassword.length < 6) signupErrors.signupPassword = "Password must be at least 6 characters!";
+        if (!formData.signupConfirmPassword) signupErrors.signupConfirmPassword = "Confirm your password!";
+        else if (formData.signupPassword !== formData.signupConfirmPassword) signupErrors.signupConfirmPassword = "Passwords do not match!";
+
+        setErrors(signupErrors);
+        return Object.keys(signupErrors).length === 0;
+    };
+
+    const handleLogin = async () => {
+        if (!validateLogin()) return;
+
+        const body = { email: formData.loginEmail, password: formData.loginPassword };
+
+        try {
+            const response = await fetch("http://localhost:8080/api/customers/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("customerName", data.customerName);
+                localStorage.setItem("email", data.email);
+                localStorage.setItem("role", data.role);
+
+                toast.success("Login Successful!");
+                setTimeout(() => {
+                    if (data.role === "ADMIN") {
+                        navigate("/admin/dashboard");
+                    } else {
+                        navigate("/dashboard");
+                    }
+                }, 1000);
+            } else {
+                toast.error("Wrong Credentials!");
+            }
+        } catch {
+            toast.error("Server Error!");
+        }
+    };
 
     const handleSignup = async () => {
-        if (signupPassword !== signupConfirmPassword) {
-            toast.error("Passwords do not match!");
-            return;
-        }
-        const body = { customerName: signupName, email: signupEmail, password: signupPassword };
+        if (!validateSignup()) return;
+
+        const body = {
+            customerName: formData.signupName,
+            email: formData.signupEmail,
+            password: formData.signupPassword,
+            roles: formData.signupRole
+        };
+
         try {
             const response = await fetch("http://localhost:8080/api/customers/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
             });
+
             if (response.ok) {
                 toast.success("Signup Successful!");
                 setIsLogin(true);
@@ -38,36 +133,18 @@ export default function LoginForm() {
         }
     };
 
-    const handleLogin = async () => {
-        const body = { email: loginEmail, password: loginPassword };
-        try {
-            const response = await fetch("http://localhost:8080/api/customers/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body)
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem("token", data.token);
-                localStorage.setItem("customerName", data.customerName);
-                localStorage.setItem("email", data.email);
-
-                toast.success("Login Successful!");
-                setTimeout(() => {
-                    navigate("/dashboard");
-                }, 1000);
-            } else {
-                toast.error("Wrong Credentials!");
-            }
-        } catch {
-            toast.error("Server Error!");
-        }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     return (
         <div className='container'>
             <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
+
             <div className='form-container'>
                 <div className='form-toggle'>
                     <button className={isLogin ? 'active' : ''} onClick={() => setIsLogin(true)}>Login</button>
@@ -77,20 +154,114 @@ export default function LoginForm() {
                 {isLogin ? (
                     <div className='form'>
                         <h2>User Login</h2>
-                        <input type='email' placeholder='Enter your email' value={loginEmail} onChange={e => setLoginEmail(e.target.value)} />
-                        <input type='password' placeholder='Enter your Password' value={loginPassword} onChange={e => setLoginPassword(e.target.value)} />
-                        <a href='#'>Forgot Password?</a>
-                        <button onClick={handleLogin}>Login</button>
+
+                        <div className="email-field">
+                            <span className="email-icon"><MdOutlineEmail /></span>
+                            <input
+                                type='email'
+                                name='loginEmail'
+                                placeholder='Enter your email'
+                                value={formData.loginEmail}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        {errors.loginEmail && <span className='error'>{errors.loginEmail}</span>}
+
+                        <div className="password-field">
+                            <span className="lock-icon"><FaLock /></span>
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                name='loginPassword'
+                                placeholder='Enter your Password'
+                                value={formData.loginPassword}
+                                onChange={handleChange}
+                            />
+                            <span className="password-icon" onClick={() => setShowPassword(prev => !prev)}>
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                            </span>
+                        </div>
+                        {errors.loginPassword && <span className='error'>{errors.loginPassword}</span>}
+
+                        <div className="reset-links">
+                            <a href="#">Forgot Password?</a>
+                            <span onClick={handleLoginReset} className="reset-btn">Reset Fields</span>
+                        </div>
+
+                        <button className="primary-btn" onClick={handleLogin}>Login</button>
+
                         <p>Not a User? <a href='#' onClick={() => setIsLogin(false)}>Register Here</a></p>
                     </div>
                 ) : (
                     <div className='form'>
                         <h2>Signup Form</h2>
-                        <input type='text' placeholder='Enter your Name' value={signupName} onChange={e => setSignupName(e.target.value)} />
-                        <input type='email' placeholder='Enter your Email' value={signupEmail} onChange={e => setSignupEmail(e.target.value)} />
-                        <input type='password' placeholder='Enter your Password' value={signupPassword} onChange={e => setSignupPassword(e.target.value)} />
-                        <input type='password' placeholder='Confirm your Password' value={signupConfirmPassword} onChange={e => setSignupConfirmPassword(e.target.value)} />
-                        <button onClick={handleSignup}>Signup</button>
+                        <div className="name-field">
+                            <span className="name-icon"><IoMdPerson /></span>
+                            <input
+                                type='text'
+                                name='signupName'
+                                placeholder='Enter your Name'
+                                value={formData.signupName}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        {errors.signupName && <span className='error'>{errors.signupName}</span>}
+                        <div className="email-field">
+                            <span className="email-icon"><MdOutlineEmail /></span>
+                            <input
+                                type='email'
+                                name='signupEmail'
+                                placeholder='Enter your Email'
+                                value={formData.signupEmail}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        {errors.signupEmail && <span className='error'>{errors.signupEmail}</span>}
+                        <div className="role-field">
+                            <select
+                                name="signupRole"
+                                value={formData.signupRole}
+                                onChange={handleChange}
+                            >
+                                <option value="">Select Role</option>
+                                <option value="ADMIN">Admin</option>
+                                <option value="CUSTOMER">Customer</option>
+                            </select>
+                        </div>
+                        {errors.signupRole && <span className='error'>{errors.signupRole}</span>}
+                        <div className="password-field">
+                            <span className="lock-icon"><FaLock /></span>
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                name='signupPassword'
+                                placeholder='Enter your Password'
+                                value={formData.signupPassword}
+                                onChange={handleChange}
+                            />
+                            <span className="password-icon" onClick={() => setShowPassword(prev => !prev)}>
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                            </span>
+                        </div>
+                        {errors.signupPassword && <span className='error'>{errors.signupPassword}</span>}
+                        <div className="password-field">
+                            <span className="lock-icon"><FaLock /></span>
+                            <input
+                                type={showConfirmPassword ? 'text' : 'password'}
+                                name='signupConfirmPassword'
+                                placeholder='Confirm your Password'
+                                value={formData.signupConfirmPassword}
+                                onChange={handleChange}
+                            />
+                            <span className="password-icon" onClick={() => setShowConfirmPassword(prev => !prev)}>
+                                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                            </span>
+                        </div>
+                        {errors.signupConfirmPassword && <span className='error'>{errors.signupConfirmPassword}</span>}
+                        <div className="reset-links">
+                            <span onClick={handleSignupReset} className="reset-btn">Reset Fields</span>
+                        </div>
+                        <div className="signup-button">
+                            <button onClick={handleSignup}>Signup</button>
+                        </div>
                     </div>
                 )}
             </div>
