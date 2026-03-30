@@ -38,19 +38,20 @@ export default function RequestNewCard() {
     try {
       const response = await fetch("http://localhost:8080/api/request-card/create-request", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("token")
+        },
         body: JSON.stringify(body),
       });
 
       if (response.ok) {
-        const textResponse = await response.text();    // because backend returns String
-
         toast.success("Card Request Submitted!");
 
         clearForm();
 
         setTimeout(() => {
-          navigate("/dashboard");       // redirect to different page
+          navigate("/dashboard");
         }, 1200);
 
       } else {

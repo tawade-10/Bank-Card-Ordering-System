@@ -1,5 +1,6 @@
 package com.example.bankingApp.config;
 
+import com.example.bankingApp.entity.CustomUserDetails;
 import com.example.bankingApp.entity.Customers;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -32,17 +33,18 @@ public class JwtService {
         }
     }
 
-    public String generateToken(Customers customers) {
+    public String generateToken(CustomUserDetails customUserDetails) {
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("customerName", customers.getCustomerName());
-        claims.put("email", customers.getEmail());
+        claims.put("customerName", customUserDetails.getCustomer().getCustomerName());
+        claims.put("email", customUserDetails.getCustomer().getEmail());
+        claims.put("role", customUserDetails.getCustomer().getRoles().toString());
 
-        long expirationMillis = System.currentTimeMillis() + (1000L * 60 * 60 * 30); // 30 hours
+        long expirationMillis = System.currentTimeMillis() + (1000L * 60 * 60 * 30);
 
         return Jwts.builder()
                 .claims(claims)
-                .subject(customers.getEmail())
+                .subject(customUserDetails.getUsername())
                 .issuedAt(new Date())
                 .expiration(new Date(expirationMillis))
                 .signWith(getKey())

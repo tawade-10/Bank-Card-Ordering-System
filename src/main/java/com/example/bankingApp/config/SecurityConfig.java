@@ -34,19 +34,16 @@ public class SecurityConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/customers/register",
-                                "/api/customers/login",
-                                "/api/request-card/create-request",
-                                "/api/request-card/**").permitAll()
+                        .requestMatchers("/api/customers/register", "/api/customers/login").permitAll()
+                        .requestMatchers("/api/request-card/**").authenticated()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/customer/**").hasRole("CUSTOMER")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
-                .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 

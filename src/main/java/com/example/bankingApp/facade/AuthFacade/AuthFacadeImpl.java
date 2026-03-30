@@ -4,6 +4,7 @@ import com.example.bankingApp.config.JwtService;
 import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
 import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
 import com.example.bankingApp.dto.CustomersDto.LoginResponse;
+import com.example.bankingApp.entity.CustomUserDetails;
 import com.example.bankingApp.entity.Customers;
 import com.example.bankingApp.service.Customers.AuthService;
 import org.springframework.http.ResponseEntity;
@@ -45,10 +46,10 @@ public class AuthFacadeImpl implements AuthFacade {
                 )
         );
 
-        Customers customer = (Customers) auth.getPrincipal();
+        CustomUserDetails customer = (CustomUserDetails) auth.getPrincipal();
         String token = jwtService.generateToken(customer);
 
-        return new LoginResponse(token, customer.getCustomerName(), customer.getEmail(), customer.getRoles().name()
+        return new LoginResponse(token, customer.getCustomer().getCustomerName(), customer.getCustomer().getEmail(), customer.getCustomer().getRoles().toString()
         );
     }
 }

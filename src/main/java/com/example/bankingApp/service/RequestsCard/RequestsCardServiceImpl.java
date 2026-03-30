@@ -7,11 +7,13 @@ import com.example.bankingApp.entity.RequestCard;
 import com.example.bankingApp.entity.enums.StatusOfRequest;
 import com.example.bankingApp.repository.CustomersRepo;
 import com.example.bankingApp.repository.RequestsCardRepo;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -27,24 +29,32 @@ public class RequestsCardServiceImpl implements RequestsCardService{
     }
 
     @Override
-    public CardResponseDto createRequest(CardRequestsDto cardRequestsDto) {
+    public CardResponseDto createRequest(CardRequestsDto dto) {
 
-        String email =  SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("User not authenticated");
+        }
+
+        String email = authentication.getName();
         Customers customer = customersRepo.findByEmail(email);
-//                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        if (customer == null) {
+            throw new RuntimeException("Customer not found for email: " + email);
+        }
 
         RequestCard request = new RequestCard();
-
-        request.setCardType(cardRequestsDto.getCardType());
-        request.setCardVariant(cardRequestsDto.getCardVariant());
-        request.setReason(cardRequestsDto.getReason());
+        request.setCardType(dto.getCardType());
+        request.setCardVariant(dto.getCardVariant());
+        request.setReason(dto.getReason());
         request.setStatusOfRequest(StatusOfRequest.PENDING_REVIEW);
         request.setLocalDate(LocalDate.now());
         request.setCustomer(customer);
 
-        RequestCard savedRequest = requestsCardRepo.save(request);
-        return new CardResponseDto(savedRequest);
+        RequestCard saved = requestsCardRepo.save(request);
+
+        return new CardResponseDto(saved);
     }
 
     @Override

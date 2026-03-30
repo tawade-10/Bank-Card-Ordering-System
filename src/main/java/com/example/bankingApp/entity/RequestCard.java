@@ -2,7 +2,6 @@ package com.example.bankingApp.entity;
 
 import com.example.bankingApp.entity.enums.StatusOfRequest;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
 @Entity
@@ -14,16 +13,20 @@ public class RequestCard {
     @Column(name = "request_id", unique = true)
     private Long requestId;
 
-    @Column(name = "card_type", nullable = false)
-    private String cardType;
+    @ManyToOne
+    @JoinColumn(name = "card_type_id", nullable = false)
+    private CardType cardType;
 
-    @Column(name = "card_variant", nullable = false)
-    private String cardVariant;
+    @ManyToOne
+    @JoinColumn(name = "card_variant_id", nullable = false)
+    private CardVariant cardVariant;
 
-    @Column(name = "reason", nullable = false)
-    private String reason;
+    @ManyToOne
+    @JoinColumn(name = "reason_id", nullable = false)
+    private ReasonForRequest reason;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private StatusOfRequest statusOfRequest;
 
     @Column(name = "date")
@@ -41,27 +44,27 @@ public class RequestCard {
         this.requestId = requestId;
     }
 
-    public String getCardType() {
+    public CardType getCardType() {
         return cardType;
     }
 
-    public void setCardType(String cardType) {
+    public void setCardType(CardType cardType) {
         this.cardType = cardType;
     }
 
-    public String getCardVariant() {
+    public CardVariant getCardVariant() {
         return cardVariant;
     }
 
-    public void setCardVariant(String cardVariant) {
+    public void setCardVariant(CardVariant cardVariant) {
         this.cardVariant = cardVariant;
     }
 
-    public String getReason() {
+    public Reason getReason() {
         return reason;
     }
 
-    public void setReason(String reason) {
+    public void setReason(Reason reason) {
         this.reason = reason;
     }
 
