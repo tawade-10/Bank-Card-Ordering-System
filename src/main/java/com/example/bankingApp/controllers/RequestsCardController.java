@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/request-card")
@@ -23,6 +25,18 @@ public class RequestsCardController {
     public ResponseEntity<CardResponseDto> createRequest(@Valid @RequestBody CardRequestsDto cardRequestsDto){
         CardResponseDto requestCreated = requestsCardFacade.createRequest(cardRequestsDto);
         return new ResponseEntity<>(requestCreated, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CardResponseDto>> getAllRequests(){
+        List<CardResponseDto> requests = requestsCardFacade.getAllRequests();
+        return ResponseEntity.ok(requests);
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<List<CardResponseDto>> getRequestsByEmail(@PathVariable String email){
+        List<CardResponseDto> requests = requestsCardFacade.getRequestsByEmail(email);
+        return ResponseEntity.ok(requests);
     }
 
 }
