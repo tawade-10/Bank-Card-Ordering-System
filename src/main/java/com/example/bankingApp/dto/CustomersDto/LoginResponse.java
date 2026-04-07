@@ -1,17 +1,19 @@
 package com.example.bankingApp.dto.CustomersDto;
 
+import com.example.bankingApp.entity.enums.Roles;
+
 public class LoginResponse {
 
     private String token;
     private String customerName;
     private String email;
-    private String role;
+    private Roles roles;
 
-    public LoginResponse(String token, String customerName, String email, String role) {
+    public LoginResponse(String token, String customerName, String email, Roles roles) {
         this.token = token;
         this.customerName = customerName;
         this.email = email;
-        this.role = role;
+        this.roles = roles;
     }
 
     public String getToken() {
@@ -26,5 +28,5 @@ public class LoginResponse {
         return email;
     }
 
-    public String getRole() {return role; }
+    public Roles getRoles() { return roles; }
 }

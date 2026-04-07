@@ -1,0 +1,97 @@
+.mycards-wrapper {
+  padding: 10px;
+}
+
+/* Centered title for full page */
+.full-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #0a2a5a;
+  text-align: left;
+}
+
+/* Dashboard mode (default) -> side-by-side */
+.cards-container.dashboard {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Full page mode -> vertical + centered */
+.cards-container.full {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 380px;
+  margin: auto;
+}
+
+/* Card UI */
+.card-box {
+  width: 320px;
+  padding: 20px;
+  border-radius: 14px;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background circles */
+.card-box::before,
+.card-box::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  opacity: 0.2;
+}
+
+.card-box::before {
+  right: -40px;
+  bottom: -40px;
+  width: 180px;
+  height: 180px;
+}
+.card-box::after {
+  right: -10px;
+  bottom: -10px;
+  width: 130px;
+  height: 130px;
+}
+
+/* Colors */
+.card-box.credit {
+  background: linear-gradient(135deg, #003c8f, #1565c0);
+}
+
+.card-box.debit {
+  background: linear-gradient(135deg, #c79700, #f2b705);
+}
+
+/* Text */
+.card-number {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.card-type {
+  font-size: 16px;
+}
+.card-expiry {
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* Full page button */
+.details-btn {
+  margin: 20px auto 0;
+  display: block;
+  padding: 10px 20px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}

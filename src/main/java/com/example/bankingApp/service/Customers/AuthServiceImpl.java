@@ -2,9 +2,9 @@ package com.example.bankingApp.service.Customers;
 
 import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
 import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
-import com.example.bankingApp.entity.Customers;
+import com.example.bankingApp.entity.customer.Customers;
 import com.example.bankingApp.entity.enums.Roles;
-import com.example.bankingApp.repository.CustomersRepo;
+import com.example.bankingApp.repository.customer.CustomersRepo;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
 
         customer.setCustomerName(customersRequestDto.getCustomerName());
         customer.setEmail(customersRequestDto.getEmail());
-        customer.setRoles(customersRequestDto.getRoles());
+        customer.setRoles(Roles.CUSTOMER);
         customer.setPassword(customersRequestDto.getPassword());
         customer.setCreatedDate(LocalDate.now());
         customer.setCreatedTime(LocalTime.now());

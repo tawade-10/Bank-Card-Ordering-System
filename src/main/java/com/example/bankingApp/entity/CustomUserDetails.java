@@ -1,34 +1,43 @@
 package com.example.bankingApp.entity;
 
-import org.jspecify.annotations.Nullable;
+import com.example.bankingApp.entity.customer.Customers;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
 
-    private final Customers customer;
+    private Customers customers;
 
-    public CustomUserDetails(Customers customer) {
-        this.customer = customer;
+    public CustomUserDetails(Customers customers) {
+        this.customers = customers;
     }
 
-    @Override
-    public String getUsername() {
-        return customer.getEmail();
+    public Customers getCustomers() {
+        return customers;
     }
 
-    @Override
-    public String getPassword() {
-        return customer.getPassword();
+    public void setCustomers(Customers customers) {
+        this.customers = customers;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(customer.getRoles().toString()));
+        return List.of(new SimpleGrantedAuthority(customers.getRoles().toString()));
+    }
+
+    @Override
+    public String getPassword() {
+        return customers.getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return customers.getEmail();
     }
 
     @Override
@@ -49,9 +58,5 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public Customers getCustomer() {
-        return customer;
     }
 }

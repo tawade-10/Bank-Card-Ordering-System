@@ -1,5 +1,6 @@
-package com.example.bankingApp.entity;
+package com.example.bankingApp.entity.request_card;
 
+import com.example.bankingApp.entity.customer.Customers;
 import com.example.bankingApp.entity.enums.StatusOfRequest;
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -60,11 +61,11 @@ public class RequestCard {
         this.cardVariant = cardVariant;
     }
 
-    public Reason getReason() {
+    public ReasonForRequest getReason() {
         return reason;
     }
 
-    public void setReason(Reason reason) {
+    public void setReason(ReasonForRequest reason) {
         this.reason = reason;
     }
 

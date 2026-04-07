@@ -6,17 +6,32 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaLock } from "react-icons/fa6";
 import { IoMdPerson } from "react-icons/io";
+import { useRef,useEffect } from 'react';
 
 export default function LoginForm() {
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(true);
+
+    const signUpRef = useRef(null);
+    const loginRef = useRef(null);
+
+     useEffect(() => {
+         if(isLogin && signUpRef.current){
+             signUpRef.current.focus();
+             }
+         }, [!isLogin]);
+
+    useEffect(() => {
+        if(!isLogin && signUpRef.current){
+            signUpRef.current.focus();
+            }
+        }, [isLogin]);
 
     const [formData, setFormData] = useState({
         loginEmail: '',
         loginPassword: '',
         signupName: '',
         signupEmail: '',
-        signupRole: '',
         signupPassword: '',
         signupConfirmPassword: ''
     });
@@ -38,7 +53,6 @@ export default function LoginForm() {
             signupName: "",
             signupEmail: "",
             signupPassword: "",
-            signupRole: "",
             signupConfirmPassword: ""
         }));
         setErrors({});
@@ -49,7 +63,6 @@ export default function LoginForm() {
         if (!formData.loginEmail) loginErrors.loginEmail = "Email is required!";
         else if (!/\S+@\S+\.\S+/.test(formData.loginEmail)) loginErrors.loginEmail = "Invalid Email format!";
         if (!formData.loginPassword) loginErrors.loginPassword = "Password is required!";
-
         setErrors(loginErrors);
         return Object.keys(loginErrors).length === 0;
     };
@@ -59,44 +72,33 @@ export default function LoginForm() {
         if (!formData.signupName) signupErrors.signupName = "Name is required!";
         if (!formData.signupEmail) signupErrors.signupEmail = "Email is required!";
         else if (!/\S+@\S+\.\S+/.test(formData.signupEmail)) signupErrors.signupEmail = "Invalid Email format!";
-        if (!formData.signupRole) signupErrors.signupRole = "Role is required!";
         if (!formData.signupPassword) signupErrors.signupPassword = "Password is required!";
         else if (formData.signupPassword.length < 6) signupErrors.signupPassword = "Password must be at least 6 characters!";
         if (!formData.signupConfirmPassword) signupErrors.signupConfirmPassword = "Confirm your password!";
         else if (formData.signupPassword !== formData.signupConfirmPassword) signupErrors.signupConfirmPassword = "Passwords do not match!";
-
         setErrors(signupErrors);
         return Object.keys(signupErrors).length === 0;
     };
 
     const handleLogin = async () => {
         if (!validateLogin()) return;
-
         const body = { email: formData.loginEmail, password: formData.loginPassword };
-
         try {
             const response = await fetch("http://localhost:8080/api/customers/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
             });
-
             if (response.ok) {
                 const data = await response.json();
-
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("customerName", data.customerName);
                 localStorage.setItem("email", data.email);
-                localStorage.setItem("role", data.role);
+                localStorage.setItem("role", data.roles);
 
                 toast.success("Login Successful!");
-                setTimeout(() => {
-                    if (data.role === "ADMIN") {
-                        navigate("/admin/dashboard");
-                    } else {
-                        navigate("/dashboard");
-                    }
-                }, 1000);
+                if (data.role === "ADMIN") navigate("/admin/dashboard");
+                else navigate("/dashboard");
             } else {
                 toast.error("Wrong Credentials!");
             }
@@ -112,7 +114,7 @@ export default function LoginForm() {
             customerName: formData.signupName,
             email: formData.signupEmail,
             password: formData.signupPassword,
-            roles: formData.signupRole
+            roles: "CUSTOMER"
         };
 
         try {
@@ -163,6 +165,7 @@ export default function LoginForm() {
                                 placeholder='Enter your email'
                                 value={formData.loginEmail}
                                 onChange={handleChange}
+                                ref={signUpRef}
                             />
                         </div>
                         {errors.loginEmail && <span className='error'>{errors.loginEmail}</span>}
@@ -194,6 +197,7 @@ export default function LoginForm() {
                 ) : (
                     <div className='form'>
                         <h2>Signup Form</h2>
+
                         <div className="name-field">
                             <span className="name-icon"><IoMdPerson /></span>
                             <input
@@ -202,9 +206,11 @@ export default function LoginForm() {
                                 placeholder='Enter your Name'
                                 value={formData.signupName}
                                 onChange={handleChange}
+                                ref={signUpRef}
                             />
                         </div>
                         {errors.signupName && <span className='error'>{errors.signupName}</span>}
+
                         <div className="email-field">
                             <span className="email-icon"><MdOutlineEmail /></span>
                             <input
@@ -216,18 +222,7 @@ export default function LoginForm() {
                             />
                         </div>
                         {errors.signupEmail && <span className='error'>{errors.signupEmail}</span>}
-                        <div className="role-field">
-                            <select
-                                name="signupRole"
-                                value={formData.signupRole}
-                                onChange={handleChange}
-                            >
-                                <option value="">Select Role</option>
-                                <option value="ADMIN">Admin</option>
-                                <option value="CUSTOMER">Customer</option>
-                            </select>
-                        </div>
-                        {errors.signupRole && <span className='error'>{errors.signupRole}</span>}
+
                         <div className="password-field">
                             <span className="lock-icon"><FaLock /></span>
                             <input
@@ -242,6 +237,7 @@ export default function LoginForm() {
                             </span>
                         </div>
                         {errors.signupPassword && <span className='error'>{errors.signupPassword}</span>}
+
                         <div className="password-field">
                             <span className="lock-icon"><FaLock /></span>
                             <input
@@ -256,9 +252,11 @@ export default function LoginForm() {
                             </span>
                         </div>
                         {errors.signupConfirmPassword && <span className='error'>{errors.signupConfirmPassword}</span>}
+
                         <div className="reset-links">
                             <span onClick={handleSignupReset} className="reset-btn">Reset Fields</span>
                         </div>
+
                         <div className="signup-button">
                             <button onClick={handleSignup}>Signup</button>
                         </div>

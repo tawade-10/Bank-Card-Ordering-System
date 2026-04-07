@@ -5,9 +5,8 @@ import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
 import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
 import com.example.bankingApp.dto.CustomersDto.LoginResponse;
 import com.example.bankingApp.entity.CustomUserDetails;
-import com.example.bankingApp.entity.Customers;
+import com.example.bankingApp.entity.enums.Roles;
 import com.example.bankingApp.service.Customers.AuthService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -46,10 +45,13 @@ public class AuthFacadeImpl implements AuthFacade {
                 )
         );
 
-        CustomUserDetails customer = (CustomUserDetails) auth.getPrincipal();
-        String token = jwtService.generateToken(customer);
+        CustomUserDetails customerDetails = (CustomUserDetails) auth.getPrincipal();
+        String token = jwtService.generateToken(customerDetails);
 
-        return new LoginResponse(token, customer.getCustomer().getCustomerName(), customer.getCustomer().getEmail(), customer.getCustomer().getRoles().toString()
-        );
+        String name = customerDetails.getCustomers().getCustomerName();
+        String email = customerDetails.getCustomers().getEmail();
+        Roles role = customerDetails.getCustomers().getRoles();
+
+        return new LoginResponse(token, name, email, role);
     }
 }

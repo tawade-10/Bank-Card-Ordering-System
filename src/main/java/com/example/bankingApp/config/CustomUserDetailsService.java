@@ -1,8 +1,8 @@
 package com.example.bankingApp.config;
 
 import com.example.bankingApp.entity.CustomUserDetails;
-import com.example.bankingApp.entity.Customers;
-import com.example.bankingApp.repository.CustomersRepo;
+import com.example.bankingApp.entity.customer.Customers;
+import com.example.bankingApp.repository.customer.CustomersRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,12 +17,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
-        Customers customer = customersRepo.findByEmail(email);
-
-        if (customer == null) {
-            throw new UsernameNotFoundException("User not found with email: " + email);
-        }
+         Customers customer = customersRepo.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
         return new CustomUserDetails(customer);
     }

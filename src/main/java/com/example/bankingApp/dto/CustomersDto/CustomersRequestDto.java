@@ -1,7 +1,9 @@
 package com.example.bankingApp.dto.CustomersDto;
 
-import com.example.bankingApp.entity.Customers;
+import com.example.bankingApp.entity.customer.Customers;
 import com.example.bankingApp.entity.enums.Roles;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -14,16 +16,17 @@ public class CustomersRequestDto {
     @Email(message = "Invalid Email format")
     private String email;
 
-    private Roles roles;
-
     @NotBlank(message = "Password cannot be empty")
     private String password;
 
-    public CustomersRequestDto(Customers customers) {
-        this.customerName = customers.getCustomerName();
-        this.email = customers.getEmail();
-        this.roles = customers.getRoles();
-        this.password = customers.getPassword();
+    @Enumerated(EnumType.STRING)
+    private Roles roles;
+
+    public CustomersRequestDto(String customerName, String email, String password, Roles roles) {
+        this.customerName = customerName;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
     }
 
     public CustomersRequestDto() {

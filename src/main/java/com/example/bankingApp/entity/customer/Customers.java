@@ -1,4 +1,4 @@
-package com.example.bankingApp.entity;
+package com.example.bankingApp.entity.customer;
 
 import com.example.bankingApp.entity.enums.Roles;
 import jakarta.persistence.*;

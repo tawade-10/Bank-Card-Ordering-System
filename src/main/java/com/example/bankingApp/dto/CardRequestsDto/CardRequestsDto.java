@@ -1,49 +1,41 @@
 package com.example.bankingApp.dto.CardRequestsDto;
 
-import com.example.bankingApp.entity.RequestCard;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class CardRequestsDto {
 
-    @NotBlank(message = "Card Type should be selected")
-    private String cardType;
+    @NotNull(message = "Card Type ID is required")
+    private Long cardTypeId;
 
-    @NotBlank(message = "Card Variant should be selected")
-    private String cardVariant;
+    @NotNull(message = "Card Variant ID is required")
+    private Long cardVariantId;
 
-    @NotBlank(message = "Reason should be selected")
-    private String reason;
+    @NotNull(message = "Reason ID is required")
+    private Long reasonId;
 
-    public CardRequestsDto(RequestCard requestCard) {
-        this.cardType = requestCard.getCardType();
-        this.cardVariant = requestCard.getCardVariant();
-        this.reason = requestCard.getReason();
+    public CardRequestsDto() {}
+
+    public Long getCardTypeId() {
+        return cardTypeId;
     }
 
-    public CardRequestsDto() {
+    public void setCardTypeId(Long cardTypeId) {
+        this.cardTypeId = cardTypeId;
     }
 
-    public String getCardType() {
-        return cardType;
+    public Long getCardVariantId() {
+        return cardVariantId;
     }
 
-    public void setCardType(String cardType) {
-        this.cardType = cardType;
+    public void setCardVariantId(Long cardVariantId) {
+        this.cardVariantId = cardVariantId;
     }
 
-    public String getCardVariant() {
-        return cardVariant;
+    public Long getReasonId() {
+        return reasonId;
     }
 
-    public void setCardVariant(String cardVariant) {
-        this.cardVariant = cardVariant;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
+    public void setReasonId(Long reasonId) {
+        this.reasonId = reasonId;
     }
 }

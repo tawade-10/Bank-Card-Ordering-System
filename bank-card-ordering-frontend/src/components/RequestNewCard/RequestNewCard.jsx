@@ -8,9 +8,9 @@ export default function RequestNewCard() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    cardType: "",
-    cardVariant: "",
-    reason: "",
+    cardTypeId: "",
+    cardVariantId: "",
+    reasonId: "",
   });
 
   const handleChange = (e) => {
@@ -20,9 +20,9 @@ export default function RequestNewCard() {
 
   const clearForm = () => {
     setFormData({
-      cardType: "",
-      cardVariant: "",
-      reason: "",
+      cardTypeId: "",
+      cardVariantId: "",
+      reasonId: "",
     });
   };
 
@@ -30,9 +30,9 @@ export default function RequestNewCard() {
     e.preventDefault();
 
     const body = {
-      cardType: formData.cardType,
-      cardVariant: formData.cardVariant,
-      reason: formData.reason,
+      cardTypeId: Number(formData.cardTypeId),
+      cardVariantId: Number(formData.cardVariantId),
+      reasonId: Number(formData.reasonId),
     };
 
     try {
@@ -44,16 +44,12 @@ export default function RequestNewCard() {
         },
         body: JSON.stringify(body),
       });
-
       if (response.ok) {
         toast.success("Card Request Submitted!");
-
         clearForm();
-
         setTimeout(() => {
           navigate("/dashboard");
         }, 1200);
-
       } else {
         toast.error("Request Cancelled!");
       }
@@ -68,16 +64,15 @@ export default function RequestNewCard() {
         <div className="form-header">Request New Card</div>
 
         <form onSubmit={handleSubmit}>
-
           <label className="label">Select Card Type:</label>
           <div className="radio-group">
             <label className="radio-box">
               <input
                 type="radio"
-                name="cardType"
-                value="DEBIT"
+                name="cardTypeId"
+                value="1"
                 onChange={handleChange}
-                checked={formData.cardType === "DEBIT"}
+                checked={formData.cardTypeId === "1"}
               />
               Debit Card
             </label>
@@ -85,10 +80,10 @@ export default function RequestNewCard() {
             <label className="radio-box">
               <input
                 type="radio"
-                name="cardType"
-                value="CREDIT"
+                name="cardTypeId"
+                value="2"
                 onChange={handleChange}
-                checked={formData.cardType === "CREDIT"}
+                checked={formData.cardTypeId === "2"}
               />
               Credit Card
             </label>
@@ -99,10 +94,10 @@ export default function RequestNewCard() {
             <label className="radio-box">
               <input
                 type="radio"
-                name="cardVariant"
-                value="CLASSIC"
+                name="cardVariantId"
+                value="1"
                 onChange={handleChange}
-                checked={formData.cardVariant === "CLASSIC"}
+                checked={formData.cardVariantId === "1"}
               />
               Classic
             </label>
@@ -110,10 +105,10 @@ export default function RequestNewCard() {
             <label className="radio-box">
               <input
                 type="radio"
-                name="cardVariant"
-                value="GOLD"
+                name="cardVariantId"
+                value="2"
                 onChange={handleChange}
-                checked={formData.cardVariant === "GOLD"}
+                checked={formData.cardVariantId === "2"}
               />
               Gold
             </label>
@@ -121,10 +116,10 @@ export default function RequestNewCard() {
             <label className="radio-box">
               <input
                 type="radio"
-                name="cardVariant"
-                value="PLATINUM"
+                name="cardVariantId"
+                value="3"
                 onChange={handleChange}
-                checked={formData.cardVariant === "PLATINUM"}
+                checked={formData.cardVariantId === "3"}
               />
               Platinum
             </label>
@@ -132,18 +127,18 @@ export default function RequestNewCard() {
 
           <label className="label">Reason for Request:</label>
           <select
-            id="reason"
-            name="reason"
+            id="reasonId"
+            name="reasonId"
             className="styled-select"
-            value={formData.reason}
+            value={formData.reasonId}
             onChange={handleChange}
           >
             <option value="">Select a Reason--</option>
-            <option value="NEW_CARD">New Card</option>
-            <option value="LOST_CARD">Lost Card</option>
-            <option value="REPLACEMENT">Replacement</option>
-            <option value="UPGRADE">Upgrade</option>
-            <option value="DAMAGED_CARD">Damaged Card</option>
+            <option value="1">New Card</option>
+            <option value="2">Lost Card</option>
+            <option value="3">Replacement</option>
+            <option value="4">Upgrade</option>
+            <option value="5">Damaged Card</option>
           </select>
 
           <div className="button-row">

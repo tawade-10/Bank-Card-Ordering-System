@@ -1,0 +1,18 @@
+INSERT INTO card_type (type_name) VALUES
+('DEBIT'),
+('CREDIT')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO card_variant (variant_name) VALUES
+('CLASSIC'),
+('GOLD'),
+('PLATINUM')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO reason (reason_name) VALUES
+('NEW CARD'),
+('LOST CARD'),
+('REPLACEMENT'),
+('UPGRADE'),
+('DAMAGED CARD')
+ON CONFLICT DO NOTHING;
