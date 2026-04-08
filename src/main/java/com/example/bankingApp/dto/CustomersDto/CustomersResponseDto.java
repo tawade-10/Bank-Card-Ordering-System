@@ -1,7 +1,7 @@
     package com.example.bankingApp.dto.CustomersDto;
 
-    import com.example.bankingApp.entity.customer.Customers;
-    import com.example.bankingApp.entity.enums.Roles;
+    import com.example.bankingApp.entity.Customers.Customers;
+    import com.example.bankingApp.entity.Enums.Roles;
 
     import java.time.LocalDate;
     import java.time.LocalTime;

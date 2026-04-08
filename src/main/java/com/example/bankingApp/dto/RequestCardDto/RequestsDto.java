@@ -1,8 +1,8 @@
-package com.example.bankingApp.dto.CardRequestsDto;
+package com.example.bankingApp.dto.RequestCardDto;
 
 import jakarta.validation.constraints.NotNull;
 
-public class CardRequestsDto {
+public class RequestsDto {
 
     @NotNull(message = "Card Type ID is required")
     private Long cardTypeId;
@@ -13,7 +13,7 @@ public class CardRequestsDto {
     @NotNull(message = "Reason ID is required")
     private Long reasonId;
 
-    public CardRequestsDto() {}
+    public RequestsDto() {}
 
     public Long getCardTypeId() {
         return cardTypeId;

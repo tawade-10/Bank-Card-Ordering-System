@@ -1,6 +1,6 @@
 package com.example.bankingApp.dto.CustomersDto;
 
-import com.example.bankingApp.entity.enums.Roles;
+import com.example.bankingApp.entity.Enums.Roles;
 
 public class LoginResponse {
 

@@ -1,4 +1,4 @@
-package com.example.bankingApp.service.Customers;
+package com.example.bankingApp.service.Auth;
 
 import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
 import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;

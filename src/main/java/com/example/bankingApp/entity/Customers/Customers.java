@@ -1,6 +1,6 @@
-package com.example.bankingApp.entity.customer;
+package com.example.bankingApp.entity.Customers;
 
-import com.example.bankingApp.entity.enums.Roles;
+import com.example.bankingApp.entity.Enums.Roles;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

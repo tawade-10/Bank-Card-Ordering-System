@@ -1,9 +1,9 @@
-package com.example.bankingApp.service.Customers;
+package com.example.bankingApp.service.Auth;
 
 import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
 import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
-import com.example.bankingApp.entity.customer.Customers;
-import com.example.bankingApp.entity.enums.Roles;
+import com.example.bankingApp.entity.Customers.Customers;
+import com.example.bankingApp.entity.Enums.Roles;
 import com.example.bankingApp.repository.customer.CustomersRepo;
 import org.springframework.stereotype.Service;
 

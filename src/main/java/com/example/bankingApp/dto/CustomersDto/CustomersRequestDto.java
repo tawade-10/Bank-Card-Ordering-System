@@ -1,7 +1,6 @@
 package com.example.bankingApp.dto.CustomersDto;
 
-import com.example.bankingApp.entity.customer.Customers;
-import com.example.bankingApp.entity.enums.Roles;
+import com.example.bankingApp.entity.Enums.Roles;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;

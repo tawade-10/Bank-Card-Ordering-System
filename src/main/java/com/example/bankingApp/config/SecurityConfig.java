@@ -36,8 +36,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/customers/register", "/api/customers/login").permitAll()
+                        .requestMatchers("/api/register", "/api/login").permitAll()
+                        .requestMatchers("/api/customers/**").authenticated()
                         .requestMatchers("/api/request-card/**").authenticated()
+                        .requestMatchers("/api/cards/**").authenticated()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/customer/**").hasRole("CUSTOMER")
                         .anyRequest().authenticated()

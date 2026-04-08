@@ -1,18 +1,18 @@
 package com.example.bankingApp.service.RequestsCard;
 
-import com.example.bankingApp.dto.CardRequestsDto.CardRequestsDto;
-import com.example.bankingApp.dto.CardRequestsDto.CardResponseDto;
-import com.example.bankingApp.entity.request_card.CardType;
-import com.example.bankingApp.entity.request_card.CardVariant;
-import com.example.bankingApp.entity.request_card.ReasonForRequest;
-import com.example.bankingApp.entity.request_card.RequestCard;
-import com.example.bankingApp.entity.customer.Customers;
-import com.example.bankingApp.entity.enums.StatusOfRequest;
-import com.example.bankingApp.repository.card.CardTypeRepo;
-import com.example.bankingApp.repository.card.CardVariantRepo;
-import com.example.bankingApp.repository.card.ReasonForRequestRepo;
+import com.example.bankingApp.dto.RequestCardDto.RequestsDto;
+import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
+import com.example.bankingApp.entity.RequestNewCard.CardType;
+import com.example.bankingApp.entity.RequestNewCard.CardVariant;
+import com.example.bankingApp.entity.RequestNewCard.Reason;
+import com.example.bankingApp.entity.RequestNewCard.RequestNewCard;
+import com.example.bankingApp.entity.Customers.Customers;
+import com.example.bankingApp.entity.Enums.StatusOfRequest;
+import com.example.bankingApp.repository.request_card.CardTypeRepo;
+import com.example.bankingApp.repository.request_card.CardVariantRepo;
+import com.example.bankingApp.repository.request_card.ReasonForRequestRepo;
 import com.example.bankingApp.repository.customer.CustomersRepo;
-import com.example.bankingApp.repository.card.RequestsCardRepo;
+import com.example.bankingApp.repository.request_card.RequestsCardRepo;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -43,7 +43,7 @@ public class RequestsCardServiceImpl implements RequestsCardService{
     }
 
     @Override
-    public CardResponseDto createRequest(CardRequestsDto dto) {
+    public ResponseDto createRequest(RequestsDto dto) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -62,7 +62,7 @@ public class RequestsCardServiceImpl implements RequestsCardService{
         CardVariant cardVariant = cardVariantRepo.findById(dto.getCardVariantId())
                 .orElseThrow(() -> new RuntimeException("Invalid Card Variant ID"));
 
-        ReasonForRequest reason = reasonForRequestRepo.findById(dto.getReasonId())
+        Reason reason = reasonForRequestRepo.findById(dto.getReasonId())
                 .orElseThrow(() -> new RuntimeException("Invalid Reason ID"));
 
 //        boolean exists = requestsCardRepo.hasPendingRequest(
@@ -73,7 +73,7 @@ public class RequestsCardServiceImpl implements RequestsCardService{
 //            throw new RuntimeException("A request for this card is already pending!");
 //        }
 
-        RequestCard request = new RequestCard();
+        RequestNewCard request = new RequestNewCard();
         request.setCardType(cardType);
         request.setCardVariant(cardVariant);
         request.setReason(reason);
@@ -81,20 +81,22 @@ public class RequestsCardServiceImpl implements RequestsCardService{
         request.setLocalDate(LocalDate.now());
         request.setCustomer(customer);
 
-        RequestCard saved = requestsCardRepo.save(request);
+        RequestNewCard saved = requestsCardRepo.save(request);
 
-        return new CardResponseDto(saved);
+        return new ResponseDto(saved);
     }
 
     @Override
-    public List<CardResponseDto> getAllRequests() {
-        List<RequestCard> requests = requestsCardRepo.findAll();
-        return requests.stream().map(CardResponseDto::new).collect(Collectors.toList());
+    public List<ResponseDto> getAllRequests() {
+        List<RequestNewCard> requests = requestsCardRepo.findAll();
+        return requests.stream().map(ResponseDto::new).collect(Collectors.toList());
     }
 
     @Override
-    public List<CardResponseDto> getRequestsByEmail(String email) {
-        List<RequestCard> requests = requestsCardRepo.findByCustomerEmail(email);
-        return requests.stream().map(CardResponseDto::new).collect(Collectors.toList());
+    public ResponseDto getRequestById(Long requestId) {
+
+        RequestNewCard request = requestsCardRepo.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
+        return new ResponseDto(request);
     }
 }

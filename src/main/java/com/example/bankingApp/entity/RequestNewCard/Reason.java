@@ -1,10 +1,10 @@
-package com.example.bankingApp.entity.request_card;
+package com.example.bankingApp.entity.RequestNewCard;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "reason")
-public class ReasonForRequest {
+public class Reason {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

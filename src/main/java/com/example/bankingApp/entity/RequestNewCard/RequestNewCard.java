@@ -1,13 +1,13 @@
-package com.example.bankingApp.entity.request_card;
+package com.example.bankingApp.entity.RequestNewCard;
 
-import com.example.bankingApp.entity.customer.Customers;
-import com.example.bankingApp.entity.enums.StatusOfRequest;
+import com.example.bankingApp.entity.Customers.Customers;
+import com.example.bankingApp.entity.Enums.StatusOfRequest;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "request_card")
-public class RequestCard {
+public class RequestNewCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class RequestCard {
 
     @ManyToOne
     @JoinColumn(name = "reason_id", nullable = false)
-    private ReasonForRequest reason;
+    private Reason reason;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -61,11 +61,11 @@ public class RequestCard {
         this.cardVariant = cardVariant;
     }
 
-    public ReasonForRequest getReason() {
+    public Reason getReason() {
         return reason;
     }
 
-    public void setReason(ReasonForRequest reason) {
+    public void setReason(Reason reason) {
         this.reason = reason;
     }
 

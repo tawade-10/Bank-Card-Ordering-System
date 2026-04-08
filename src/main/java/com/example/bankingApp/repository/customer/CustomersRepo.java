@@ -1,6 +1,6 @@
 package com.example.bankingApp.repository.customer;
 
-import com.example.bankingApp.entity.customer.Customers;
+import com.example.bankingApp.entity.Customers.Customers;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

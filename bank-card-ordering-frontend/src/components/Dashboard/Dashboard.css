@@ -1,75 +1,74 @@
-.dashboard-wrapper {
-  padding-bottom: 300px;
-  width: 100%;
-  margin-top: 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Top Boxes */
 .top-boxes {
+  margin-top: 30px;
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 25px;
   margin-bottom: 20px;
+  width: 100%;
 }
 
-/* Cards */
+/* Each Box / Link Button */
 .box {
   width: 200px;
-  height: 50px;
-  background: white;
-  border-radius: 6px;
+  height: 55px;
+  background: #ffffff;
+  border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  cursor: pointer;
   text-decoration: none;
-  color: black;
-  transition: 0.2s ease;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
+/* Hover Effect */
 .box:hover {
   background: #eef3ff;
+  transform: translateY(-3px);
 }
 
-/* Divider Line */
-.divider {
-  width: 80%;
-  border: none;
-  border-top: 1px solid #ccc;
-  margin: 20px 0;
-}
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .top-boxes {
+    flex-direction: column;
+    gap: 15px;
+  }
 
-/* Titles */
-.section-title {
-  margin: 10px 0;
-  font-size: 20px;
-  font-weight: 600;
+  .box {
+    width: 180px;
+    height: 50px;
+    font-size: 14px;
+  }
 }
 
 /* Table Container */
 .table-container {
   width: 80%;
-  overflow-x: auto;
+  max-height: 200px;  /* Shows around 3 rows */
+  overflow-y: auto;   /* Scroll for more rows */
   margin-top: 15px;
-}
-
-/* Table Styles */
-.custom-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
   border-radius: 8px;
-  overflow: hidden;
+  background: white;
   box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
 }
 
+/* Table */
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Header */
 .custom-table thead {
+  position: sticky;
+  top: 0;
   background: #2c3e50;
   color: white;
+  z-index: 2;
 }
 
 .custom-table th,
@@ -77,34 +76,43 @@
   padding: 12px 15px;
   text-align: left;
   border-bottom: 1px solid #eaeaea;
+  font-size: 14px;
 }
 
+/* Hover Effect */
 .custom-table tbody tr:hover {
   background: #f5f7ff;
-  cursor: pointer;
 }
 
+/* Remove last border */
 .custom-table tbody tr:last-child td {
   border-bottom: none;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .custom-table th,
-  .custom-table td {
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  .box {
-    width: 150px;
-    height: 45px;
-    font-size: 14px;
-  }
-
-  .top-boxes {
-    flex-direction: column;
-    align-items: center;
-  }
+/* Scrollbar Styling */
+.table-container::-webkit-scrollbar {
+  width: 8px;
 }
 
+.table-container::-webkit-scrollbar-thumb {
+  background: #b6b6b6;
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #8d8d8d;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .table-container {
+    width: 95%;
+    max-height: 180px;
+  }
+
+  .custom-table th,
+  .custom-table td {
+    font-size: 12px;
+    padding: 10px;
+  }
+}

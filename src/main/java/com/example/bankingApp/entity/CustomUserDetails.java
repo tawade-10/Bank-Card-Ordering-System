@@ -1,10 +1,9 @@
 package com.example.bankingApp.entity;
 
-import com.example.bankingApp.entity.customer.Customers;
+import com.example.bankingApp.entity.Customers.Customers;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;

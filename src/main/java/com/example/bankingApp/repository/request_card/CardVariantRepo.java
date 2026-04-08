@@ -1,6 +1,6 @@
-package com.example.bankingApp.repository.card;
+package com.example.bankingApp.repository.request_card;
 
-import com.example.bankingApp.entity.request_card.CardVariant;
+import com.example.bankingApp.entity.RequestNewCard.CardVariant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CardVariantRepo extends JpaRepository<CardVariant,Long> {

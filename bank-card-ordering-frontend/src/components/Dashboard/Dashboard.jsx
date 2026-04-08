@@ -68,7 +68,6 @@ export default function Dashboard() {
               <th>Date</th>
             </tr>
           </thead>
-
           <tbody>
             {requests.length > 0 ? (
               requests.map((req) => (

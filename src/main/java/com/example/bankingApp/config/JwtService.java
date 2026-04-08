@@ -1,7 +1,6 @@
 package com.example.bankingApp.config;
 
 import com.example.bankingApp.entity.CustomUserDetails;
-import com.example.bankingApp.entity.customer.Customers;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

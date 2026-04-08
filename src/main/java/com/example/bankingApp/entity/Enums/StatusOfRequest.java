@@ -1,4 +1,4 @@
-package com.example.bankingApp.entity.enums;
+package com.example.bankingApp.entity.Enums;
 
 public enum StatusOfRequest {
     PENDING_REVIEW,

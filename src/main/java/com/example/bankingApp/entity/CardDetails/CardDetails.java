@@ -1,7 +1,8 @@
 package com.example.bankingApp.entity.CardDetails;
 
-import com.example.bankingApp.entity.request_card.CardType;
-import com.example.bankingApp.entity.request_card.CardVariant;
+import com.example.bankingApp.entity.Customers.Customers;
+import com.example.bankingApp.entity.RequestNewCard.CardType;
+import com.example.bankingApp.entity.RequestNewCard.CardVariant;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -14,6 +15,10 @@ public class CardDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "card_id", unique = true)
     private Long cardId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "customer_id")
+    private Customers customers;
 
     @Column(name = "card_number", unique = true, nullable = false)
     private Long cardNumber;
@@ -35,6 +40,14 @@ public class CardDetails {
 
     public void setCardId(Long cardId) {
         this.cardId = cardId;
+    }
+
+    public Customers getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(Customers customers) {
+        this.customers = customers;
     }
 
     public Long getCardNumber() {

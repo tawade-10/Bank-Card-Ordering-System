@@ -1,13 +1,13 @@
-package com.example.bankingApp.repository.card;
+package com.example.bankingApp.repository.request_card;
 
-import com.example.bankingApp.entity.request_card.RequestCard;
+import com.example.bankingApp.entity.RequestNewCard.RequestNewCard;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface RequestsCardRepo extends JpaRepository<RequestCard,Long> {
+public interface RequestsCardRepo extends JpaRepository<RequestNewCard,Long> {
 
-    List<RequestCard> findByCustomerEmail(String email);
+    List<RequestNewCard> findByCustomerEmail(String email);
 
 //    @Query("""
 //    SELECT CASE WHEN COUNT(r) > 0 THEN TRUE ELSE FALSE END

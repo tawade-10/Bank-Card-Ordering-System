@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("/api")
 public class AuthController {
 
     private final AuthFacade authFacade;
@@ -30,5 +30,4 @@ public class AuthController {
         Object loginCustomer = authFacade.loginCustomer(customersRequestDto);
         return ResponseEntity.ok(loginCustomer);
     }
-
 }

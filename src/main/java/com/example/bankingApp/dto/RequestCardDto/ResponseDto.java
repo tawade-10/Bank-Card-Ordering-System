@@ -1,8 +1,8 @@
-package com.example.bankingApp.dto.CardRequestsDto;
+package com.example.bankingApp.dto.RequestCardDto;
 
-import com.example.bankingApp.entity.request_card.RequestCard;
+import com.example.bankingApp.entity.RequestNewCard.RequestNewCard;
 
-public class CardResponseDto {
+public class ResponseDto {
 
     private Long requestId;
     private String cardType;
@@ -11,16 +11,16 @@ public class CardResponseDto {
     private String statusOfRequest;
     private String localDate;
 
-    public CardResponseDto(RequestCard requestCard) {
-        this.requestId = requestCard.getRequestId();
-        this.cardType = requestCard.getCardType().getTypeName();
-        this.cardVariant = requestCard.getCardVariant().getVariantName();
-        this.reason = requestCard.getReason().getReasonName();
-        this.statusOfRequest = requestCard.getStatusOfRequest().name();
-        this.localDate = requestCard.getLocalDate().toString();
+    public ResponseDto(RequestNewCard requestNewCard) {
+        this.requestId = requestNewCard.getRequestId();
+        this.cardType = requestNewCard.getCardType().getTypeName();
+        this.cardVariant = requestNewCard.getCardVariant().getVariantName();
+        this.reason = requestNewCard.getReason().getReasonName();
+        this.statusOfRequest = requestNewCard.getStatusOfRequest().name();
+        this.localDate = requestNewCard.getLocalDate().toString();
     }
 
-    public CardResponseDto() {}
+    public ResponseDto() {}
 
     public Long getRequestId() {
         return requestId;

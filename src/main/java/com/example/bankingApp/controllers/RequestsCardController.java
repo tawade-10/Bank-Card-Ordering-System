@@ -1,7 +1,7 @@
 package com.example.bankingApp.controllers;
 
-import com.example.bankingApp.dto.CardRequestsDto.CardRequestsDto;
-import com.example.bankingApp.dto.CardRequestsDto.CardResponseDto;
+import com.example.bankingApp.dto.RequestCardDto.RequestsDto;
+import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
 import com.example.bankingApp.facade.RequestsCardFacade.RequestsCardFacade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,21 +22,21 @@ public class RequestsCardController {
     }
 
     @PostMapping("/create-request")
-    public ResponseEntity<CardResponseDto> createRequest(@Valid @RequestBody CardRequestsDto cardRequestsDto){
-        CardResponseDto requestCreated = requestsCardFacade.createRequest(cardRequestsDto);
+    public ResponseEntity<ResponseDto> createRequest(@Valid @RequestBody RequestsDto requestsDto){
+        ResponseDto requestCreated = requestsCardFacade.createRequest(requestsDto);
         return new ResponseEntity<>(requestCreated, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<CardResponseDto>> getAllRequests(){
-        List<CardResponseDto> requests = requestsCardFacade.getAllRequests();
+    public ResponseEntity<List<ResponseDto>> getAllRequests(){
+        List<ResponseDto> requests = requestsCardFacade.getAllRequests();
         return ResponseEntity.ok(requests);
     }
 
-    @GetMapping("/{email}")
-    public ResponseEntity<List<CardResponseDto>> getRequestsByEmail(@PathVariable String email){
-        List<CardResponseDto> requests = requestsCardFacade.getRequestsByEmail(email);
-        return ResponseEntity.ok(requests);
+    @GetMapping("/{requestId}")
+    public ResponseEntity<ResponseDto> getRequestById(@PathVariable Long requestId){
+        ResponseDto requestById = requestsCardFacade.getRequestById(requestId);
+        return ResponseEntity.ok(requestById);
     }
 
 }
