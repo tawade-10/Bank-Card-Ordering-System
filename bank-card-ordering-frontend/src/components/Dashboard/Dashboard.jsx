@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import "./Dashboard.css";
 import MyCards from "../MyCards/MyCards";
 
+import RecentCardTable from "../RecentCardTable/RecentCardTable";
+
 export default function Dashboard() {
   const [requests, setRequests] = useState([]);
 
@@ -53,41 +55,12 @@ export default function Dashboard() {
       <hr className="divider" />
 
       <h3 className="section-title">My Active Cards</h3>
-      <MyCards layout="dashboard" />
+      <MyCards/>
 
       <hr className="divider" />
-      <h3 className="section-title">Recent Card Requests</h3>
 
-      <div className="table-container">
-        <table className="custom-table">
-          <thead>
-            <tr>
-              <th>Request ID</th>
-              <th>Card Type</th>
-              <th>Status</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requests.length > 0 ? (
-              requests.map((req) => (
-                <tr key={req.requestId}>
-                  <td>{req.requestId}</td>
-                  <td>{req.cardType}</td>
-                  <td>{req.statusOfRequest}</td>
-                  <td>{req.localDate}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="4" style={{ textAlign: "center" }}>
-                  No requests found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <h3 className="section-title">Recent Card Requests</h3>
+      <RecentCardTable requests={requests} />
     </div>
   );
 }

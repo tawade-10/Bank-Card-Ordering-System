@@ -4,6 +4,12 @@ import com.example.bankingApp.dto.CardDto.CardRequestDto;
 import com.example.bankingApp.dto.CardDto.CardResponseDto;
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 public interface CardDetailsFacade {
     CardResponseDto createCard(@Valid CardRequestDto cardRequestDto);
+
+    List<CardResponseDto> getAllCards();
+
+    CardResponseDto getCardById(Long cardId);
 }

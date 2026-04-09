@@ -29,4 +29,9 @@ public class RequestsCardFacadeImpl implements RequestsCardFacade{
     @Override
     public ResponseDto getRequestById(Long requestId) { return requestsCardService.getRequestById(requestId);
     }
+
+    @Override
+    public ResponseDto updateRequest(Long requestId, RequestsDto requestsDto) {
+        return requestsCardService.updateRequest(requestId,requestsDto);
+    }
 }

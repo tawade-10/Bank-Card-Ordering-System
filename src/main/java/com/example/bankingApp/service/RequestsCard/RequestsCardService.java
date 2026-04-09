@@ -12,4 +12,6 @@ public interface RequestsCardService {
     List<ResponseDto> getAllRequests();
 
     ResponseDto getRequestById(Long requestId);
+
+    ResponseDto updateRequest(Long requestId, RequestsDto requestsDto);
 }

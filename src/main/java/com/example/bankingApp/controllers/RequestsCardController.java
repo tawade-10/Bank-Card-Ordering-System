@@ -1,5 +1,7 @@
 package com.example.bankingApp.controllers;
 
+import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
+import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
 import com.example.bankingApp.dto.RequestCardDto.RequestsDto;
 import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
 import com.example.bankingApp.facade.RequestsCardFacade.RequestsCardFacade;
@@ -37,6 +39,12 @@ public class RequestsCardController {
     public ResponseEntity<ResponseDto> getRequestById(@PathVariable Long requestId){
         ResponseDto requestById = requestsCardFacade.getRequestById(requestId);
         return ResponseEntity.ok(requestById);
+    }
+
+    @PutMapping("/{requestId}")
+    public ResponseEntity<ResponseDto> updateRequest(@PathVariable Long requestId, @RequestBody RequestsDto requestsDto){
+        ResponseDto updatedRequest = requestsCardFacade.updateRequest(requestId,requestsDto);
+        return ResponseEntity.ok(updatedRequest);
     }
 
 }

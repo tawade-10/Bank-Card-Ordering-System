@@ -17,16 +17,8 @@
   text-align: center;
 }
 
-/**************** Container Layouts *****************/
-.cards-container.dashboard {
-  display: flex;
-  gap: 25px;
-  justify-content: center;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-.cards-container.full {
+/**************** Unified Layout *****************/
+.cards-container-full {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -82,10 +74,9 @@
   margin-top: 6px;
 }
 
-/**************** Full Page Button *****************/
+/**************** Button *****************/
 .details-btn {
   margin: 22px auto 0;
-  display: block;
   padding: 12px 25px;
   background: #fff;
   border: 1px solid #dcdcdc;
@@ -116,7 +107,7 @@
     font-size: 13px;
   }
 
-  .cards-container.full {
+  .cards-container-full {
     width: 100%;
   }
 }

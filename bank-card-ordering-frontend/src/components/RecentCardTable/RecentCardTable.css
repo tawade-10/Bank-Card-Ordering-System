@@ -1,60 +1,8 @@
-.section-title {
-  text-align: center;
-  width: 100%;
-}
-
-.top-boxes {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 25px;
-  margin-bottom: 20px;
-  width: 100%;
-}
-
-/* Each Box / Link Button */
-.box {
-  width: 200px;
-  height: 55px;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 600;
-  text-decoration: none;
-  color: #000;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-/* Hover Effect */
-.box:hover {
-  background: #eef3ff;
-  transform: translateY(-3px);
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .top-boxes {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .box {
-    width: 180px;
-    height: 50px;
-    font-size: 14px;
-  }
-}
-
-/* Table Container */
 .table-container {
+  margin-left: 130px;
   width: 80%;
-  max-height: 200px;  /* Shows around 3 rows */
-  overflow-y: auto;   /* Scroll for more rows */
+  max-height: 200px;
+  overflow-y: auto;
   margin-top: 15px;
   border-radius: 8px;
   background: white;
@@ -67,7 +15,7 @@
   border-collapse: collapse;
 }
 
-/* Header */
+/* Sticky Header */
 .custom-table thead {
   position: sticky;
   top: 0;
@@ -94,7 +42,7 @@
   border-bottom: none;
 }
 
-/* Scrollbar Styling */
+/* Scrollbar */
 .table-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -108,7 +56,6 @@
   background: #8d8d8d;
 }
 
-/* Mobile Responsive */
 @media (max-width: 768px) {
   .table-container {
     width: 95%;

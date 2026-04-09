@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -6,26 +6,23 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaLock } from "react-icons/fa6";
 import { IoMdPerson } from "react-icons/io";
-import { useRef,useEffect } from 'react';
 
 export default function LoginForm() {
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(true);
 
-    const signUpRef = useRef(null);
     const loginRef = useRef(null);
+    const signUpRef = useRef(null);
 
-     useEffect(() => {
-         if(isLogin && signUpRef.current){
-             signUpRef.current.focus();
-             }
-         }, [!isLogin]);
-
+    // Auto focus based on tab (login/signup)
     useEffect(() => {
-        if(!isLogin && signUpRef.current){
+        if (isLogin && loginRef.current) {
+            loginRef.current.focus();
+        }
+        if (!isLogin && signUpRef.current) {
             signUpRef.current.focus();
-            }
-        }, [isLogin]);
+        }
+    }, [isLogin]);
 
     const [formData, setFormData] = useState({
         loginEmail: '',
@@ -80,25 +77,38 @@ export default function LoginForm() {
         return Object.keys(signupErrors).length === 0;
     };
 
+    // ⭐ Updated Login Handler with Role-based Redirect
     const handleLogin = async () => {
         if (!validateLogin()) return;
+
         const body = { email: formData.loginEmail, password: formData.loginPassword };
+
         try {
-            const response = await fetch("http://localhost:8080/api/customers/login", {
+            const response = await fetch("http://localhost:8080/api/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
             });
+
             if (response.ok) {
                 const data = await response.json();
+
+                // Save to localStorage
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("customerName", data.customerName);
                 localStorage.setItem("email", data.email);
                 localStorage.setItem("role", data.roles);
 
                 toast.success("Login Successful!");
-                if (data.role === "ADMIN") navigate("/admin/dashboard");
-                else navigate("/dashboard");
+
+                if (data.roles === "ADMIN") {
+                    navigate("/admin/dashboard");
+                } else if (data.roles === "CUSTOMER") {
+                    navigate("/dashboard");
+                } else {
+                    toast.error("Unknown Role Assigned!");
+                }
+
             } else {
                 toast.error("Wrong Credentials!");
             }
@@ -118,7 +128,7 @@ export default function LoginForm() {
         };
 
         try {
-            const response = await fetch("http://localhost:8080/api/customers/register", {
+            const response = await fetch("http://localhost:8080/api/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
@@ -153,6 +163,7 @@ export default function LoginForm() {
                     <button className={!isLogin ? 'active' : ''} onClick={() => setIsLogin(false)}>SignUp</button>
                 </div>
 
+                {/* LOGIN FORM */}
                 {isLogin ? (
                     <div className='form'>
                         <h2>User Login</h2>
@@ -165,7 +176,7 @@ export default function LoginForm() {
                                 placeholder='Enter your email'
                                 value={formData.loginEmail}
                                 onChange={handleChange}
-                                ref={signUpRef}
+                                ref={loginRef}
                             />
                         </div>
                         {errors.loginEmail && <span className='error'>{errors.loginEmail}</span>}
@@ -195,6 +206,8 @@ export default function LoginForm() {
                         <p>Not a User? <a href='#' onClick={() => setIsLogin(false)}>Register Here</a></p>
                     </div>
                 ) : (
+
+                    /* SIGNUP FORM */
                     <div className='form'>
                         <h2>Signup Form</h2>
 

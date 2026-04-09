@@ -1,5 +1,6 @@
 package com.example.bankingApp.controllers;
 
+import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
 import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
 import com.example.bankingApp.facade.CustomersFacade.CustomersFacade;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,12 @@ public class CustomersController {
     public ResponseEntity<CustomersResponseDto> getCustomerById(@PathVariable Long customerId){
         CustomersResponseDto customerById = customersFacade.getCustomerById(customerId);
         return ResponseEntity.ok(customerById);
+    }
+
+    @PutMapping("/{customerId}")
+    public ResponseEntity<CustomersResponseDto> updateCustomer(@PathVariable Long customerId, @RequestBody CustomersRequestDto customersRequestDto){
+        CustomersResponseDto updatedCustomer = customersFacade.updateCustomer(customerId,customersRequestDto);
+        return ResponseEntity.ok(updatedCustomer);
     }
 
 }

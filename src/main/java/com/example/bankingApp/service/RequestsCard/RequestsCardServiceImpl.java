@@ -1,5 +1,6 @@
 package com.example.bankingApp.service.RequestsCard;
 
+import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
 import com.example.bankingApp.dto.RequestCardDto.RequestsDto;
 import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
 import com.example.bankingApp.entity.RequestNewCard.CardType;
@@ -94,9 +95,20 @@ public class RequestsCardServiceImpl implements RequestsCardService{
 
     @Override
     public ResponseDto getRequestById(Long requestId) {
-
         RequestNewCard request = requestsCardRepo.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
         return new ResponseDto(request);
+    }
+
+    @Override
+    public ResponseDto updateRequest(Long requestId, RequestsDto requestsDto) {
+
+        RequestNewCard request = requestsCardRepo.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
+
+        request.setStatusOfRequest(StatusOfRequest.APPROVED,Sta);
+
+        Customers saveUpdatedCustomer = customersRepo.save(customer);
+        return new CustomersResponseDto(saveUpdatedCustomer);
     }
 }

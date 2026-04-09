@@ -2,10 +2,12 @@ package com.example.bankingApp.service.CardDetails;
 
 import com.example.bankingApp.dto.CardDto.CardRequestDto;
 import com.example.bankingApp.dto.CardDto.CardResponseDto;
+import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
 import com.example.bankingApp.entity.CardDetails.CardDetails;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.RequestNewCard.CardType;
 import com.example.bankingApp.entity.RequestNewCard.CardVariant;
+import com.example.bankingApp.entity.RequestNewCard.RequestNewCard;
 import com.example.bankingApp.repository.card_details.CardDetailsRepo;
 import com.example.bankingApp.repository.customer.CustomersRepo;
 import com.example.bankingApp.repository.request_card.CardTypeRepo;
@@ -13,6 +15,9 @@ import com.example.bankingApp.repository.request_card.CardVariantRepo;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CardDetailsServiceImpl implements CardDetailsService{
@@ -62,5 +67,18 @@ public class CardDetailsServiceImpl implements CardDetailsService{
 
         CardDetails savedCard = cardDetailsRepo.save(cardDetails);
         return new CardResponseDto(savedCard);
+    }
+
+    @Override
+    public List<CardResponseDto> getAllCards() {
+        List<CardDetails> cards = cardDetailsRepo.findAll();
+        return cards.stream().map(CardResponseDto::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public CardResponseDto getCardById(Long cardId) {
+        CardDetails card = cardDetailsRepo.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Card not found with ID: " + cardId));
+        return new CardResponseDto(card);
     }
 }
