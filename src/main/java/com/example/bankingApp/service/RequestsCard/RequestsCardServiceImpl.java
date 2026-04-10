@@ -101,14 +101,15 @@ public class RequestsCardServiceImpl implements RequestsCardService{
     }
 
     @Override
-    public ResponseDto updateRequest(Long requestId, RequestsDto requestsDto) {
+    public ResponseDto updateRequest(Long requestId, RequestsDto dto) {
 
-        RequestNewCard request = requestsCardRepo.findById(requestId)
-                .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
-
-        request.setStatusOfRequest(StatusOfRequest.APPROVED,Sta);
-
-        Customers saveUpdatedCustomer = customersRepo.save(customer);
-        return new CustomersResponseDto(saveUpdatedCustomer);
+//        RequestNewCard request = requestsCardRepo.findById(requestId)
+//                .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
+//
+//        request.setStatusOfRequest(StatusOfRequest.APPROVED,StatusOfRequest.CANCELLED,StatusOfRequest.DELIVERED,StatusOfRequest.DISPATCHED,StatusOfRequest.PRINTING,StatusOfRequest.REJECTED);
+//
+//        RequestNewCard updated = requestsCardRepo.save(request);
+//        return new ResponseDto(updated);
+        return null;
     }
 }

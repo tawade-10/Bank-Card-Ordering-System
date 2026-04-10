@@ -14,7 +14,6 @@ export default function LoginForm() {
     const loginRef = useRef(null);
     const signUpRef = useRef(null);
 
-    // Auto focus based on tab (login/signup)
     useEffect(() => {
         if (isLogin && loginRef.current) {
             loginRef.current.focus();
@@ -77,7 +76,6 @@ export default function LoginForm() {
         return Object.keys(signupErrors).length === 0;
     };
 
-    // ⭐ Updated Login Handler with Role-based Redirect
     const handleLogin = async () => {
         if (!validateLogin()) return;
 

@@ -4,6 +4,7 @@ import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
 import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
 import com.example.bankingApp.dto.RequestCardDto.RequestsDto;
 import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
+import com.example.bankingApp.entity.Enums.StatusOfRequest;
 import com.example.bankingApp.facade.RequestsCardFacade.RequestsCardFacade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,7 @@ public class RequestsCardController {
     }
 
     @PutMapping("/{requestId}")
-    public ResponseEntity<ResponseDto> updateRequest(@PathVariable Long requestId, @RequestBody RequestsDto requestsDto){
+    public ResponseEntity<ResponseDto> updateRequest(@PathVariable Long requestId, RequestsDto requestsDto){
         ResponseDto updatedRequest = requestsCardFacade.updateRequest(requestId,requestsDto);
         return ResponseEntity.ok(updatedRequest);
     }

@@ -5,6 +5,7 @@ import com.example.bankingApp.dto.CardDto.CardResponseDto;
 import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
 import com.example.bankingApp.entity.CardDetails.CardDetails;
 import com.example.bankingApp.entity.Customers.Customers;
+import com.example.bankingApp.entity.Enums.Roles;
 import com.example.bankingApp.entity.RequestNewCard.CardType;
 import com.example.bankingApp.entity.RequestNewCard.CardVariant;
 import com.example.bankingApp.entity.RequestNewCard.RequestNewCard;
@@ -12,6 +13,7 @@ import com.example.bankingApp.repository.card_details.CardDetailsRepo;
 import com.example.bankingApp.repository.customer.CustomersRepo;
 import com.example.bankingApp.repository.request_card.CardTypeRepo;
 import com.example.bankingApp.repository.request_card.CardVariantRepo;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,7 @@ public class CardDetailsServiceImpl implements CardDetailsService{
         this.customersRepo = customersRepo;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public CardResponseDto createCard(CardRequestDto cardRequestDto) {
 

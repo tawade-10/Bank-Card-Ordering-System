@@ -2,6 +2,7 @@ package com.example.bankingApp.service.RequestsCard;
 
 import com.example.bankingApp.dto.RequestCardDto.RequestsDto;
 import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
+import com.example.bankingApp.entity.Enums.StatusOfRequest;
 
 import java.util.List;
 

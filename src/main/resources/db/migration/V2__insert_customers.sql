@@ -8,7 +8,7 @@ INSERT INTO customers (
 ) VALUES (
     'Admin User',
     'admin@bank.com',
-    '$2a$10$3p7mPUuWZqtD9c1hPaqh7O6eqoRVax0tL3FV2nFatE2BqdJ1TTn5W',
+    'admin123',
     'ADMIN',
     CURRENT_DATE,
     CURRENT_TIME
