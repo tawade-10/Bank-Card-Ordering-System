@@ -2,7 +2,7 @@ package com.example.bankingApp.service.RequestsCard;
 
 import com.example.bankingApp.dto.RequestCardDto.RequestsDto;
 import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
-import com.example.bankingApp.entity.Enums.StatusOfRequest;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -13,6 +13,8 @@ public interface RequestsCardService {
     List<ResponseDto> getAllRequests();
 
     ResponseDto getRequestById(Long requestId);
+
+    List<ResponseDto> getRequestsByEmail(Authentication authentication);
 
     ResponseDto updateRequest(Long requestId, RequestsDto requestsDto);
 }

@@ -1,5 +1,7 @@
 package com.example.bankingApp.dto.RequestCardDto;
 
+import com.example.bankingApp.entity.Customers.Customers;
+import com.example.bankingApp.entity.Enums.Status;
 import com.example.bankingApp.entity.RequestNewCard.RequestNewCard;
 
 public class ResponseDto {
@@ -8,16 +10,18 @@ public class ResponseDto {
     private String cardType;
     private String cardVariant;
     private String reason;
-    private String statusOfRequest;
+    private Status status;
     private String localDate;
+    private Customers customers;
 
     public ResponseDto(RequestNewCard requestNewCard) {
         this.requestId = requestNewCard.getRequestId();
         this.cardType = requestNewCard.getCardType().getTypeName();
         this.cardVariant = requestNewCard.getCardVariant().getVariantName();
         this.reason = requestNewCard.getReason().getReasonName();
-        this.statusOfRequest = requestNewCard.getStatusOfRequest().name();
+        this.status = requestNewCard.getStatus();
         this.localDate = requestNewCard.getLocalDate().toString();
+        this.customers = requestNewCard.getCustomers();
     }
 
     public ResponseDto() {}
@@ -54,12 +58,12 @@ public class ResponseDto {
         this.reason = reason;
     }
 
-    public String getStatusOfRequest() {
-        return statusOfRequest;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setStatusOfRequest(String statusOfRequest) {
-        this.statusOfRequest = statusOfRequest;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public String getLocalDate() {
@@ -68,5 +72,13 @@ public class ResponseDto {
 
     public void setLocalDate(String localDate) {
         this.localDate = localDate;
+    }
+
+    public Customers getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(Customers customers) {
+        this.customers = customers;
     }
 }

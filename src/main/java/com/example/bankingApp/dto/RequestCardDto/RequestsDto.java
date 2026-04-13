@@ -1,5 +1,6 @@
 package com.example.bankingApp.dto.RequestCardDto;
 
+import com.example.bankingApp.entity.Enums.Status;
 import jakarta.validation.constraints.NotNull;
 
 public class RequestsDto {
@@ -12,6 +13,8 @@ public class RequestsDto {
 
     @NotNull(message = "Reason ID is required")
     private Long reasonId;
+
+    private Status status;
 
     public RequestsDto() {}
 
@@ -37,5 +40,13 @@ public class RequestsDto {
 
     public void setReasonId(Long reasonId) {
         this.reasonId = reasonId;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

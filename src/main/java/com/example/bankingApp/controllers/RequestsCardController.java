@@ -1,14 +1,13 @@
 package com.example.bankingApp.controllers;
 
 import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
-import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
 import com.example.bankingApp.dto.RequestCardDto.RequestsDto;
 import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
-import com.example.bankingApp.entity.Enums.StatusOfRequest;
 import com.example.bankingApp.facade.RequestsCardFacade.RequestsCardFacade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,8 +41,14 @@ public class RequestsCardController {
         return ResponseEntity.ok(requestById);
     }
 
+    @GetMapping("/email")
+    public ResponseEntity<List<ResponseDto>> getRequestsByEmail(Authentication authentication){
+        List<ResponseDto> requestByEmail = requestsCardFacade.getRequestsByEmail(authentication);
+        return ResponseEntity.ok(requestByEmail);
+    }
+
     @PutMapping("/{requestId}")
-    public ResponseEntity<ResponseDto> updateRequest(@PathVariable Long requestId, RequestsDto requestsDto){
+    public ResponseEntity<ResponseDto> updateRequest(@PathVariable Long requestId,@RequestBody RequestsDto requestsDto){
         ResponseDto updatedRequest = requestsCardFacade.updateRequest(requestId,requestsDto);
         return ResponseEntity.ok(updatedRequest);
     }

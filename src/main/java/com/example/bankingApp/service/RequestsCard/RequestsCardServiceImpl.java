@@ -1,19 +1,19 @@
 package com.example.bankingApp.service.RequestsCard;
 
-import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
 import com.example.bankingApp.dto.RequestCardDto.RequestsDto;
 import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
+import com.example.bankingApp.entity.Enums.Status;
 import com.example.bankingApp.entity.RequestNewCard.CardType;
 import com.example.bankingApp.entity.RequestNewCard.CardVariant;
 import com.example.bankingApp.entity.RequestNewCard.Reason;
 import com.example.bankingApp.entity.RequestNewCard.RequestNewCard;
 import com.example.bankingApp.entity.Customers.Customers;
-import com.example.bankingApp.entity.Enums.StatusOfRequest;
 import com.example.bankingApp.repository.request_card.CardTypeRepo;
 import com.example.bankingApp.repository.request_card.CardVariantRepo;
 import com.example.bankingApp.repository.request_card.ReasonForRequestRepo;
 import com.example.bankingApp.repository.customer.CustomersRepo;
 import com.example.bankingApp.repository.request_card.RequestsCardRepo;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -78,9 +78,9 @@ public class RequestsCardServiceImpl implements RequestsCardService{
         request.setCardType(cardType);
         request.setCardVariant(cardVariant);
         request.setReason(reason);
-        request.setStatusOfRequest(StatusOfRequest.PENDING_REVIEW);
+        request.setStatus(Status.PENDING_REVIEW);
         request.setLocalDate(LocalDate.now());
-        request.setCustomer(customer);
+        request.setCustomers(customer);
 
         RequestNewCard saved = requestsCardRepo.save(request);
 
@@ -101,15 +101,31 @@ public class RequestsCardServiceImpl implements RequestsCardService{
     }
 
     @Override
-    public ResponseDto updateRequest(Long requestId, RequestsDto dto) {
+    public List<ResponseDto> getRequestsByEmail(Authentication authentication) {
 
-//        RequestNewCard request = requestsCardRepo.findById(requestId)
-//                .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
-//
-//        request.setStatusOfRequest(StatusOfRequest.APPROVED,StatusOfRequest.CANCELLED,StatusOfRequest.DELIVERED,StatusOfRequest.DISPATCHED,StatusOfRequest.PRINTING,StatusOfRequest.REJECTED);
-//
-//        RequestNewCard updated = requestsCardRepo.save(request);
-//        return new ResponseDto(updated);
-        return null;
+        String email = authentication.getName();
+
+        Customers customer = customersRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Customer not found for email: " + email));
+
+        List<RequestNewCard> listOfRequests = requestsCardRepo.findByCustomersEmail(email);
+
+        return listOfRequests.stream().map(ResponseDto::new).toList();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Override
+    public ResponseDto updateRequest(Long requestId, RequestsDto requestsDto) {
+
+        RequestNewCard request = requestsCardRepo.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
+
+        if (requestsDto.getStatus() != null) {
+            request.setStatus(requestsDto.getStatus());
+        }
+
+        RequestNewCard updated = requestsCardRepo.save(request);
+
+        return new ResponseDto(updated);
     }
 }

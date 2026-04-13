@@ -1,7 +1,7 @@
 package com.example.bankingApp.entity.RequestNewCard;
 
 import com.example.bankingApp.entity.Customers.Customers;
-import com.example.bankingApp.entity.Enums.StatusOfRequest;
+import com.example.bankingApp.entity.Enums.Status;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -28,14 +28,14 @@ public class RequestNewCard {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private StatusOfRequest statusOfRequest;
+    private Status status;
 
     @Column(name = "date")
     private LocalDate localDate;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    private Customers customer;
+    private Customers customers;
 
     public Long getRequestId() {
         return requestId;
@@ -69,13 +69,9 @@ public class RequestNewCard {
         this.reason = reason;
     }
 
-    public StatusOfRequest getStatusOfRequest() {
-        return statusOfRequest;
-    }
+    public Status getStatus() { return status; }
 
-    public void setStatusOfRequest(StatusOfRequest statusOfRequest) {
-        this.statusOfRequest = statusOfRequest;
-    }
+    public void setStatus(Status status) { this.status = status; }
 
     public LocalDate getLocalDate() {
         return localDate;
@@ -85,11 +81,11 @@ public class RequestNewCard {
         this.localDate = localDate;
     }
 
-    public Customers getCustomer() {
-        return customer;
+    public Customers getCustomers() {
+        return customers;
     }
 
-    public void setCustomer(Customers customer) {
-        this.customer = customer;
+    public void setCustomers(Customers customers) {
+        this.customers = customers;
     }
 }

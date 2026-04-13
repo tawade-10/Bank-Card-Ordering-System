@@ -34,20 +34,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http
-                .csrf(AbstractHttpConfigurer::disable)
+        http.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/register", "/api/login").permitAll()
-                        .requestMatchers("/api/customers/**").authenticated()
+                        .requestMatchers("/api/request-card/email").hasAuthority("CUSTOMER")
+                        .requestMatchers("/api/cards/my-cards").hasAuthority("CUSTOMER")
+                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/request-card/**").authenticated()
                         .requestMatchers("/api/cards/**").authenticated()
-                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/customer/**").hasAuthority("CUSTOMER")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

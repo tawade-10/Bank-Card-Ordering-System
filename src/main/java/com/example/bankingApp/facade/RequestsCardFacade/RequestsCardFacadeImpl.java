@@ -1,8 +1,10 @@
 package com.example.bankingApp.facade.RequestsCardFacade;
 
+import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
 import com.example.bankingApp.dto.RequestCardDto.RequestsDto;
 import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
 import com.example.bankingApp.service.RequestsCard.RequestsCardService;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,6 +30,11 @@ public class RequestsCardFacadeImpl implements RequestsCardFacade{
 
     @Override
     public ResponseDto getRequestById(Long requestId) { return requestsCardService.getRequestById(requestId);
+    }
+
+    @Override
+    public List<ResponseDto> getRequestsByEmail(Authentication authentication) {
+        return requestsCardService.getRequestsByEmail(authentication);
     }
 
     @Override

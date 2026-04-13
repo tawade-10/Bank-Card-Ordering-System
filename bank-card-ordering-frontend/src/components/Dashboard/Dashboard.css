@@ -61,6 +61,7 @@
   border-collapse: collapse;
 }
 
+/* HEADER */
 .admin-table thead {
   position: sticky;
   top: 0;
@@ -69,13 +70,21 @@
   z-index: 2;
 }
 
+/* ADD COLUMN LINES HERE */
 .admin-table th,
 .admin-table td {
   padding: 12px;
   font-size: 14px;
-  border-bottom: 1px solid #ececec;
+  border: 1px solid #dcdcdc; /* ✅ vertical + horizontal lines */
+  text-align: center; /* optional: perfect alignment */
 }
 
+/* Header border fix */
+.admin-table thead th {
+  border: 1px solid #2c3e50;
+}
+
+/* Hover */
 .admin-table tbody tr:hover {
   background: #f5f7ff;
 }

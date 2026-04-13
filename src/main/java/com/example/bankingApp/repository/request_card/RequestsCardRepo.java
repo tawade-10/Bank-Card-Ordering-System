@@ -6,8 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface RequestsCardRepo extends JpaRepository<RequestNewCard,Long> {
-
-    List<RequestNewCard> findByCustomerEmail(String email);
+    List<RequestNewCard> findByCustomersEmail(String email);
 
 //    @Query("""
 //    SELECT CASE WHEN COUNT(r) > 0 THEN TRUE ELSE FALSE END

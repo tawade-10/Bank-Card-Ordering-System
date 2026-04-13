@@ -20,7 +20,7 @@ export default function RecentCardTable({ requests }) {
               <tr key={req.requestId}>
                 <td>{req.requestId}</td>
                 <td>{req.cardType}</td>
-                <td>{req.statusOfRequest}</td>
+                <td>{req.status}</td>
                 <td>{req.localDate}</td>
               </tr>
             ))
