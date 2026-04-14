@@ -13,6 +13,7 @@ import com.example.bankingApp.repository.request_card.CardVariantRepo;
 import com.example.bankingApp.repository.request_card.ReasonForRequestRepo;
 import com.example.bankingApp.repository.customer.CustomersRepo;
 import com.example.bankingApp.repository.request_card.RequestsCardRepo;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -89,7 +90,7 @@ public class RequestsCardServiceImpl implements RequestsCardService{
 
     @Override
     public List<ResponseDto> getAllRequests() {
-        List<RequestNewCard> requests = requestsCardRepo.findAll();
+        List<RequestNewCard> requests = requestsCardRepo.findAll(Sort.by(Sort.Direction.DESC, "requestId"));
         return requests.stream().map(ResponseDto::new).collect(Collectors.toList());
     }
 
@@ -120,9 +121,11 @@ public class RequestsCardServiceImpl implements RequestsCardService{
         RequestNewCard request = requestsCardRepo.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
 
-        if (requestsDto.getStatus() != null) {
-            request.setStatus(requestsDto.getStatus());
+        if (request.getStatus() != Status.PENDING_REVIEW) {
+            throw new RuntimeException("Request already processed! You cannot update it again.");
         }
+
+        request.setStatus(requestsDto.getStatus());
 
         RequestNewCard updated = requestsCardRepo.save(request);
 

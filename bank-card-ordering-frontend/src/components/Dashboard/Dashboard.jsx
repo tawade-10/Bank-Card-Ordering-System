@@ -99,9 +99,13 @@ export default function Dashboard() {
                       <td>{req.localDate}</td>
                       <td>
                         <button
-                          onClick={() =>
-                            navigate(`/admin/dashboard/view-request/${req.requestId}`)
-                          }
+                          onClick={() => {
+                            if (req.status === "APPROVED") {
+                              navigate(`/admin/dashboard/create-card/${req.requestId}`);
+                            } else {
+                              navigate(`/admin/dashboard/view-request/${req.requestId}`);
+                            }
+                          }}
                           className="reject-btn"
                         >
                           View
