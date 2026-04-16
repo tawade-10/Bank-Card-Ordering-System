@@ -2,7 +2,7 @@ package com.example.bankingApp.config;
 
 import com.example.bankingApp.entity.CustomUserDetails;
 import com.example.bankingApp.entity.Customers.Customers;
-import com.example.bankingApp.repository.customer.CustomersRepo;
+import com.example.bankingApp.repository.Customers.CustomersRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

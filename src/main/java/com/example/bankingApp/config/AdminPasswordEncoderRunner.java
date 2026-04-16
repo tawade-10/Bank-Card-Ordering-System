@@ -1,6 +1,6 @@
 package com.example.bankingApp.config;
 
-import com.example.bankingApp.repository.customer.CustomersRepo;
+import com.example.bankingApp.repository.Customers.CustomersRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;

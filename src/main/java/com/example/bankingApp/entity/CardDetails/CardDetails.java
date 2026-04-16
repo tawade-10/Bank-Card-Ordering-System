@@ -1,8 +1,8 @@
 package com.example.bankingApp.entity.CardDetails;
 
 import com.example.bankingApp.entity.Customers.Customers;
-import com.example.bankingApp.entity.RequestNewCard.CardType;
-import com.example.bankingApp.entity.RequestNewCard.CardVariant;
+import com.example.bankingApp.entity.CardRequests.CardType;
+import com.example.bankingApp.entity.CardRequests.CardVariant;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -13,15 +13,18 @@ public class CardDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "card_id", unique = true)
+    @Column(name = "card_id")
     private Long cardId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customers customers;
 
-    @Column(name = "card_number", unique = true, nullable = false)
-    private Long cardNumber;
+    @Column(name = "card_number", nullable = false, length = 255)
+    private String cardNumber;
+
+    @Column(name = "cvv", nullable = false, length = 255)
+    private String cvv;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "card_type_id", nullable = false)
@@ -50,11 +53,11 @@ public class CardDetails {
         this.customers = customers;
     }
 
-    public Long getCardNumber() {
+    public String getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(Long cardNumber) {
+    public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
@@ -80,5 +83,13 @@ public class CardDetails {
 
     public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
+    }
+
+    public String getCvv() {
+        return cvv;
+    }
+
+    public void setCvv(String cvv) {
+        this.cvv = cvv;
     }
 }

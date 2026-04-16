@@ -1,8 +1,7 @@
-package com.example.bankingApp.facade.RequestsCardFacade;
+package com.example.bankingApp.facade.CardRequestsFacade;
 
-import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
-import com.example.bankingApp.dto.RequestCardDto.RequestsDto;
-import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
+import com.example.bankingApp.dto.CardRequestsDto.RequestsDto;
+import com.example.bankingApp.dto.CardRequestsDto.ResponseDto;
 import com.example.bankingApp.service.RequestsCard.RequestsCardService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -10,11 +9,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class RequestsCardFacadeImpl implements RequestsCardFacade{
+public class CardRequestsFacadeImpl implements CardRequestsFacade {
 
     private final RequestsCardService requestsCardService;
 
-    public RequestsCardFacadeImpl(RequestsCardService requestsCardService) {
+    public CardRequestsFacadeImpl(RequestsCardService requestsCardService) {
         this.requestsCardService = requestsCardService;
     }
 

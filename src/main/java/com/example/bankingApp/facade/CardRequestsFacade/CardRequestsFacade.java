@@ -1,14 +1,13 @@
-package com.example.bankingApp.facade.RequestsCardFacade;
+package com.example.bankingApp.facade.CardRequestsFacade;
 
-import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
-import com.example.bankingApp.dto.RequestCardDto.RequestsDto;
-import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
+import com.example.bankingApp.dto.CardRequestsDto.RequestsDto;
+import com.example.bankingApp.dto.CardRequestsDto.ResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
-public interface RequestsCardFacade {
+public interface CardRequestsFacade {
     ResponseDto createRequest(@Valid RequestsDto requestsDto);
 
     List<ResponseDto> getAllRequests();

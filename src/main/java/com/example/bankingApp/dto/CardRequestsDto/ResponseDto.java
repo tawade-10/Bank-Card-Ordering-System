@@ -1,8 +1,8 @@
-package com.example.bankingApp.dto.RequestCardDto;
+package com.example.bankingApp.dto.CardRequestsDto;
 
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.Enums.Status;
-import com.example.bankingApp.entity.RequestNewCard.RequestNewCard;
+import com.example.bankingApp.entity.CardRequests.CardRequests;
 
 public class ResponseDto {
 
@@ -14,14 +14,14 @@ public class ResponseDto {
     private String localDate;
     private Customers customers;
 
-    public ResponseDto(RequestNewCard requestNewCard) {
-        this.requestId = requestNewCard.getRequestId();
-        this.cardType = requestNewCard.getCardType().getTypeName();
-        this.cardVariant = requestNewCard.getCardVariant().getVariantName();
-        this.reason = requestNewCard.getReason().getReasonName();
-        this.status = requestNewCard.getStatus();
-        this.localDate = requestNewCard.getLocalDate().toString();
-        this.customers = requestNewCard.getCustomers();
+    public ResponseDto(CardRequests cardRequests) {
+        this.requestId = cardRequests.getRequestId();
+        this.cardType = cardRequests.getCardType().getTypeName();
+        this.cardVariant = cardRequests.getCardVariant().getVariantName();
+        this.reason = cardRequests.getReason().getReasonName();
+        this.status = cardRequests.getStatus();
+        this.localDate = cardRequests.getLocalDate().toString();
+        this.customers = cardRequests.getCustomers();
     }
 
     public ResponseDto() {}

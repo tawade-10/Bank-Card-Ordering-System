@@ -1,4 +1,4 @@
-package com.example.bankingApp.dto.RequestCardDto;
+package com.example.bankingApp.dto.CardRequestsDto;
 
 import com.example.bankingApp.entity.Enums.Status;
 import jakarta.validation.constraints.NotNull;

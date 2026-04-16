@@ -10,5 +10,7 @@ public interface CardDetailsService {
 
     List<CardResponseDto> getAllCards();
 
-    CardResponseDto getCardById(Long cardId);
+    List<CardResponseDto> getCardsByCustomerId(Long customerId);
+
+    List<CardResponseDto> getCardsByEmail(String email);
 }

@@ -1,4 +1,4 @@
-package com.example.bankingApp.repository.customer;
+package com.example.bankingApp.repository.Customers;
 
 import com.example.bankingApp.entity.Customers.Customers;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -8,6 +8,9 @@ public class CardRequestDto {
     @NotNull(message = "Card Number cannot be empty")
     private Long cardNumber;
 
+    @NotNull(message = "Request Id cannot be empty")
+    private Long requestId;
+
     @NotNull(message = "Card Type is required")
     private Long cardType;
 
@@ -17,6 +20,9 @@ public class CardRequestDto {
     @NotNull(message = "Expiry Date is required")
     private Date expiryDate;
 
+    @NotNull(message = "CVV is required")
+    private Integer cvv;
+
     public CardRequestDto() {}
 
     public Long getCardNumber() {
@@ -25,6 +31,14 @@ public class CardRequestDto {
 
     public void setCardNumber(Long cardNumber) {
         this.cardNumber = cardNumber;
+    }
+
+    public Long getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(Long requestId) {
+        this.requestId = requestId;
     }
 
     public Long getCardType() {
@@ -49,5 +63,13 @@ public class CardRequestDto {
 
     public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
+    }
+
+    public Integer getCvv() {
+        return cvv;
+    }
+
+    public void setCvv(Integer cvv) {
+        this.cvv = cvv;
     }
 }

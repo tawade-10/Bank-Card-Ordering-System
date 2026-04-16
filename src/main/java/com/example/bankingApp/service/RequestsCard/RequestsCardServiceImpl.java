@@ -1,18 +1,18 @@
 package com.example.bankingApp.service.RequestsCard;
 
-import com.example.bankingApp.dto.RequestCardDto.RequestsDto;
-import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
+import com.example.bankingApp.dto.CardRequestsDto.RequestsDto;
+import com.example.bankingApp.dto.CardRequestsDto.ResponseDto;
 import com.example.bankingApp.entity.Enums.Status;
-import com.example.bankingApp.entity.RequestNewCard.CardType;
-import com.example.bankingApp.entity.RequestNewCard.CardVariant;
-import com.example.bankingApp.entity.RequestNewCard.Reason;
-import com.example.bankingApp.entity.RequestNewCard.RequestNewCard;
+import com.example.bankingApp.entity.CardRequests.CardType;
+import com.example.bankingApp.entity.CardRequests.CardVariant;
+import com.example.bankingApp.entity.CardRequests.Reason;
+import com.example.bankingApp.entity.CardRequests.CardRequests;
 import com.example.bankingApp.entity.Customers.Customers;
-import com.example.bankingApp.repository.request_card.CardTypeRepo;
-import com.example.bankingApp.repository.request_card.CardVariantRepo;
-import com.example.bankingApp.repository.request_card.ReasonForRequestRepo;
-import com.example.bankingApp.repository.customer.CustomersRepo;
-import com.example.bankingApp.repository.request_card.RequestsCardRepo;
+import com.example.bankingApp.repository.CardRequests.CardTypeRepo;
+import com.example.bankingApp.repository.CardRequests.CardVariantRepo;
+import com.example.bankingApp.repository.CardRequests.ReasonForRequestRepo;
+import com.example.bankingApp.repository.Customers.CustomersRepo;
+import com.example.bankingApp.repository.CardRequests.CardRequestsRepo;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Component
 public class RequestsCardServiceImpl implements RequestsCardService{
 
-    private final RequestsCardRepo requestsCardRepo;
+    private final CardRequestsRepo cardRequestsRepo;
 
     private final CustomersRepo customersRepo;
 
@@ -36,8 +36,8 @@ public class RequestsCardServiceImpl implements RequestsCardService{
 
     private final ReasonForRequestRepo reasonForRequestRepo;
 
-    public RequestsCardServiceImpl(RequestsCardRepo requestsCardRepo, CustomersRepo customersRepo, CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, ReasonForRequestRepo reasonForRequestRepo) {
-        this.requestsCardRepo = requestsCardRepo;
+    public RequestsCardServiceImpl(CardRequestsRepo cardRequestsRepo, CustomersRepo customersRepo, CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, ReasonForRequestRepo reasonForRequestRepo) {
+        this.cardRequestsRepo = cardRequestsRepo;
         this.customersRepo = customersRepo;
         this.cardTypeRepo = cardTypeRepo;
         this.cardVariantRepo = cardVariantRepo;
@@ -75,7 +75,7 @@ public class RequestsCardServiceImpl implements RequestsCardService{
 //            throw new RuntimeException("A request for this card is already pending!");
 //        }
 
-        RequestNewCard request = new RequestNewCard();
+        CardRequests request = new CardRequests();
         request.setCardType(cardType);
         request.setCardVariant(cardVariant);
         request.setReason(reason);
@@ -83,20 +83,20 @@ public class RequestsCardServiceImpl implements RequestsCardService{
         request.setLocalDate(LocalDate.now());
         request.setCustomers(customer);
 
-        RequestNewCard saved = requestsCardRepo.save(request);
+        CardRequests saved = cardRequestsRepo.save(request);
 
         return new ResponseDto(saved);
     }
 
     @Override
     public List<ResponseDto> getAllRequests() {
-        List<RequestNewCard> requests = requestsCardRepo.findAll(Sort.by(Sort.Direction.DESC, "requestId"));
+        List<CardRequests> requests = cardRequestsRepo.findAll(Sort.by(Sort.Direction.ASC, "requestId"));
         return requests.stream().map(ResponseDto::new).collect(Collectors.toList());
     }
 
     @Override
     public ResponseDto getRequestById(Long requestId) {
-        RequestNewCard request = requestsCardRepo.findById(requestId)
+        CardRequests request = cardRequestsRepo.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
         return new ResponseDto(request);
     }
@@ -109,7 +109,7 @@ public class RequestsCardServiceImpl implements RequestsCardService{
         Customers customer = customersRepo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Customer not found for email: " + email));
 
-        List<RequestNewCard> listOfRequests = requestsCardRepo.findByCustomersEmail(email);
+        List<CardRequests> listOfRequests = cardRequestsRepo.findByCustomersEmail(email);
 
         return listOfRequests.stream().map(ResponseDto::new).toList();
     }
@@ -118,7 +118,7 @@ public class RequestsCardServiceImpl implements RequestsCardService{
     @Override
     public ResponseDto updateRequest(Long requestId, RequestsDto requestsDto) {
 
-        RequestNewCard request = requestsCardRepo.findById(requestId)
+        CardRequests request = cardRequestsRepo.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
 
         if (request.getStatus() != Status.PENDING_REVIEW) {
@@ -127,7 +127,7 @@ public class RequestsCardServiceImpl implements RequestsCardService{
 
         request.setStatus(requestsDto.getStatus());
 
-        RequestNewCard updated = requestsCardRepo.save(request);
+        CardRequests updated = cardRequestsRepo.save(request);
 
         return new ResponseDto(updated);
     }

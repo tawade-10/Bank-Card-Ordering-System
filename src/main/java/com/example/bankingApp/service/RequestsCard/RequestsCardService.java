@@ -1,7 +1,7 @@
 package com.example.bankingApp.service.RequestsCard;
 
-import com.example.bankingApp.dto.RequestCardDto.RequestsDto;
-import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
+import com.example.bankingApp.dto.CardRequestsDto.RequestsDto;
+import com.example.bankingApp.dto.CardRequestsDto.ResponseDto;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;

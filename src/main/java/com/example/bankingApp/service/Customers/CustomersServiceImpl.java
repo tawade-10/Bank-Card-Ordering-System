@@ -3,7 +3,7 @@ package com.example.bankingApp.service.Customers;
 import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
 import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
 import com.example.bankingApp.entity.Customers.Customers;
-import com.example.bankingApp.repository.customer.CustomersRepo;
+import com.example.bankingApp.repository.Customers.CustomersRepo;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

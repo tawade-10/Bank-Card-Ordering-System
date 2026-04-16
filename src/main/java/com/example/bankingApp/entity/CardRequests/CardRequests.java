@@ -1,4 +1,4 @@
-package com.example.bankingApp.entity.RequestNewCard;
+package com.example.bankingApp.entity.CardRequests;
 
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.Enums.Status;
@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "request_card")
-public class RequestNewCard {
+public class CardRequests {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

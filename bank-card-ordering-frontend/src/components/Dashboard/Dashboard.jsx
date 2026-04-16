@@ -4,9 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 import MyCards from "../MyCards/MyCards";
 import RecentCardTable from "../RecentCardTable/RecentCardTable";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
 
 export default function Dashboard() {
   const [requests, setRequests] = useState([]);
+  const [tabValue, setTabValue] = useState(0);
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
 
@@ -14,7 +18,14 @@ export default function Dashboard() {
     loadRequests();
   }, []);
 
-  // Fetch requests based on role
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
+
   const loadRequests = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -45,11 +56,19 @@ export default function Dashboard() {
 
       <div className="top-boxes">
         {role === "ADMIN" ? (
-          <>
-            <Link to="/admin/dashboard/pending" className="box">Pending</Link>
-            <Link to="/admin/dashboard/approved" className="box">Approved</Link>
-            <Link to="/admin/dashboard/rejected" className="box">Rejected</Link>
-          </>
+          <Box sx={{ width: "100%" }}>
+            <Tabs
+              value={tabValue}
+              onChange={handleTabChange}
+              centered
+              textColor="tertiary"
+              indicatorColor="primary"
+            >
+              <Tab label="Pending" />
+              <Tab label="Approved" />
+              <Tab label="Rejected" />
+            </Tabs>
+          </Box>
         ) : (
           <>
             <Link to="/dashboard/request-new-card" className="box">
@@ -64,13 +83,10 @@ export default function Dashboard() {
           </>
         )}
       </div>
-
       <hr className="divider" />
-
       {role === "ADMIN" ? (
         <div>
           <h3 className="section-title">Manage Requests</h3>
-
           <div className="table-container">
             <table className="admin-table">
               <thead>
@@ -85,7 +101,6 @@ export default function Dashboard() {
                   <th>Action</th>
                 </tr>
               </thead>
-
               <tbody>
                 {requests?.length > 0 ? (
                   requests.map((req) => (
@@ -101,9 +116,13 @@ export default function Dashboard() {
                         <button
                           onClick={() => {
                             if (req.status === "APPROVED") {
-                              navigate(`/admin/dashboard/create-card/${req.requestId}`);
+                              navigate(
+                                `/admin/dashboard/create-card/${req.requestId}`
+                              );
                             } else {
-                              navigate(`/admin/dashboard/view-request/${req.requestId}`);
+                              navigate(
+                                `/admin/dashboard/view-request/${req.requestId}`
+                              );
                             }
                           }}
                           className="reject-btn"
@@ -123,15 +142,15 @@ export default function Dashboard() {
               </tbody>
             </table>
           </div>
+          <button className="btn" onClick={handleGoBack}>
+            Go Back
+          </button>
         </div>
       ) : (
         <>
-          {/* CUSTOMER VIEW */}
           <h3 className="section-title">My Active Cards</h3>
           <MyCards />
-
           <hr className="divider" />
-
           <h3 className="section-title">Recent Card Requests</h3>
           <RecentCardTable requests={requests} />
         </>

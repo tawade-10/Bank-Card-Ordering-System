@@ -27,7 +27,12 @@ public class CardDetailsFacadeImpl implements CardDetailsFacade{
     }
 
     @Override
-    public CardResponseDto getCardById(Long cardId) {
-        return cardDetailsService.getCardById(cardId);
+    public List<CardResponseDto> getCardsByCustomerId(Long customerId) {
+        return cardDetailsService.getCardsByCustomerId(customerId);
+    }
+
+    @Override
+    public List<CardResponseDto> getCardsByEmail(String email) {
+        return cardDetailsService.getCardsByEmail(email);
     }
 }

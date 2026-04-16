@@ -11,5 +11,7 @@ public interface CardDetailsFacade {
 
     List<CardResponseDto> getAllCards();
 
-    CardResponseDto getCardById(Long cardId);
+    List<CardResponseDto> getCardsByCustomerId(Long customerId);
+
+    List<CardResponseDto> getCardsByEmail(String email);
 }

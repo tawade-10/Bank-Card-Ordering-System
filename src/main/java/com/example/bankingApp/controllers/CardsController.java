@@ -2,13 +2,12 @@ package com.example.bankingApp.controllers;
 
 import com.example.bankingApp.dto.CardDto.CardRequestDto;
 import com.example.bankingApp.dto.CardDto.CardResponseDto;
-import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
-import com.example.bankingApp.dto.RequestCardDto.RequestsDto;
-import com.example.bankingApp.dto.RequestCardDto.ResponseDto;
 import com.example.bankingApp.facade.CardDetailsFacade.CardDetailsFacade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,9 +36,16 @@ public class CardsController {
     }
 
     @GetMapping("/{customerId}")
-    public ResponseEntity<CardResponseDto> getCardById(@PathVariable Long cardId){
-        CardResponseDto cardById = cardDetailsFacade.getCardById(cardId);
+    public ResponseEntity<List<CardResponseDto>> getCardsByCustomerId(@PathVariable Long customerId){
+        List<CardResponseDto> cardById = cardDetailsFacade.getCardsByCustomerId(customerId);
         return ResponseEntity.ok(cardById);
+    }
+
+    @GetMapping("/my-cards")
+    public ResponseEntity<List<CardResponseDto>> getMyCards(@AuthenticationPrincipal UserDetails userDetails) {
+        String email = userDetails.getUsername();
+        List<CardResponseDto> cards = cardDetailsFacade.getCardsByEmail(email);
+        return ResponseEntity.ok(cards);
     }
 
 }

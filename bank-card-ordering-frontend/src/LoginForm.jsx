@@ -90,15 +90,11 @@ export default function LoginForm() {
 
             if (response.ok) {
                 const data = await response.json();
-
-                // Save to localStorage
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("customerName", data.customerName);
                 localStorage.setItem("email", data.email);
                 localStorage.setItem("role", data.roles);
-
                 toast.success("Login Successful!");
-
                 if (data.roles === "ADMIN") {
                     navigate("/admin/dashboard");
                 } else if (data.roles === "CUSTOMER") {
@@ -106,7 +102,6 @@ export default function LoginForm() {
                 } else {
                     toast.error("Unknown Role Assigned!");
                 }
-
             } else {
                 toast.error("Wrong Credentials!");
             }
@@ -131,9 +126,9 @@ export default function LoginForm() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
             });
-
             if (response.ok) {
                 toast.success("Signup Successful!");
+                handleSignupReset();
                 setIsLogin(true);
             } else {
                 toast.error("Signup failed!");
@@ -200,8 +195,14 @@ export default function LoginForm() {
                         </div>
 
                         <button className="primary-btn" onClick={handleLogin}>Login</button>
+                        <p>Not a User?{" "}<a href="#" onClick={() => {setIsLogin(false);
+                                                                       handleLoginReset();
 
-                        <p>Not a User? <a href='#' onClick={() => setIsLogin(false)}>Register Here</a></p>
+                            }}
+                          >
+                            Register Here
+                          </a>
+                        </p>
                     </div>
                 ) : (
 
