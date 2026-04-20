@@ -1,4 +1,4 @@
-package com.example.bankingApp.service.RequestsCard;
+package com.example.bankingApp.service.CardRequests;
 
 import com.example.bankingApp.dto.CardRequestsDto.RequestsDto;
 import com.example.bankingApp.dto.CardRequestsDto.ResponseDto;
@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
-public interface RequestsCardService {
+public interface CardRequestsService {
 
     ResponseDto createRequest(RequestsDto requestsDto);
 
@@ -16,5 +16,7 @@ public interface RequestsCardService {
 
     List<ResponseDto> getRequestsByEmail(Authentication authentication);
 
-    ResponseDto updateRequest(Long requestId, RequestsDto requestsDto);
+    ResponseDto reviewRequest(Long requestId, RequestsDto requestsDto);
+
+    ResponseDto updateRequestStatus(Long requestId, RequestsDto requestsDto);
 }

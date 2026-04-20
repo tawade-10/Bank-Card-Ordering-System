@@ -13,11 +13,15 @@ import com.example.bankingApp.repository.Customers.CustomersRepo;
 import com.example.bankingApp.repository.CardRequests.CardTypeRepo;
 import com.example.bankingApp.repository.CardRequests.CardVariantRepo;
 import com.example.bankingApp.service.Encryption.EncryptionService;
+import jakarta.transaction.Transactional;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,11 +51,10 @@ public class CardDetailsServiceImpl implements CardDetailsService{
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @Override
+    @Transactional
     public CardResponseDto createCard(CardRequestDto cardRequestDto) {
 
-        Long requestId = cardRequestDto.getRequestId();
-
-        CardRequests request = cardRequestsRepo.findById(requestId)
+        CardRequests request = cardRequestsRepo.findById(cardRequestDto.getRequestId())
                 .orElseThrow(() -> new RuntimeException("Request not found"));
 
         Customers customer = request.getCustomers();
@@ -62,18 +65,31 @@ public class CardDetailsServiceImpl implements CardDetailsService{
         CardVariant variant = cardVariantRepo.findById(cardRequestDto.getCardVariant())
                 .orElseThrow(() -> new RuntimeException("Invalid Card Variant ID"));
 
-        CardDetails cardDetails = new CardDetails();
+        String rawCardNumber = cardRequestDto.getCardNumber();
+        if (rawCardNumber.length() < 16)
+            throw new RuntimeException("Card number must be 16 digits");
 
-        cardDetails.setCustomers(customer);
-        cardDetails.setCardNumber(encryptionService.encrypt(String.valueOf(cardRequestDto.getCardNumber())));
-        cardDetails.setCvv(encryptionService.encrypt(String.valueOf(cardRequestDto.getCvv())));
-        cardDetails.setCardType(type);
-        cardDetails.setCardVariant(variant);
-        cardDetails.setExpiryDate(cardRequestDto.getExpiryDate());
+        String last4 = rawCardNumber.substring(rawCardNumber.length() - 4);
 
-        CardDetails savedCard = cardDetailsRepo.save(cardDetails);
+        String encryptedCard = encryptionService.encrypt(rawCardNumber);
 
-        return new CardResponseDto(savedCard);
+        if (cardRequestDto.getCvv().length() < 3)
+            throw new RuntimeException("Invalid CVV");
+
+        YearMonth expiry = YearMonth.parse(cardRequestDto.getExpiry(), DateTimeFormatter.ofPattern("MM/yy"));
+
+        CardDetails card = new CardDetails();
+        card.setCustomers(customer);
+        card.setCardNumber(encryptedCard);
+        card.setLast4(last4);
+        card.setCardType(type);
+        card.setCardVariant(variant);
+        card.setExpiry(expiry);
+        card.setCreatedAt(LocalDateTime.now());
+
+        CardDetails saved = cardDetailsRepo.save(card);
+
+        return new CardResponseDto(saved);
     }
 
     @Override

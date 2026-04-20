@@ -7,7 +7,7 @@ export default function ViewRequests() {
   const { requestId } = useParams();
   const navigate = useNavigate();
   const [request, setRequest] = useState(null);
-  const token = localStorage.getItem("token"); // FIXED: declared once
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     loadRequest();
@@ -28,11 +28,10 @@ export default function ViewRequests() {
     }
   };
 
-  // 🔥 Generic update function
   const updateRequestStatus = async (newStatus) => {
     try {
       await axios.put(
-        `http://localhost:8080/api/request-card/${requestId}`,
+        `http://localhost:8080/api/request-card/${requestId}/review`,
         { status: newStatus },
         {
           headers: { Authorization: `Bearer ${token}` },

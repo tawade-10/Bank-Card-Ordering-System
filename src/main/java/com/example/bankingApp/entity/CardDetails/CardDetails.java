@@ -5,7 +5,8 @@ import com.example.bankingApp.entity.CardRequests.CardType;
 import com.example.bankingApp.entity.CardRequests.CardVariant;
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.YearMonth;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "card_details")
@@ -13,29 +14,31 @@ public class CardDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "card_id")
     private Long cardId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customers customers;
 
     @Column(name = "card_number", nullable = false, length = 255)
     private String cardNumber;
 
-    @Column(name = "cvv", nullable = false, length = 255)
-    private String cvv;
+    @Column(name = "last4", nullable = false, length = 4)
+    private String last4;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_type_id", nullable = false)
     private CardType cardType;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_variant_id", nullable = false)
     private CardVariant cardVariant;
 
-    @Column(name = "expiry_date", nullable = false)
-    private Date expiryDate;
+    @Column(name = "expiry")
+    private YearMonth expiry;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     public Long getCardId() {
         return cardId;
@@ -61,6 +64,14 @@ public class CardDetails {
         this.cardNumber = cardNumber;
     }
 
+    public String getLast4() {
+        return last4;
+    }
+
+    public void setLast4(String last4) {
+        this.last4 = last4;
+    }
+
     public CardType getCardType() {
         return cardType;
     }
@@ -77,19 +88,19 @@ public class CardDetails {
         this.cardVariant = cardVariant;
     }
 
-    public Date getExpiryDate() {
-        return expiryDate;
+    public YearMonth getExpiry() {
+        return expiry;
     }
 
-    public void setExpiryDate(Date expiryDate) {
-        this.expiryDate = expiryDate;
+    public void setExpiry(YearMonth expiry) {
+        this.expiry = expiry;
     }
 
-    public String getCvv() {
-        return cvv;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCvv(String cvv) {
-        this.cvv = cvv;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

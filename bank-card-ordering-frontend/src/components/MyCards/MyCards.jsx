@@ -43,29 +43,20 @@ export default function MyCards() {
 
   return (
     <div className="card-page-wrapper">
-{/*       <h2 className="page-title">My Active Cards</h2> */}
       <div className="cards-grid">
         {cards.map((card) => (
           <div className="display-card" key={card.cardId}>
+
+            {/* Chip */}
             <div className="chip-small"></div>
-            <div className="display-number">
-              {card.cardNumber}
+            <div className="display-number">{card.maskedNumber}</div>
+            <div className="display-variant">
+                <span>Card Holder</span>
+              <div>{card.customerName}</div>
             </div>
-
-            <div className="display-row">
-              <span>Type:</span> {card.cardType}
-            </div>
-
-            <div className="display-row">
-              <span>Variant:</span> {card.cardVariant}
-            </div>
-
-            <div className="display-row">
-              <span>Expiry:</span> {card.expiryDate}
-            </div>
-
-            <div className="display-row">
-              <span>Customer ID:</span> {card.customerId}
+            <div className="display-expiry">
+              <span>Expiry</span>
+              <div>{card.expiry}</div>
             </div>
           </div>
         ))}

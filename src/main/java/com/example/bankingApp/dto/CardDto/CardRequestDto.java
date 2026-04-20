@@ -2,34 +2,35 @@ package com.example.bankingApp.dto.CardDto;
 
 import jakarta.validation.constraints.NotNull;
 import java.util.Date;
+import jakarta.validation.constraints.NotBlank;
 
 public class CardRequestDto {
 
-    @NotNull(message = "Card Number cannot be empty")
-    private Long cardNumber;
+    @NotBlank
+    private String cardNumber;
 
-    @NotNull(message = "Request Id cannot be empty")
+    @NotNull
     private Long requestId;
 
-    @NotNull(message = "Card Type is required")
+    @NotNull
     private Long cardType;
 
-    @NotNull(message = "Card Variant is required")
+    @NotNull
     private Long cardVariant;
 
-    @NotNull(message = "Expiry Date is required")
-    private Date expiryDate;
+    @NotBlank
+    private String expiry;
 
-    @NotNull(message = "CVV is required")
-    private Integer cvv;
+    @NotBlank
+    private String cvv;
 
     public CardRequestDto() {}
 
-    public Long getCardNumber() {
+    public String getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(Long cardNumber) {
+    public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
@@ -57,19 +58,19 @@ public class CardRequestDto {
         this.cardVariant = cardVariant;
     }
 
-    public Date getExpiryDate() {
-        return expiryDate;
+    public String getExpiry() {
+        return expiry;
     }
 
-    public void setExpiryDate(Date expiryDate) {
-        this.expiryDate = expiryDate;
+    public void setExpiry(String expiry) {
+        this.expiry = expiry;
     }
 
-    public Integer getCvv() {
+    public String getCvv() {
         return cvv;
     }
 
-    public void setCvv(Integer cvv) {
+    public void setCvv(String cvv) {
         this.cvv = cvv;
     }
 }

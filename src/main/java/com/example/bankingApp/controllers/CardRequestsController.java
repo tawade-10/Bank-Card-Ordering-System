@@ -46,9 +46,15 @@ public class CardRequestsController {
         return ResponseEntity.ok(requestByEmail);
     }
 
-    @PutMapping("/{requestId}")
-    public ResponseEntity<ResponseDto> updateRequest(@PathVariable Long requestId,@RequestBody RequestsDto requestsDto){
-        ResponseDto updatedRequest = cardRequestsFacade.updateRequest(requestId,requestsDto);
+    @PutMapping("/{requestId}/review")
+    public ResponseEntity<ResponseDto> reviewRequest(@PathVariable Long requestId, @RequestBody RequestsDto requestsDto) {
+        ResponseDto updatedRequest = cardRequestsFacade.reviewRequest(requestId, requestsDto);
+        return ResponseEntity.ok(updatedRequest);
+    }
+
+    @PutMapping("/{requestId}/status")
+    public ResponseEntity<ResponseDto> updateRequestStatus(@PathVariable Long requestId, @RequestBody RequestsDto requestsDto) {
+        ResponseDto updatedRequest = cardRequestsFacade.updateRequestStatus(requestId, requestsDto);
         return ResponseEntity.ok(updatedRequest);
     }
 

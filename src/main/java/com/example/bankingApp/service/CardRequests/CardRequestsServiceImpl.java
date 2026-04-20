@@ -1,4 +1,4 @@
-package com.example.bankingApp.service.RequestsCard;
+package com.example.bankingApp.service.CardRequests;
 
 import com.example.bankingApp.dto.CardRequestsDto.RequestsDto;
 import com.example.bankingApp.dto.CardRequestsDto.ResponseDto;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class RequestsCardServiceImpl implements RequestsCardService{
+public class CardRequestsServiceImpl implements CardRequestsService {
 
     private final CardRequestsRepo cardRequestsRepo;
 
@@ -36,7 +36,7 @@ public class RequestsCardServiceImpl implements RequestsCardService{
 
     private final ReasonForRequestRepo reasonForRequestRepo;
 
-    public RequestsCardServiceImpl(CardRequestsRepo cardRequestsRepo, CustomersRepo customersRepo, CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, ReasonForRequestRepo reasonForRequestRepo) {
+    public CardRequestsServiceImpl(CardRequestsRepo cardRequestsRepo, CustomersRepo customersRepo, CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, ReasonForRequestRepo reasonForRequestRepo) {
         this.cardRequestsRepo = cardRequestsRepo;
         this.customersRepo = customersRepo;
         this.cardTypeRepo = cardTypeRepo;
@@ -116,19 +116,58 @@ public class RequestsCardServiceImpl implements RequestsCardService{
 
     @PreAuthorize("hasRole('ADMIN')")
     @Override
-    public ResponseDto updateRequest(Long requestId, RequestsDto requestsDto) {
+    public ResponseDto reviewRequest(Long requestId, RequestsDto requestsDto) {
 
         CardRequests request = cardRequestsRepo.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
 
         if (request.getStatus() != Status.PENDING_REVIEW) {
-            throw new RuntimeException("Request already processed! You cannot update it again.");
+            throw new RuntimeException("Only PENDING_REVIEW requests can be approved or rejected.");
+        }
+
+        if (requestsDto.getStatus() != Status.APPROVED && requestsDto.getStatus() != Status.REJECTED) {
+            throw new RuntimeException("Invalid status. Only APPROVED or REJECTED allowed here.");
         }
 
         request.setStatus(requestsDto.getStatus());
+        return new ResponseDto(cardRequestsRepo.save(request));
+    }
 
-        CardRequests updated = cardRequestsRepo.save(request);
+    @PreAuthorize("hasRole('ADMIN')")
+    @Override
+    public ResponseDto updateRequestStatus(Long requestId, RequestsDto requestsDto) {
 
-        return new ResponseDto(updated);
+        CardRequests request = cardRequestsRepo.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
+
+        Status current = request.getStatus();
+        Status next = requestsDto.getStatus();
+
+        if (current == Status.REJECTED) {
+            throw new RuntimeException("Request already rejected.");
+        }
+
+        if (current == Status.PENDING_REVIEW) {
+            throw new RuntimeException("Please review (approve/reject) the request first.");
+        }
+
+        if (current == Status.APPROVED && next != Status.PRINTING) {
+            throw new RuntimeException("APPROVED → PRINTING is the only valid transition.");
+        }
+
+        if (current == Status.PRINTING && next != Status.DISPATCHED) {
+            throw new RuntimeException("PRINTING → DISPATCHED only.");
+        }
+
+        if (current == Status.DISPATCHED && next != Status.DELIVERED) {
+            throw new RuntimeException("DISPATCHED → DELIVERED only.");
+        }
+
+        if (current == Status.DELIVERED) {
+            throw new RuntimeException("Request already delivered.");
+        }
+
+        request.setStatus(next);
+        return new ResponseDto(cardRequestsRepo.save(request));
     }
 }

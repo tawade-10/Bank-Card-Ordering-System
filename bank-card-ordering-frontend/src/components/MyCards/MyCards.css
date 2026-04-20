@@ -6,13 +6,6 @@
   font-family: "Poppins", sans-serif;
 }
 
-.page-title {
-  font-size: 26px;
-  font-weight: 700;
-  color: #0a2a5a;
-  margin-bottom: 25px;
-}
-
 .no-cards {
   margin-top: 50px;
   font-size: 18px;
@@ -30,8 +23,8 @@
 
 /* Compact Card */
 .display-card {
-  height: 145px; /* 🔥 Reduced height */
-  padding: 18px; /* Slightly reduced padding */
+  height: 150px;
+  padding: 18px;
   border-radius: 16px;
   background: linear-gradient(145deg, #003c8f, #1565c0);
   color: white;
@@ -40,7 +33,7 @@
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -51,28 +44,47 @@
 
 /* Chip */
 .chip-small {
-  width: 38px;
-  height: 28px;
+  width: 40px;
+  height: 30px;
   border-radius: 6px;
   background: gold;
   opacity: 0.9;
 }
 
-/* Number */
+/* Card Number */
 .display-number {
-  font-size: 17px; /* Smaller */
+  font-size: 18px;
   font-weight: 600;
   letter-spacing: 2px;
+  margin-top: 10px;
 }
 
-/* Info Rows */
-.display-row {
-  font-size: 13px; /* Smaller text */
-  opacity: 0.95;
-  display: flex;
-  justify-content: space-between;
-}
-
-.display-row span {
+/* Variant (Bottom-left) */
+.display-variant {
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  font-size: 13px;
   font-weight: 600;
+  opacity: 0.95;
+}
+
+/* Expiry (Bottom-right) */
+.display-expiry {
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  text-align: right;
+}
+
+.display-expiry span {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.85;
+  display: block;
+}
+
+.display-expiry div {
+  font-size: 14px;
+  font-weight: 700;
 }

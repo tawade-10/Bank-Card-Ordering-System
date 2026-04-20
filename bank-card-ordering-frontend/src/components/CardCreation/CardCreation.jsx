@@ -1,7 +1,8 @@
 import React, { useRef, useState, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom"; // ✅ ADD useParams
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { IoArrowBack } from "react-icons/io5";
+
 import {
   Card,
   Container,
@@ -26,16 +27,14 @@ export default function CardCreation() {
   const flipper = useRef(null);
   const [side, setSide] = useState("front");
 
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('____ ____ ____ ____');
-  const [expiration, setExpiration] = useState('__/__');
-  const [cvc, setCvc] = useState('');
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("____ ____ ____ ____");
+  const [expiration, setExpiration] = useState("__/__");
+  const [cvc, setCvc] = useState("");
 
   const navigate = useNavigate();
 
-  const handleGoBack = () => {
-    navigate(-1);
-  };
+  const handleGoBack = () => navigate(-1);
 
   const turnAround = useCallback(() => {
     if (!flipper.current) return;
@@ -80,16 +79,13 @@ export default function CardCreation() {
         return;
       }
 
-      const [mm, yy] = cleanExpiry.split("/");
-      const expiryDate = `20${yy}-${mm}-01`;
-
       const payload = {
         requestId: parseInt(requestId),
-        cardNumber: parseInt(cleanCardNumber, 10),
-        cvv: parseInt(cvc, 10),
+        cardNumber: cleanCardNumber,
+        cvv: cvc,
         cardType: 1,
         cardVariant: 1,
-        expiryDate: expiryDate
+        expiry: cleanExpiry
       };
 
       const response = await axios.post(
@@ -105,11 +101,13 @@ export default function CardCreation() {
       console.log("Card Created:", response.data);
       alert("Card Created Successfully!");
 
-      setName('');
-      setNumber('____ ____ ____ ____');
-      setExpiration('__/__');
-      setCvc('');
+      setName("");
+      setNumber("____ ____ ____ ____");
+      setExpiration("__/__");
+      setCvc("");
+
       navigate("/admin/dashboard");
+
     } catch (error) {
       console.error(error);
       alert("Error creating card");
@@ -118,7 +116,6 @@ export default function CardCreation() {
 
   return (
     <Container style={{ position: "relative" }}>
-
       <button onClick={handleGoBack} style={{ position: "absolute", top: "20px", left: "20px" }}>
         <IoArrowBack /> Back
       </button>
@@ -145,7 +142,7 @@ export default function CardCreation() {
         <Input placeholder="Name" onChange={(e) => setName(e.target.value)} />
 
         <FormRow>
-          <Input placeholder="Valid Thru" onChange={handleExpiryChange} />
+          <Input placeholder="Valid Thru (MM/YY)" onChange={handleExpiryChange} />
           <Input
             placeholder="CVC"
             onChange={(e) => setCvc(e.target.value)}

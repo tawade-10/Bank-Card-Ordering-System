@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "./Dashboard.css";
+
 import MyCards from "../MyCards/MyCards";
 import RecentCardTable from "../RecentCardTable/RecentCardTable";
+
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 
 export default function Dashboard() {
   const [requests, setRequests] = useState([]);
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(-1);
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
 
@@ -18,27 +20,21 @@ export default function Dashboard() {
     loadRequests();
   }, []);
 
-  const handleGoBack = () => {
-    navigate(-1);
-  };
+  const handleGoBack = () => navigate(-1);
 
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
+  const handleTabChange = (event, newValue) => setTabValue(newValue);
 
   const loadRequests = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      let url =
+      const url =
         role === "ADMIN"
           ? "http://localhost:8080/api/request-card"
           : "http://localhost:8080/api/request-card/email";
 
       const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       setRequests(response.data);
@@ -47,6 +43,13 @@ export default function Dashboard() {
       alert("Failed to fetch card requests.");
     }
   };
+
+  const filteredRequests = requests.filter((req) => {
+    if (tabValue === 0) return req.status === "PENDING";
+    if (tabValue === 1) return req.status === "APPROVED";
+    if (tabValue === 2) return req.status === "REJECTED";
+    return true;
+  });
 
   return (
     <div className="dashboard-wrapper">
@@ -83,10 +86,13 @@ export default function Dashboard() {
           </>
         )}
       </div>
+
       <hr className="divider" />
+
       {role === "ADMIN" ? (
         <div>
           <h3 className="section-title">Manage Requests</h3>
+
           <div className="table-container">
             <table className="admin-table">
               <thead>
@@ -98,12 +104,13 @@ export default function Dashboard() {
                   <th>Reason</th>
                   <th>Status</th>
                   <th>Date</th>
-                  <th>Action</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
+
               <tbody>
-                {requests?.length > 0 ? (
-                  requests.map((req) => (
+                {filteredRequests.length > 0 ? (
+                  filteredRequests.map((req) => (
                     <tr key={req.requestId}>
                       <td>{req.requestId}</td>
                       <td>{req.customers?.customerName || "N/A"}</td>
@@ -112,23 +119,47 @@ export default function Dashboard() {
                       <td>{req.reason}</td>
                       <td>{req.status}</td>
                       <td>{req.localDate}</td>
+
                       <td>
+                        {/* VIEW BUTTON — always available */}
                         <button
-                          onClick={() => {
-                            if (req.status === "APPROVED") {
-                              navigate(
-                                `/admin/dashboard/create-card/${req.requestId}`
-                              );
-                            } else {
-                              navigate(
-                                `/admin/dashboard/view-request/${req.requestId}`
-                              );
-                            }
-                          }}
-                          className="reject-btn"
+                          className="view-btn"
+                          onClick={() =>
+                            navigate(
+                              `/admin/dashboard/view-request/${req.requestId}`
+                            )
+                          }
                         >
                           View
                         </button>
+
+                        {/* UPDATE STATUS — only when PENDING */}
+                        {req.status === "PENDING" && (
+                          <button
+                            className="update-btn"
+                            onClick={() =>
+                              navigate(
+                                `/admin/dashboard/update-request/${req.requestId}`
+                              )
+                            }
+                          >
+                            Update Status
+                          </button>
+                        )}
+
+                        {/* CREATE CARD — only when APPROVED */}
+                        {req.status === "APPROVED" && (
+                          <button
+                            className="create-btn"
+                            onClick={() =>
+                              navigate(
+                                `/admin/dashboard/create-card/${req.requestId}`
+                              )
+                            }
+                          >
+                            Create Card
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))
@@ -142,6 +173,7 @@ export default function Dashboard() {
               </tbody>
             </table>
           </div>
+
           <button className="btn" onClick={handleGoBack}>
             Go Back
           </button>
@@ -150,7 +182,9 @@ export default function Dashboard() {
         <>
           <h3 className="section-title">My Active Cards</h3>
           <MyCards />
+
           <hr className="divider" />
+
           <h3 className="section-title">Recent Card Requests</h3>
           <RecentCardTable requests={requests} />
         </>
