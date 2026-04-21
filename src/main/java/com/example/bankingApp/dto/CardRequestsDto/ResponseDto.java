@@ -13,6 +13,7 @@ public class ResponseDto {
     private Status status;
     private String localDate;
     private Customers customers;
+    private String reviewMessage;
 
     public ResponseDto(CardRequests cardRequests) {
         this.requestId = cardRequests.getRequestId();
@@ -22,6 +23,7 @@ public class ResponseDto {
         this.status = cardRequests.getStatus();
         this.localDate = cardRequests.getLocalDate().toString();
         this.customers = cardRequests.getCustomers();
+        this.reviewMessage = cardRequests.getReviewMessage();
     }
 
     public ResponseDto() {}
@@ -80,5 +82,13 @@ public class ResponseDto {
 
     public void setCustomers(Customers customers) {
         this.customers = customers;
+    }
+
+    public String getReviewMessage() {
+        return reviewMessage;
+    }
+
+    public void setReviewMessage(String reviewMessage) {
+        this.reviewMessage = reviewMessage;
     }
 }

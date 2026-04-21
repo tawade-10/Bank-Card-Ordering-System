@@ -67,14 +67,6 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         Reason reason = reasonForRequestRepo.findById(dto.getReasonId())
                 .orElseThrow(() -> new RuntimeException("Invalid Reason ID"));
 
-//        boolean exists = requestsCardRepo.hasPendingRequest(
-//                customer, cardType, cardVariant, StatusOfRequest.PENDING_REVIEW
-//        );
-//
-//        if (exists) {
-//            throw new RuntimeException("A request for this card is already pending!");
-//        }
-
         CardRequests request = new CardRequests();
         request.setCardType(cardType);
         request.setCardVariant(cardVariant);
@@ -129,7 +121,12 @@ public class CardRequestsServiceImpl implements CardRequestsService {
             throw new RuntimeException("Invalid status. Only APPROVED or REJECTED allowed here.");
         }
 
+        if (requestsDto.getReviewMessage() == null || requestsDto.getReviewMessage().trim().isEmpty()) {
+            throw new RuntimeException("Reason cannot be empty");
+        }
+
         request.setStatus(requestsDto.getStatus());
+        request.setReviewMessage(requestsDto.getReviewMessage());
         return new ResponseDto(cardRequestsRepo.save(request));
     }
 

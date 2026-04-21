@@ -1,8 +1,8 @@
-package com.example.bankingApp.dto.CardDto;
+package com.example.bankingApp.dto.CardDetailsDto;
 
 import com.example.bankingApp.entity.CardDetails.CardDetails;
 
-public class CardResponseDto {
+public class CardDetailsResponseDto {
 
     private Long cardId;
     private Long customerId;
@@ -12,7 +12,7 @@ public class CardResponseDto {
     private String cardVariantName;
     private String expiry;
 
-    public CardResponseDto(CardDetails card) {
+    public CardDetailsResponseDto(CardDetails card) {
         this.cardId = card.getCardId();
         this.customerId = card.getCustomers().getCustomerId();
         this.customerName = card.getCustomers().getCustomerName();

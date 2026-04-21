@@ -1,16 +1,16 @@
 package com.example.bankingApp.service.CardDetails;
 
-import com.example.bankingApp.dto.CardDto.CardRequestDto;
-import com.example.bankingApp.dto.CardDto.CardResponseDto;
+import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
+import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 
 import java.util.List;
 
 public interface CardDetailsService {
-    CardResponseDto createCard(CardRequestDto cardRequestDto);
+    CardDetailsResponseDto createCard(CardDetailsRequestDto cardDetailsRequestDto);
 
-    List<CardResponseDto> getAllCards();
+    List<CardDetailsResponseDto> getAllCards();
 
-    List<CardResponseDto> getCardsByCustomerId(Long customerId);
+    List<CardDetailsResponseDto> getCardsByCustomerId(Long customerId);
 
-    List<CardResponseDto> getCardsByEmail(String email);
+    List<CardDetailsResponseDto> getCardsByEmail(String email);
 }

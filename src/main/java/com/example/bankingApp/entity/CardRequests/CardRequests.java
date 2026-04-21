@@ -37,6 +37,9 @@ public class CardRequests {
     @JoinColumn(name = "customer_id")
     private Customers customers;
 
+    @Column(name = "message")
+    private String reviewMessage;
+
     public Long getRequestId() {
         return requestId;
     }
@@ -87,5 +90,13 @@ public class CardRequests {
 
     public void setCustomers(Customers customers) {
         this.customers = customers;
+    }
+
+    public String getReviewMessage() {
+        return reviewMessage;
+    }
+
+    public void setReviewMessage(String reviewMessage) {
+        this.reviewMessage = reviewMessage;
     }
 }

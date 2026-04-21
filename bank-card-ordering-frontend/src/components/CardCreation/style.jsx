@@ -38,11 +38,15 @@ const sideStyle = css`
 
 export const CardFront = styled.div`
   ${sideStyle};
+  background: linear-gradient(135deg, #d4af37, #b58e18);
+  color: #fff;
 `;
 
 export const CardBack = styled.div`
   ${sideStyle};
   transform: rotateY(180deg);
+  background: linear-gradient(135deg, #d4af37, #b58e18);
+  color: #fff;
 `;
 
 export const CardForm = styled.div`

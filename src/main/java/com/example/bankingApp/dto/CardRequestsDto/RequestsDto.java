@@ -7,14 +7,12 @@ public class RequestsDto {
 
     @NotNull(message = "Card Type ID is required")
     private Long cardTypeId;
-
     @NotNull(message = "Card Variant ID is required")
     private Long cardVariantId;
-
     @NotNull(message = "Reason ID is required")
     private Long reasonId;
-
     private Status status;
+    private String reviewMessage;
 
     public RequestsDto() {}
 
@@ -48,5 +46,13 @@ public class RequestsDto {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getReviewMessage() {
+        return reviewMessage;
+    }
+
+    public void setReviewMessage(String reviewMessage) {
+        this.reviewMessage = reviewMessage;
     }
 }

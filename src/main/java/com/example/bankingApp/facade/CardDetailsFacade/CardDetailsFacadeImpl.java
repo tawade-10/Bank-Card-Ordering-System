@@ -1,7 +1,7 @@
 package com.example.bankingApp.facade.CardDetailsFacade;
 
-import com.example.bankingApp.dto.CardDto.CardRequestDto;
-import com.example.bankingApp.dto.CardDto.CardResponseDto;
+import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
+import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.service.CardDetails.CardDetailsService;
 import org.springframework.stereotype.Component;
 
@@ -17,22 +17,22 @@ public class CardDetailsFacadeImpl implements CardDetailsFacade{
     }
 
     @Override
-    public CardResponseDto createCard(CardRequestDto cardRequestDto) {
-        return cardDetailsService.createCard(cardRequestDto);
+    public CardDetailsResponseDto createCard(CardDetailsRequestDto cardDetailsRequestDto) {
+        return cardDetailsService.createCard(cardDetailsRequestDto);
     }
 
     @Override
-    public List<CardResponseDto> getAllCards() {
+    public List<CardDetailsResponseDto> getAllCards() {
         return cardDetailsService.getAllCards();
     }
 
     @Override
-    public List<CardResponseDto> getCardsByCustomerId(Long customerId) {
+    public List<CardDetailsResponseDto> getCardsByCustomerId(Long customerId) {
         return cardDetailsService.getCardsByCustomerId(customerId);
     }
 
     @Override
-    public List<CardResponseDto> getCardsByEmail(String email) {
+    public List<CardDetailsResponseDto> getCardsByEmail(String email) {
         return cardDetailsService.getCardsByEmail(email);
     }
 }

@@ -121,7 +121,6 @@ export default function Dashboard() {
                       <td>{req.localDate}</td>
 
                       <td>
-                        {/* VIEW BUTTON — always available */}
                         <button
                           className="view-btn"
                           onClick={() =>
@@ -133,7 +132,6 @@ export default function Dashboard() {
                           View
                         </button>
 
-                        {/* UPDATE STATUS — only when PENDING */}
                         {req.status === "PENDING" && (
                           <button
                             className="update-btn"
@@ -147,19 +145,19 @@ export default function Dashboard() {
                           </button>
                         )}
 
-                        {/* CREATE CARD — only when APPROVED */}
-                        {req.status === "APPROVED" && (
-                          <button
-                            className="create-btn"
-                            onClick={() =>
-                              navigate(
-                                `/admin/dashboard/create-card/${req.requestId}`
-                              )
-                            }
-                          >
-                            Create Card
-                          </button>
-                        )}
+{/*                          */}{/* CREATE CARD — only when APPROVED */}
+{/*                         {req.status === "APPROVED" && ( */}
+{/*                           <button */}
+{/*                             className="create-btn" */}
+{/*                             onClick={() => */}
+{/*                               navigate( */}
+{/*                                 `/admin/dashboard/create-card/${req.requestId}` */}
+{/*                               ) */}
+{/*                             } */}
+{/*                           > */}
+{/*                             Create Card */}
+{/*                           </button> */}
+{/*                         )} */}
                       </td>
                     </tr>
                   ))

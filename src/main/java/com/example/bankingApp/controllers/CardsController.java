@@ -1,7 +1,7 @@
 package com.example.bankingApp.controllers;
 
-import com.example.bankingApp.dto.CardDto.CardRequestDto;
-import com.example.bankingApp.dto.CardDto.CardResponseDto;
+import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
+import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.facade.CardDetailsFacade.CardDetailsFacade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -24,27 +24,27 @@ public class CardsController {
     }
 
     @PostMapping("/create-card")
-    public ResponseEntity<CardResponseDto> createCard(@Valid @RequestBody CardRequestDto cardRequestDto){
-        CardResponseDto cardCreated = cardDetailsFacade.createCard(cardRequestDto);
+    public ResponseEntity<CardDetailsResponseDto> createCard(@Valid @RequestBody CardDetailsRequestDto cardDetailsRequestDto){
+        CardDetailsResponseDto cardCreated = cardDetailsFacade.createCard(cardDetailsRequestDto);
         return new ResponseEntity<>(cardCreated, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<CardResponseDto>> getAllCards(){
-        List<CardResponseDto> allCards = cardDetailsFacade.getAllCards();
+    public ResponseEntity<List<CardDetailsResponseDto>> getAllCards(){
+        List<CardDetailsResponseDto> allCards = cardDetailsFacade.getAllCards();
         return ResponseEntity.ok(allCards);
     }
 
     @GetMapping("/{customerId}")
-    public ResponseEntity<List<CardResponseDto>> getCardsByCustomerId(@PathVariable Long customerId){
-        List<CardResponseDto> cardById = cardDetailsFacade.getCardsByCustomerId(customerId);
+    public ResponseEntity<List<CardDetailsResponseDto>> getCardsByCustomerId(@PathVariable Long customerId){
+        List<CardDetailsResponseDto> cardById = cardDetailsFacade.getCardsByCustomerId(customerId);
         return ResponseEntity.ok(cardById);
     }
 
     @GetMapping("/my-cards")
-    public ResponseEntity<List<CardResponseDto>> getMyCards(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<CardDetailsResponseDto>> getMyCards(@AuthenticationPrincipal UserDetails userDetails) {
         String email = userDetails.getUsername();
-        List<CardResponseDto> cards = cardDetailsFacade.getCardsByEmail(email);
+        List<CardDetailsResponseDto> cards = cardDetailsFacade.getCardsByEmail(email);
         return ResponseEntity.ok(cards);
     }
 

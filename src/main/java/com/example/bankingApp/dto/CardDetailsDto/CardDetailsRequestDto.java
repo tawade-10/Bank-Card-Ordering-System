@@ -1,10 +1,9 @@
-package com.example.bankingApp.dto.CardDto;
+package com.example.bankingApp.dto.CardDetailsDto;
 
 import jakarta.validation.constraints.NotNull;
-import java.util.Date;
 import jakarta.validation.constraints.NotBlank;
 
-public class CardRequestDto {
+public class CardDetailsRequestDto {
 
     @NotBlank
     private String cardNumber;
@@ -24,7 +23,7 @@ public class CardRequestDto {
     @NotBlank
     private String cvv;
 
-    public CardRequestDto() {}
+    public CardDetailsRequestDto() {}
 
     public String getCardNumber() {
         return cardNumber;

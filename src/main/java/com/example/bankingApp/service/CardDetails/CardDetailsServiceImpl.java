@@ -1,7 +1,7 @@
 package com.example.bankingApp.service.CardDetails;
 
-import com.example.bankingApp.dto.CardDto.CardRequestDto;
-import com.example.bankingApp.dto.CardDto.CardResponseDto;
+import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
+import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.entity.CardDetails.CardDetails;
 import com.example.bankingApp.entity.CardRequests.CardRequests;
 import com.example.bankingApp.entity.Customers.Customers;
@@ -15,8 +15,6 @@ import com.example.bankingApp.repository.CardRequests.CardVariantRepo;
 import com.example.bankingApp.service.Encryption.EncryptionService;
 import jakarta.transaction.Transactional;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -52,20 +50,20 @@ public class CardDetailsServiceImpl implements CardDetailsService{
     @PreAuthorize("hasAuthority('ADMIN')")
     @Override
     @Transactional
-    public CardResponseDto createCard(CardRequestDto cardRequestDto) {
+    public CardDetailsResponseDto createCard(CardDetailsRequestDto cardDetailsRequestDto) {
 
-        CardRequests request = cardRequestsRepo.findById(cardRequestDto.getRequestId())
+        CardRequests request = cardRequestsRepo.findById(cardDetailsRequestDto.getRequestId())
                 .orElseThrow(() -> new RuntimeException("Request not found"));
 
         Customers customer = request.getCustomers();
 
-        CardType type = cardTypeRepo.findById(cardRequestDto.getCardType())
+        CardType type = cardTypeRepo.findById(cardDetailsRequestDto.getCardType())
                 .orElseThrow(() -> new RuntimeException("Invalid Card Type ID"));
 
-        CardVariant variant = cardVariantRepo.findById(cardRequestDto.getCardVariant())
+        CardVariant variant = cardVariantRepo.findById(cardDetailsRequestDto.getCardVariant())
                 .orElseThrow(() -> new RuntimeException("Invalid Card Variant ID"));
 
-        String rawCardNumber = cardRequestDto.getCardNumber();
+        String rawCardNumber = cardDetailsRequestDto.getCardNumber();
         if (rawCardNumber.length() < 16)
             throw new RuntimeException("Card number must be 16 digits");
 
@@ -73,10 +71,10 @@ public class CardDetailsServiceImpl implements CardDetailsService{
 
         String encryptedCard = encryptionService.encrypt(rawCardNumber);
 
-        if (cardRequestDto.getCvv().length() < 3)
+        if (cardDetailsRequestDto.getCvv().length() < 3)
             throw new RuntimeException("Invalid CVV");
 
-        YearMonth expiry = YearMonth.parse(cardRequestDto.getExpiry(), DateTimeFormatter.ofPattern("MM/yy"));
+        YearMonth expiry = YearMonth.parse(cardDetailsRequestDto.getExpiry(), DateTimeFormatter.ofPattern("MM/yy"));
 
         CardDetails card = new CardDetails();
         card.setCustomers(customer);
@@ -89,17 +87,17 @@ public class CardDetailsServiceImpl implements CardDetailsService{
 
         CardDetails saved = cardDetailsRepo.save(card);
 
-        return new CardResponseDto(saved);
+        return new CardDetailsResponseDto(saved);
     }
 
     @Override
-    public List<CardResponseDto> getAllCards() {
+    public List<CardDetailsResponseDto> getAllCards() {
         List<CardDetails> cards = cardDetailsRepo.findAll();
-        return cards.stream().map(CardResponseDto::new).collect(Collectors.toList());
+        return cards.stream().map(CardDetailsResponseDto::new).collect(Collectors.toList());
     }
 
     @Override
-    public List<CardResponseDto> getCardsByCustomerId(Long customerId) {
+    public List<CardDetailsResponseDto> getCardsByCustomerId(Long customerId) {
 
         List<CardDetails> cards = cardDetailsRepo.findByCustomersCustomerId(customerId);
 
@@ -107,15 +105,15 @@ public class CardDetailsServiceImpl implements CardDetailsService{
             throw new RuntimeException("No cards found for customer ID: " + customerId);
         }
 
-        return cards.stream().map(CardResponseDto::new).toList();
+        return cards.stream().map(CardDetailsResponseDto::new).toList();
     }
 
-    public List<CardResponseDto> getCardsByEmail(String email) {
+    public List<CardDetailsResponseDto> getCardsByEmail(String email) {
         Customers customer = customersRepo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         List<CardDetails> cards = cardDetailsRepo.findByCustomers(customer);
 
-        return cards.stream().map(CardResponseDto::new).toList();
+        return cards.stream().map(CardDetailsResponseDto::new).toList();
     }
 }

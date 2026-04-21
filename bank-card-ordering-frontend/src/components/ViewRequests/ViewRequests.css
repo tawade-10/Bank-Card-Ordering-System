@@ -1,88 +1,74 @@
-.view-req-container {
-  max-width: 600px;
-  margin: 40px auto;
-  margin-top: 150px;
-  padding: 35px;
-  background: #ffffff;
-  border-radius: 12px;
-
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  font-family: "Poppins", sans-serif;
+/* Wrapper → centers everything on the page */
+.view-req-wrapper {
+  width: 100%;
+  height: calc(100vh - 50px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 120px;
 }
 
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.2s ease-in-out;
+}
+.overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.view-req-container {
+  width: 100%;
+  max-width: 650px;
+  background: #ffffff;
+  padding: 20px 28px;
+  margin: 0 auto;
+  border-radius: 14px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+  max-height: 520px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Title */
 .view-req-title {
   text-align: center;
-  font-size: 26px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.view-req-field {
-  margin: 12px 0;
-  font-size: 16px;
-  color: #444;
-}
-
-.view-req-field b {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
   color: #222;
 }
 
-.view-req-status {
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-weight: 600;
-  color: white;
+/* Each paragraph aligned */
+.view-req-container p {
+  margin: 4px 0;       /* tiny gap between fields */
+  font-size: 15px;
+  color: #444;
+}
+.view-req-container p b {
+  color: #222;
 }
 
-/* Status colors */
-.approved {
-  background-color: #28a745;
-}
-.rejected {
-  background-color: #dc3545;
-}
-.pending {
-  background-color: #ffc107;
-}
-
-.button-group {
-  margin-top: 25px;
+.button-group,
+.create-card-box,
+.status-dropdown-box,
+.btn-back {
   display: flex;
   justify-content: center;
-  gap: 30px;
+  margin-top: 15px;
 }
 
-.btn-approve {
-  padding: 12px 22px;
-  background-color: #28a745;
-  border: none;
+.flow-dropdown {
+  width: 60%;
+  padding: 10px;
   border-radius: 8px;
-  font-size: 15px;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease-in-out;
-}
-
-.btn-approve:hover {
-  background-color: #218838;
-  transform: scale(1.03);
-}
-
-.btn-reject {
-  padding: 12px 22px;
-  background-color: #dc3545;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease-in-out;
-}
-
-.btn-reject:hover {
-  background-color: #c82333;
-  transform: scale(1.03);
+  border: 1px solid #ccc;
+  background: #fff;
+  margin-top: 8px;
 }
