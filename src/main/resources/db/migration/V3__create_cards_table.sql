@@ -5,7 +5,11 @@ CREATE TABLE card_type (
 
 CREATE TABLE card_variant (
     variant_id BIGSERIAL PRIMARY KEY,
-    variant_name VARCHAR(255) NOT NULL
+    variant_name VARCHAR(255) NOT NULL,
+    card_colour_front VARCHAR(100),
+    card_colour_back VARCHAR(100),
+    chip_colour VARCHAR(50),
+    text_colour VARCHAR(50)
 );
 
 CREATE TABLE reason (

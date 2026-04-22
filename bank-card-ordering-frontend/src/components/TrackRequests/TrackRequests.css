@@ -1,0 +1,73 @@
+.track-container {
+  width: 100%;
+  padding-top: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+}
+
+.track-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #063970;
+}
+
+.table-wrapper {
+  width: 100%;
+  max-width: 1100px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.track-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.track-table thead {
+  background: #063970;
+  color: white;
+}
+
+.track-table th {
+  padding: 14px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.track-table td {
+  padding: 14px;
+  font-size: 14px;
+}
+
+.track-table tbody tr:nth-child(even) {
+  background: #f5f7fa;
+}
+
+.empty-row {
+  text-align: center;
+  padding: 20px;
+  font-size: 15px;
+  color: #777;
+}
+
+.progress-bar {
+  display: flex;
+  gap: 4px;
+}
+
+.step {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ccc;
+}
+
+.step.active {
+  background-color: #4caf50;
+}

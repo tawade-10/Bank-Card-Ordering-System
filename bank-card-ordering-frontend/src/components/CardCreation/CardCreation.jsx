@@ -1,4 +1,4 @@
-    import React, { useRef, useState, useCallback } from "react";
+    import React, { useRef, useState, useCallback, useEffect } from "react";
     import { useNavigate, useParams } from "react-router-dom";
     import axios from "axios";
     import { IoArrowBack } from "react-icons/io5";
@@ -32,6 +32,38 @@
       const [expiration, setExpiration] = useState("__/__");
       const [cvc, setCvc] = useState("");
 
+      const [cardType, setCardType] = useState(null);
+      const [cardVariant, setCardVariant] = useState(null);
+
+      const [design, setDesign] = useState({
+        front: "#000",
+        back: "#000",
+        chip: "#fff",
+        text: "#fff"
+      });
+
+      useEffect(() => {
+        fetchRequestDetails();
+      }, []);
+
+      const fetchRequestDetails = async () => {
+        const response = await axios.get(
+          `http://localhost:8080/api/request-card/${requestId}`,
+          {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+          }
+        );
+        const req = response.data;
+        setCardType(req.cardTypeId);
+        setCardVariant(req.cardVariantId);
+        setDesign({
+          front: req.cardVariantDetails.cardColourFront,
+          back: req.cardVariantDetails.cardColourBack,
+          chip: req.cardVariantDetails.chipColour,
+          text: req.cardVariantDetails.textColour
+        });
+      };
+
       const navigate = useNavigate();
 
       const handleGoBack = () => navigate(-1);
@@ -63,22 +95,18 @@
         try {
           const cleanCardNumber = number.replace(/\s/g, "");
           const cleanExpiry = expiration;
-
           if (cleanCardNumber.length !== 16) {
             alert("Invalid Card Number");
             return;
           }
-
           if (!cvc || cvc.length < 3) {
             alert("Invalid CVV");
             return;
           }
-
           if (cleanExpiry.length !== 5) {
             alert("Invalid Expiry Date");
             return;
           }
-
           const payload = {
             requestId: parseInt(requestId),
             cardNumber: cleanCardNumber,
@@ -87,7 +115,6 @@
             cardVariant: 1,
             expiry: cleanExpiry
           };
-
           const response = await axios.post(
             "http://localhost:8080/api/cards/create-card",
             payload,
@@ -97,17 +124,13 @@
               }
             }
           );
-
           console.log("Card Created:", response.data);
           alert("Card Created Successfully!");
-
           setName("");
           setNumber("____ ____ ____ ____");
           setExpiration("__/__");
           setCvc("");
-
           navigate("/admin/dashboard");
-
         } catch (error) {
           console.error(error);
           alert("Error creating card");
@@ -122,14 +145,14 @@
 
           <Card>
             <Flipper ref={flipper}>
-              <CardFront>
-                <Chip />
+              <CardFront style={{ background: design.front, color: design.text }}>
+                <Chip style={{ background: design.chip }} />
                 <Name>{name}</Name>
                 <Number>{number}</Number>
                 <Expiration>{expiration}</Expiration>
               </CardFront>
 
-              <CardBack>
+              <CardBack style={{ background: design.back, color: design.text }}>
                 <BlackStripe>
                   <CVC>{cvc}</CVC>
                 </BlackStripe>

@@ -14,6 +14,18 @@ public class CardVariant {
     @Column(name = "variant_name")
     private String variantName;
 
+    @Column(name = "card_colour_front")
+    private String cardColourFront;
+
+    @Column(name = "card_colour_back")
+    private String cardColourBack;
+
+    @Column(name = "chip_colour")
+    private String chipColour;
+
+    @Column(name = "text_colour")
+    private String textColour;
+
     public Long getVariantId() {
         return variantId;
     }
@@ -28,5 +40,37 @@ public class CardVariant {
 
     public void setVariantName(String variantName) {
         this.variantName = variantName;
+    }
+
+    public String getCardColourFront() {
+        return cardColourFront;
+    }
+
+    public void setCardColourFront(String cardColourFront) {
+        this.cardColourFront = cardColourFront;
+    }
+
+    public String getCardColourBack() {
+        return cardColourBack;
+    }
+
+    public void setCardColourBack(String cardColourBack) {
+        this.cardColourBack = cardColourBack;
+    }
+
+    public String getChipColour() {
+        return chipColour;
+    }
+
+    public void setChipColour(String chipColour) {
+        this.chipColour = chipColour;
+    }
+
+    public String getTextColour() {
+        return textColour;
+    }
+
+    public void setTextColour(String textColour) {
+        this.textColour = textColour;
     }
 }

@@ -14,6 +14,7 @@ public class ResponseDto {
     private String localDate;
     private Customers customers;
     private String reviewMessage;
+    private String updatedAt;
 
     public ResponseDto(CardRequests cardRequests) {
         this.requestId = cardRequests.getRequestId();
@@ -24,6 +25,7 @@ public class ResponseDto {
         this.localDate = cardRequests.getLocalDate().toString();
         this.customers = cardRequests.getCustomers();
         this.reviewMessage = cardRequests.getReviewMessage();
+        this.updatedAt = cardRequests.getUpdatedAt().toString();
     }
 
     public ResponseDto() {}
@@ -91,4 +93,8 @@ public class ResponseDto {
     public void setReviewMessage(String reviewMessage) {
         this.reviewMessage = reviewMessage;
     }
+
+    public String getUpdatedAt() { return updatedAt; }
+
+    public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
 }

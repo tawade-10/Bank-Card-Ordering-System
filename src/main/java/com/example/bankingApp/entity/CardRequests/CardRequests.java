@@ -3,7 +3,10 @@ package com.example.bankingApp.entity.CardRequests;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.Enums.Status;
 import jakarta.persistence.*;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "request_card")
@@ -39,6 +42,10 @@ public class CardRequests {
 
     @Column(name = "message")
     private String reviewMessage;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     public Long getRequestId() {
         return requestId;
@@ -99,4 +106,8 @@ public class CardRequests {
     public void setReviewMessage(String reviewMessage) {
         this.reviewMessage = reviewMessage;
     }
+
+    public LocalDateTime getUpdatedAt() {  return updatedAt; }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

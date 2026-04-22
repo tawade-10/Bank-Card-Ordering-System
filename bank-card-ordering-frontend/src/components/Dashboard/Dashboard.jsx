@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 
@@ -45,11 +46,15 @@ export default function Dashboard() {
   };
 
   const filteredRequests = requests.filter((req) => {
-    if (tabValue === 0) return req.status === "PENDING";
-    if (tabValue === 1) return req.status === "APPROVED";
-    if (tabValue === 2) return req.status === "REJECTED";
+    if (tabValue === 1) return req.status === "PENDING";
+    if (tabValue === 2) return req.status === "APPROVED";
+    if (tabValue === 3) return req.status === "REJECTED";
     return true;
   });
+
+  const recentTwoRequests = [...requests]
+    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+    .slice(0, 2);
 
   return (
     <div className="dashboard-wrapper">
@@ -144,20 +149,6 @@ export default function Dashboard() {
                             Update Status
                           </button>
                         )}
-
-{/*                          */}{/* CREATE CARD — only when APPROVED */}
-{/*                         {req.status === "APPROVED" && ( */}
-{/*                           <button */}
-{/*                             className="create-btn" */}
-{/*                             onClick={() => */}
-{/*                               navigate( */}
-{/*                                 `/admin/dashboard/create-card/${req.requestId}` */}
-{/*                               ) */}
-{/*                             } */}
-{/*                           > */}
-{/*                             Create Card */}
-{/*                           </button> */}
-{/*                         )} */}
                       </td>
                     </tr>
                   ))
@@ -180,11 +171,9 @@ export default function Dashboard() {
         <>
           <h3 className="section-title">My Active Cards</h3>
           <MyCards />
-
           <hr className="divider" />
-
           <h3 className="section-title">Recent Card Requests</h3>
-          <RecentCardTable requests={requests} />
+          <RecentCardTable requests={recentTwoRequests} />
         </>
       )}
     </div>
