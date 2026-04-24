@@ -7,28 +7,42 @@ public class CardDetailsResponseDto {
     private Long cardId;
     private Long customerId;
     private String customerName;
+
     private String maskedNumber;
-    private String cardTypeName;
-    private String cardVariantName;
     private String expiry;
+
+    private Long cardTypeId;
+    private String cardType;
+
+    private Long cardVariantId;
+    private String cardVariant;
+
     private String cardColourFront;
     private String cardColourBack;
     private String chipColour;
     private String textColour;
+
+    private String createdAt;
 
     public CardDetailsResponseDto(CardDetails card) {
         this.cardId = card.getCardId();
         this.customerId = card.getCustomers().getCustomerId();
         this.customerName = card.getCustomers().getCustomerName();
         this.maskedNumber = "**** **** **** " + card.getLast4();
-        this.cardTypeName = card.getCardType().getTypeName();
-        this.cardVariantName = card.getCardVariant().getVariantName();
+        this.cardTypeId = card.getCardType().getTypeId();
+        this.cardType = card.getCardType().getTypeName();
+        this.cardVariantId = card.getCardVariant().getVariantId();
+        this.cardVariant = card.getCardVariant().getVariantName();
         this.expiry = String.format("%02d/%02d", card.getExpiry().getMonthValue(),
                                                  card.getExpiry().getYear() % 100);
         this.cardColourFront = card.getCardVariant().getCardColourFront();
         this.cardColourBack = card.getCardVariant().getCardColourBack();
         this.chipColour = card.getCardVariant().getChipColour();
         this.textColour = card.getCardVariant().getTextColour();
+        this.createdAt = card.getCreatedAt().toString();
+    }
+
+    public CardDetailsResponseDto() {
     }
 
     public Long getCardId() {
@@ -63,28 +77,44 @@ public class CardDetailsResponseDto {
         this.maskedNumber = maskedNumber;
     }
 
-    public String getCardTypeName() {
-        return cardTypeName;
-    }
-
-    public void setCardTypeName(String cardTypeName) {
-        this.cardTypeName = cardTypeName;
-    }
-
-    public String getCardVariantName() {
-        return cardVariantName;
-    }
-
-    public void setCardVariantName(String cardVariantName) {
-        this.cardVariantName = cardVariantName;
-    }
-
     public String getExpiry() {
         return expiry;
     }
 
     public void setExpiry(String expiry) {
         this.expiry = expiry;
+    }
+
+    public Long getCardTypeId() {
+        return cardTypeId;
+    }
+
+    public void setCardTypeId(Long cardTypeId) {
+        this.cardTypeId = cardTypeId;
+    }
+
+    public String getCardType() {
+        return cardType;
+    }
+
+    public void setCardType(String cardType) {
+        this.cardType = cardType;
+    }
+
+    public Long getCardVariantId() {
+        return cardVariantId;
+    }
+
+    public void setCardVariantId(Long cardVariantId) {
+        this.cardVariantId = cardVariantId;
+    }
+
+    public String getCardVariant() {
+        return cardVariant;
+    }
+
+    public void setCardVariant(String cardVariant) {
+        this.cardVariant = cardVariant;
     }
 
     public String getCardColourFront() {
@@ -117,5 +147,13 @@ public class CardDetailsResponseDto {
 
     public void setTextColour(String textColour) {
         this.textColour = textColour;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }

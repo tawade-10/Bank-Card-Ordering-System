@@ -11,6 +11,8 @@ public class RequestsDto {
     private Long cardVariantId;
     @NotNull(message = "Reason ID is required")
     private Long reasonId;
+    @NotNull(message = "Network ID is required")
+    private Long cardNetworkId;
     private Status status;
     private String reviewMessage;
 
@@ -32,13 +34,15 @@ public class RequestsDto {
         this.cardVariantId = cardVariantId;
     }
 
-    public Long getReasonId() {
-        return reasonId;
-    }
+    public Long getReasonId() { return reasonId; }
 
     public void setReasonId(Long reasonId) {
         this.reasonId = reasonId;
     }
+
+    public Long getCardNetworkId() { return cardNetworkId; }
+
+    public void setCardNetworkId(Long cardNetworkId) { this.cardNetworkId = cardNetworkId; }
 
     public Status getStatus() {
         return status;

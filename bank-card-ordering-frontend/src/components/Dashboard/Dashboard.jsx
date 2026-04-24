@@ -118,7 +118,7 @@ export default function Dashboard() {
                   filteredRequests.map((req) => (
                     <tr key={req.requestId}>
                       <td>{req.requestId}</td>
-                      <td>{req.customers?.customerName || "N/A"}</td>
+                      <td>{req.customerName || "N/A"}</td>
                       <td>{req.cardType}</td>
                       <td>{req.cardVariant}</td>
                       <td>{req.reason}</td>

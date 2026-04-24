@@ -29,6 +29,10 @@ public class CardRequests {
     @JoinColumn(name = "reason_id", nullable = false)
     private Reason reason;
 
+    @ManyToOne
+    @JoinColumn(name = "network_id", nullable = false)
+    private CardNetwork cardNetwork;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
@@ -78,6 +82,10 @@ public class CardRequests {
     public void setReason(Reason reason) {
         this.reason = reason;
     }
+
+    public CardNetwork getCardNetwork() { return cardNetwork; }
+
+    public void setCardNetwork(CardNetwork cardNetwork) { this.cardNetwork = cardNetwork; }
 
     public Status getStatus() { return status; }
 

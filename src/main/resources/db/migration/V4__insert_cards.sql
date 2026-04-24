@@ -27,6 +27,14 @@ VALUES
 )
 ON CONFLICT DO NOTHING;
 
+INSERT INTO card_network
+(network_name)
+VALUES
+('MASTERCARD'),
+('VISA'),
+('RUPAY')
+ON CONFLICT DO NOTHING;
+
 INSERT INTO reason (reason_name) VALUES
 ('NEW CARD'),
 ('LOST CARD'),

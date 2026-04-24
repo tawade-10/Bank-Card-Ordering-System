@@ -12,6 +12,11 @@ CREATE TABLE card_variant (
     text_colour VARCHAR(50)
 );
 
+CREATE TABLE card_network (
+    network_id BIGSERIAL PRIMARY KEY,
+    network_name VARCHAR(255) NOT NULL UNIQUE
+);
+
 CREATE TABLE reason (
     reason_id BIGSERIAL PRIMARY KEY,
     reason_name VARCHAR(255) NOT NULL UNIQUE

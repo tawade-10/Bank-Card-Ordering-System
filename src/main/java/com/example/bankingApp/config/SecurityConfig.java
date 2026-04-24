@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/request-card/email").hasAuthority("CUSTOMER")
                         .requestMatchers("/api/cards/my-cards").hasAuthority("CUSTOMER")
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/cards/create-card").hasAuthority("ADMIN")
                         .requestMatchers("/api/request-card/**").authenticated()
                         .requestMatchers("/api/cards/**").authenticated()
                         .anyRequest().authenticated()
@@ -50,6 +51,8 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+
 
     @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults() {

@@ -2,17 +2,11 @@ package com.example.bankingApp.service.CardRequests;
 
 import com.example.bankingApp.dto.CardRequestsDto.RequestsDto;
 import com.example.bankingApp.dto.CardRequestsDto.ResponseDto;
+import com.example.bankingApp.entity.CardRequests.*;
 import com.example.bankingApp.entity.Enums.Status;
-import com.example.bankingApp.entity.CardRequests.CardType;
-import com.example.bankingApp.entity.CardRequests.CardVariant;
-import com.example.bankingApp.entity.CardRequests.Reason;
-import com.example.bankingApp.entity.CardRequests.CardRequests;
 import com.example.bankingApp.entity.Customers.Customers;
-import com.example.bankingApp.repository.CardRequests.CardTypeRepo;
-import com.example.bankingApp.repository.CardRequests.CardVariantRepo;
-import com.example.bankingApp.repository.CardRequests.ReasonForRequestRepo;
+import com.example.bankingApp.repository.CardRequests.*;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
-import com.example.bankingApp.repository.CardRequests.CardRequestsRepo;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -34,18 +28,21 @@ public class CardRequestsServiceImpl implements CardRequestsService {
 
     private final CardVariantRepo cardVariantRepo;
 
+    private final CardNetworkRepo cardNetworkRepo;
+
     private final ReasonForRequestRepo reasonForRequestRepo;
 
-    public CardRequestsServiceImpl(CardRequestsRepo cardRequestsRepo, CustomersRepo customersRepo, CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, ReasonForRequestRepo reasonForRequestRepo) {
+    public CardRequestsServiceImpl(CardRequestsRepo cardRequestsRepo, CustomersRepo customersRepo, CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, CardNetworkRepo cardNetworkRepo, ReasonForRequestRepo reasonForRequestRepo) {
         this.cardRequestsRepo = cardRequestsRepo;
         this.customersRepo = customersRepo;
         this.cardTypeRepo = cardTypeRepo;
         this.cardVariantRepo = cardVariantRepo;
+        this.cardNetworkRepo = cardNetworkRepo;
         this.reasonForRequestRepo = reasonForRequestRepo;
     }
 
     @Override
-    public ResponseDto createRequest(RequestsDto dto) {
+    public ResponseDto createRequest(RequestsDto requestsDto) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -58,18 +55,22 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         Customers customer = customersRepo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Customer not found for email: " + email));
 
-        CardType cardType = cardTypeRepo.findById(dto.getCardTypeId())
+        CardType cardType = cardTypeRepo.findById(requestsDto.getCardTypeId())
                 .orElseThrow(() -> new RuntimeException("Invalid Card Type ID"));
 
-        CardVariant cardVariant = cardVariantRepo.findById(dto.getCardVariantId())
+        CardVariant cardVariant = cardVariantRepo.findById(requestsDto.getCardVariantId())
                 .orElseThrow(() -> new RuntimeException("Invalid Card Variant ID"));
 
-        Reason reason = reasonForRequestRepo.findById(dto.getReasonId())
+        CardNetwork cardNetwork = cardNetworkRepo.findById(requestsDto.getCardNetworkId())
+                .orElseThrow(() -> new RuntimeException("Invalid Network ID"));
+
+        Reason reason = reasonForRequestRepo.findById(requestsDto.getReasonId())
                 .orElseThrow(() -> new RuntimeException("Invalid Reason ID"));
 
         CardRequests request = new CardRequests();
         request.setCardType(cardType);
         request.setCardVariant(cardVariant);
+        request.setCardNetwork(cardNetwork);
         request.setReason(reason);
         request.setStatus(Status.PENDING_REVIEW);
         request.setLocalDate(LocalDate.now());
@@ -106,7 +107,7 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         return listOfRequests.stream().map(ResponseDto::new).toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Override
     public ResponseDto reviewRequest(Long requestId, RequestsDto requestsDto) {
 
@@ -130,7 +131,7 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         return new ResponseDto(cardRequestsRepo.save(request));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Override
     public ResponseDto updateRequestStatus(Long requestId, RequestsDto requestsDto) {
 

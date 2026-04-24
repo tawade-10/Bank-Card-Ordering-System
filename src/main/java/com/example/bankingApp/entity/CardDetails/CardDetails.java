@@ -4,6 +4,7 @@ import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.CardRequests.CardType;
 import com.example.bankingApp.entity.CardRequests.CardVariant;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.YearMonth;
 import java.time.LocalDateTime;
@@ -37,7 +38,8 @@ public class CardDetails {
     @Column(name = "expiry")
     private YearMonth expiry;
 
-    @Column(name = "created_at")
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     public Long getCardId() {

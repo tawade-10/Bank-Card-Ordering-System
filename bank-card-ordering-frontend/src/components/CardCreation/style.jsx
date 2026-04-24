@@ -28,25 +28,19 @@ const sideStyle = css`
   inset: 0;
   backface-visibility: hidden;
   border-radius: 12px;
-  background: linear-gradient(135deg, #6290e4, #2053b1);
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
   font-size: 18px;
 `;
 
 export const CardFront = styled.div`
   ${sideStyle};
-  background: linear-gradient(135deg, #d4af37, #b58e18);
-  color: #fff;
 `;
 
 export const CardBack = styled.div`
   ${sideStyle};
   transform: rotateY(180deg);
-  background: linear-gradient(135deg, #d4af37, #b58e18);
-  color: #fff;
 `;
 
 export const CardForm = styled.div`
@@ -90,7 +84,7 @@ export const Name = styled.span`
   text-transform: uppercase;
 `
 
-export const Number = styled.span`
+export const CardNumber = styled.span`
   font-size: 16px;
   font-weight: bold;
   position: absolute;

@@ -10,7 +10,8 @@ export default function RequestNewCard() {
   const [formData, setFormData] = useState({
     cardTypeId: "",
     cardVariantId: "",
-    reasonId: "",
+    cardNetworkId: "",
+    reasonId: ""
   });
 
   const handleChange = (e) => {
@@ -22,17 +23,24 @@ export default function RequestNewCard() {
     setFormData({
       cardTypeId: "",
       cardVariantId: "",
-      reasonId: "",
+      cardNetworkId: "",
+      reasonId: ""
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!formData.cardTypeId || !formData.cardVariantId || !formData.reasonId) {
+      toast.error("Please fill all fields!");
+      return;
+    }
+
     const body = {
       cardTypeId: Number(formData.cardTypeId),
       cardVariantId: Number(formData.cardVariantId),
-      reasonId: Number(formData.reasonId),
+      cardNetworkId: Number(formData.cardNetworkId),
+      reasonId: Number(formData.reasonId)
     };
 
     try {
@@ -44,14 +52,14 @@ export default function RequestNewCard() {
         },
         body: JSON.stringify(body),
       });
+
       if (response.ok) {
         toast.success("Card Request Submitted!");
         clearForm();
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 1200);
+        setTimeout(() => navigate("/dashboard"), 1200);
       } else {
-        toast.error("Request Cancelled!");
+        const errorText = await response.text();
+        toast.error(errorText || "Request Failed!");
       }
     } catch (error) {
       toast.error("Backend not reachable!");
@@ -64,8 +72,10 @@ export default function RequestNewCard() {
         <div className="form-header">Request New Card</div>
 
         <form onSubmit={handleSubmit}>
+
           <label className="label">Select Card Type:</label>
           <div className="radio-group">
+
             <label className="radio-box">
               <input
                 type="radio"
@@ -87,10 +97,12 @@ export default function RequestNewCard() {
               />
               Credit Card
             </label>
+
           </div>
 
           <label className="label">Card Variant:</label>
           <div className="radio-group">
+
             <label className="radio-box">
               <input
                 type="radio"
@@ -123,7 +135,45 @@ export default function RequestNewCard() {
               />
               Platinum
             </label>
+
           </div>
+
+          <label className="label">Select Card Network:</label>
+          <div className="radio-group">
+
+                      <label className="radio-box">
+                        <input
+                          type="radio"
+                          name="cardNetworkId"
+                          value="1"
+                          onChange={handleChange}
+                          checked={formData.cardNetworkId === "1"}
+                        />
+                        MasterCard
+                      </label>
+
+                      <label className="radio-box">
+                        <input
+                          type="radio"
+                          name="cardNetworkId"
+                          value="2"
+                          onChange={handleChange}
+                          checked={formData.cardNetworkId === "2"}
+                        />
+                        Visa
+                      </label>
+
+                      <label className="radio-box">
+                          <input
+                            type="radio"
+                            name="cardNetworkId"
+                            value="3"
+                            onChange={handleChange}
+                            checked={formData.cardNetworkId === "3"}
+                          />
+                          Rupay
+                      </label>
+                    </div>
 
           <label className="label">Reason for Request:</label>
           <select

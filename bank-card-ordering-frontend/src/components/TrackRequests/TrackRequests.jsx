@@ -87,7 +87,7 @@ export default function TrackRequests() {
               <th>Reason</th>
               <th>Status</th>
               <th>Date</th>
-              <th>Progress</th>
+{/*               <th>Progress</th> */}
               <th>Actions</th>
             </tr>
           </thead>
@@ -106,7 +106,7 @@ export default function TrackRequests() {
                     </span>
                   </td>
                   <td>{req.localDate}</td>
-                  <td>{getProgress(req.status)}</td>
+{/*                   <td>{getProgress(req.status)}</td> */}
                   <td>
                     <button
                       className="view-btn"

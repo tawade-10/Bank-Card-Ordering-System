@@ -45,18 +45,31 @@ export default function MyCards() {
     <div className="card-page-wrapper">
       <div className="cards-grid">
         {cards.map((card) => (
-          <div className="display-card" key={card.cardId}>
+          <div
+            className="customer-card"
+            key={card.cardId}
+            style={{
+              background: card.cardColourFront,
+              color: card.textColour
+            }}
+          >
+            <div
+              className="chip"
+              style={{ background: card.chipColour }}
+            ></div>
 
-            {/* Chip */}
-            <div className="chip-small"></div>
-            <div className="display-number">{card.maskedNumber}</div>
-            <div className="display-variant">
-                <span>Card Holder</span>
-              <div>{card.customerName}</div>
-            </div>
-            <div className="display-expiry">
-              <span>Expiry</span>
-              <div>{card.expiry}</div>
+            <div className="card-number">{card.maskedNumber}</div>
+
+            <div className="card-footer">
+              <div className="card-holder">
+                <label>Card Holder</label>
+                <span>{card.customerName}</span>
+              </div>
+
+              <div className="card-expiry">
+                <label>Expiry</label>
+                <span>{card.expiry}</span>
+              </div>
             </div>
           </div>
         ))}
