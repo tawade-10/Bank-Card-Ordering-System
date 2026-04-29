@@ -46,6 +46,12 @@ public class CardRequestsController {
         return ResponseEntity.ok(requestByEmail);
     }
 
+    @GetMapping("/network/{networkId}")
+    public ResponseEntity<ResponseDto> getBinByNetwork(@PathVariable Long networkId){
+        ResponseDto network = cardRequestsFacade.getBinByNetwork(networkId);
+        return ResponseEntity.ok(network);
+    }
+
     @PutMapping("/{requestId}/review")
     public ResponseEntity<ResponseDto> reviewRequest(@PathVariable Long requestId, @RequestBody RequestsDto requestsDto) {
         ResponseDto updatedRequest = cardRequestsFacade.reviewRequest(requestId, requestsDto);

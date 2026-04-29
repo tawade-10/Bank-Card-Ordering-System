@@ -13,6 +13,7 @@ public class ResponseDto {
     private String cardVariant;
     private Long cardNetworkId;
     private String cardNetwork;
+    private String bin;
     private String cardColourFront;
     private String cardColourBack;
     private String chipColour;
@@ -33,6 +34,7 @@ public class ResponseDto {
         this.cardVariant = cardRequests.getCardVariant().getVariantName();
         this.cardNetworkId = cardRequests.getCardNetwork().getNetworkId();
         this.cardNetwork = cardRequests.getCardNetwork().getNetworkName();
+        this.bin = cardRequests.getNetworkBin().getBinNumber();
         this.cardColourFront = cardRequests.getCardVariant().getCardColourFront();
         this.cardColourBack = cardRequests.getCardVariant().getCardColourBack();
         this.chipColour = cardRequests.getCardVariant().getChipColour();
@@ -102,6 +104,14 @@ public class ResponseDto {
 
     public void setCardNetwork(String cardNetwork) {
         this.cardNetwork = cardNetwork;
+    }
+
+    public String getBin() {
+        return bin;
+    }
+
+    public void setBin(String bin) {
+        this.bin = bin;
     }
 
     public String getCardColourFront() {

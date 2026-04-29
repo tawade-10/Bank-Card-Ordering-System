@@ -3,6 +3,7 @@ package com.example.bankingApp.service.CardRequests;
 import com.example.bankingApp.dto.CardRequestsDto.RequestsDto;
 import com.example.bankingApp.dto.CardRequestsDto.ResponseDto;
 import com.example.bankingApp.entity.CardRequests.*;
+import com.example.bankingApp.entity.CardRequests.NetworkBin;
 import com.example.bankingApp.entity.Enums.Status;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.repository.CardRequests.*;
@@ -32,20 +33,22 @@ public class CardRequestsServiceImpl implements CardRequestsService {
 
     private final ReasonForRequestRepo reasonForRequestRepo;
 
-    public CardRequestsServiceImpl(CardRequestsRepo cardRequestsRepo, CustomersRepo customersRepo, CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, CardNetworkRepo cardNetworkRepo, ReasonForRequestRepo reasonForRequestRepo) {
+    private final NetworkBinRepo networkBinRepo;
+
+    public CardRequestsServiceImpl(CardRequestsRepo cardRequestsRepo, CustomersRepo customersRepo, CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, CardNetworkRepo cardNetworkRepo, ReasonForRequestRepo reasonForRequestRepo, NetworkBinRepo networkBinRepo) {
         this.cardRequestsRepo = cardRequestsRepo;
         this.customersRepo = customersRepo;
         this.cardTypeRepo = cardTypeRepo;
         this.cardVariantRepo = cardVariantRepo;
         this.cardNetworkRepo = cardNetworkRepo;
         this.reasonForRequestRepo = reasonForRequestRepo;
+        this.networkBinRepo = networkBinRepo;
     }
 
     @Override
     public ResponseDto createRequest(RequestsDto requestsDto) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new RuntimeException("User not authenticated");
         }
@@ -64,6 +67,8 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         CardNetwork cardNetwork = cardNetworkRepo.findById(requestsDto.getCardNetworkId())
                 .orElseThrow(() -> new RuntimeException("Invalid Network ID"));
 
+        NetworkBin networkBin = networkBinRepo.findByCardNetwork(cardNetwork);
+
         Reason reason = reasonForRequestRepo.findById(requestsDto.getReasonId())
                 .orElseThrow(() -> new RuntimeException("Invalid Reason ID"));
 
@@ -72,6 +77,7 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         request.setCardVariant(cardVariant);
         request.setCardNetwork(cardNetwork);
         request.setReason(reason);
+        request.setNetworkBin(networkBin);
         request.setStatus(Status.PENDING_REVIEW);
         request.setLocalDate(LocalDate.now());
         request.setCustomers(customer);
@@ -105,6 +111,22 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         List<CardRequests> listOfRequests = cardRequestsRepo.findByCustomersEmail(email);
 
         return listOfRequests.stream().map(ResponseDto::new).toList();
+    }
+
+    @Override
+    public ResponseDto getBinByNetwork(Long networkId) {
+
+        CardNetwork network = cardNetworkRepo.findById(networkId)
+                .orElseThrow(() -> new RuntimeException("Network not found with ID: " + networkId));
+
+        NetworkBin bin = networkBinRepo.findByCardNetwork(network);
+
+        ResponseDto dto = new ResponseDto();
+        dto.setCardNetworkId(network.getNetworkId());
+        dto.setCardNetwork(network.getNetworkName());
+        dto.setBin(bin.getBinNumber());
+
+        return dto;
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

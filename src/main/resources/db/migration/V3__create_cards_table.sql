@@ -17,6 +17,16 @@ CREATE TABLE card_network (
     network_name VARCHAR(255) NOT NULL UNIQUE
 );
 
+CREATE TABLE network_bin (
+    bin_id BIGSERIAL PRIMARY KEY,
+    network_id BIGINT NOT NULL,
+    bin_number VARCHAR(10) NOT NULL,
+
+    CONSTRAINT fk_network_bin_network
+        FOREIGN KEY (network_id)
+        REFERENCES card_network(network_id)
+);
+
 CREATE TABLE reason (
     reason_id BIGSERIAL PRIMARY KEY,
     reason_name VARCHAR(255) NOT NULL UNIQUE
@@ -27,6 +37,7 @@ CREATE TABLE request_card (
     card_type_id BIGINT NOT NULL,
     card_variant_id BIGINT NOT NULL,
     reason_id BIGINT NOT NULL,
+    network_id BIGINT,
     status VARCHAR(50),
     date DATE,
     customer_id BIGINT,
@@ -42,6 +53,10 @@ CREATE TABLE request_card (
     CONSTRAINT fk_request_reason
         FOREIGN KEY (reason_id)
         REFERENCES reason(reason_id),
+
+    CONSTRAINT fk_request_network
+        FOREIGN KEY (network_id)
+        REFERENCES card_network(network_id),
 
     CONSTRAINT fk_request_customer
         FOREIGN KEY (customer_id)

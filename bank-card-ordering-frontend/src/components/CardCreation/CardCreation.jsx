@@ -28,12 +28,14 @@ export default function CardCreation() {
   const [side, setSide] = useState("front");
 
   const [name, setName] = useState("");
-  const [number, setNumber] = useState("____ ____ ____ ____");
+  const [number, setNumber] = useState("");
   const [expiration, setExpiration] = useState("__/__");
   const [cvc, setCvc] = useState("");
 
   const [cardTypeId, setCardTypeId] = useState(null);
   const [cardVariantId, setCardVariantId] = useState(null);
+  const [cardNetworkId, setNetworkId] = useState(null);
+  const [binNumber, setBinNumber] = useState("");
 
   const [loading, setLoading] = useState(true);
 
@@ -41,7 +43,7 @@ export default function CardCreation() {
     front: "#000",
     back: "#000",
     chip: "#fff",
-    text: "#fff"
+    text: "#fff",
   });
 
   const handleGoBack = () => navigate(-1);
@@ -50,6 +52,7 @@ export default function CardCreation() {
     fetchRequestDetails();
   }, []);
 
+  // Fetch request + card design + BIN number
   const fetchRequestDetails = async () => {
     try {
       const res = await axios.get(
@@ -65,6 +68,7 @@ export default function CardCreation() {
 
       setCardTypeId(req.cardTypeId);
       setCardVariantId(req.cardVariantId);
+      setNetworkId(req.cardNetworkId);
 
       setDesign({
         front: req.cardColourFront,
@@ -72,6 +76,22 @@ export default function CardCreation() {
         chip: req.chipColour,
         text: req.textColour,
       });
+
+      // Fetch BIN from backend
+      const binRes = await axios.get(
+        `http://localhost:8080/api/request-card/network/${req.cardNetworkId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      const bin = binRes.data.bin;
+      setBinNumber(bin);
+
+      // Pre-populate card number with BIN prefix
+      setNumber(formatCardNumber(bin));
 
     } catch (err) {
       console.error(err);
@@ -81,19 +101,21 @@ export default function CardCreation() {
     }
   };
 
-  const turnAround = useCallback(() => {
-    if (!flipper.current) return;
+  // Format number (1111222233334444 → 1111 2222 3333 4444)
+  const formatCardNumber = (num) => {
+    return num.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim();
+  };
 
-    flipper.current.style.transform =
-      side === "front" ? "rotateY(180deg)" : "rotateY(0deg)";
-
-    setSide((prev) => (prev === "front" ? "back" : "front"));
-  }, [side]);
-
+  // Handle card number entry BUT BIN prefix cannot be removed
   const handleNumberChange = (e) => {
-    let input = e.target.value.replace(/\D/g, "").substring(0, 16);
-    let formatted = input.replace(/(.{4})/g, "$1 ").trim();
-    setNumber(formatted || "____ ____ ____ ____");
+    const input = e.target.value.replace(/\s/g, "");
+
+    if (!input.startsWith(binNumber)) {
+      return; // BLOCK USER from deleting bin prefix
+    }
+
+    let cleaned = input.substring(0, 16);
+    setNumber(formatCardNumber(cleaned));
   };
 
   const handleExpiryChange = (e) => {
@@ -106,17 +128,21 @@ export default function CardCreation() {
     setExpiration(input || "__/__");
   };
 
+  const turnAround = useCallback(() => {
+    if (!flipper.current) return;
+
+    flipper.current.style.transform =
+      side === "front" ? "rotateY(180deg)" : "rotateY(0deg)";
+
+    setSide((prev) => (prev === "front" ? "back" : "front"));
+  }, [side]);
+
   const handleSubmit = async () => {
     try {
-      if (!cardTypeId || !cardVariantId) {
-        alert("Request design not loaded yet");
-        return;
-      }
-
       const cleanCardNumber = number.replace(/\s/g, "");
 
       if (cleanCardNumber.length !== 16) {
-        alert("Invalid card number");
+        alert("Card number must be 16 digits");
         return;
       }
 
@@ -125,21 +151,15 @@ export default function CardCreation() {
         return;
       }
 
-      if (expiration.length !== 5) {
-        alert("Invalid expiry");
-        return;
-      }
-
       const payload = {
-        requestId: parseInt(requestId, 10),
+        requestId: parseInt(requestId),
         cardNumber: cleanCardNumber,
         cvv: cvc,
         expiry: expiration,
         cardType: cardTypeId,
-        cardVariant: cardVariantId
+        cardVariant: cardVariantId,
+        cardNetwork: cardNetworkId,
       };
-
-      console.log("FINAL PAYLOAD:", payload);
 
       await axios.post("http://localhost:8080/api/cards/create-card", payload, {
         headers: {
@@ -149,7 +169,6 @@ export default function CardCreation() {
 
       alert("Card Created Successfully!");
       navigate("/admin/dashboard");
-
     } catch (err) {
       console.error(err);
       alert("Error creating card");
@@ -164,12 +183,13 @@ export default function CardCreation() {
       >
         <IoArrowBack /> Back
       </button>
+
       <Card>
         <Flipper ref={flipper}>
           <CardFront style={{ background: design.front, color: design.text }}>
             <Chip style={{ background: design.chip }} />
             <Name>{name || "CARD HOLDER"}</Name>
-            <CardNumber>{number}</CardNumber>
+            <CardNumber>{number || "____ ____ ____ ____"}</CardNumber>
             <Expiration>{expiration}</Expiration>
           </CardFront>
 
@@ -183,7 +203,11 @@ export default function CardCreation() {
 
       {/* FORM */}
       <CardForm>
-        <Input placeholder="Card Number" onChange={handleNumberChange} />
+        <Input
+          placeholder="Card Number"
+          value={number}
+          onChange={handleNumberChange}
+        />
 
         <Input
           placeholder="Card Holder Name"

@@ -37,6 +37,11 @@ public class CardRequestsFacadeImpl implements CardRequestsFacade {
     }
 
     @Override
+    public ResponseDto getBinByNetwork(Long networkId) {
+        return cardRequestsService.getBinByNetwork(networkId);
+    }
+
+    @Override
     public ResponseDto reviewRequest(Long requestId, RequestsDto requestsDto) {
         return cardRequestsService.reviewRequest(requestId,requestsDto);
     }

@@ -33,6 +33,10 @@ public class CardRequests {
     @JoinColumn(name = "network_id", nullable = false)
     private CardNetwork cardNetwork;
 
+    @ManyToOne
+    @JoinColumn(name = "bin_id", nullable = false)
+    private NetworkBin networkBin;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
@@ -86,6 +90,14 @@ public class CardRequests {
     public CardNetwork getCardNetwork() { return cardNetwork; }
 
     public void setCardNetwork(CardNetwork cardNetwork) { this.cardNetwork = cardNetwork; }
+
+    public NetworkBin getNetworkBin() {
+        return networkBin;
+    }
+
+    public void setNetworkBin(NetworkBin networkBin) {
+        this.networkBin = networkBin;
+    }
 
     public Status getStatus() { return status; }
 

@@ -19,4 +19,6 @@ public interface CardRequestsFacade {
     ResponseDto reviewRequest(Long requestId, RequestsDto requestsDto);
 
     ResponseDto updateRequestStatus(Long requestId, RequestsDto requestsDto);
+
+    ResponseDto getBinByNetwork(Long networkId);
 }
