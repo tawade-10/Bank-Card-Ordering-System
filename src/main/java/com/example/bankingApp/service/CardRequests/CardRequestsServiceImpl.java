@@ -150,7 +150,16 @@ public class CardRequestsServiceImpl implements CardRequestsService {
 
         request.setStatus(requestsDto.getStatus());
         request.setReviewMessage(requestsDto.getReviewMessage());
-        return new ResponseDto(cardRequestsRepo.save(request));
+        CardRequests saved = cardRequestsRepo.save(request);
+
+        notificationService.notify(
+                request.getCustomers().getId(),
+                "Card Request Update",
+                "Your card request has been " + request.getStatus() +
+                        ". Reason: " + request.getReviewMessage()
+        );
+
+        return new ResponseDto(saved);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

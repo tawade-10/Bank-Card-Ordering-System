@@ -42,6 +42,9 @@ public class CardDetails {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "active_card")
+    private boolean activeCard;
+
     public Long getCardId() {
         return cardId;
     }
@@ -78,9 +81,7 @@ public class CardDetails {
         return cardType;
     }
 
-    public void setCardType(CardType cardType) {
-        this.cardType = cardType;
-    }
+    public void setCardType(CardType cardType) { this.cardType = cardType; }
 
     public CardVariant getCardVariant() {
         return cardVariant;
@@ -97,6 +98,10 @@ public class CardDetails {
     public void setExpiry(YearMonth expiry) {
         this.expiry = expiry;
     }
+
+    public boolean isActiveCard() { return activeCard; }
+
+    public void setActiveCard(boolean activeCard) { this.activeCard = activeCard; }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
