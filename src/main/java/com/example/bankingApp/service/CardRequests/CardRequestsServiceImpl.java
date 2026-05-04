@@ -8,17 +8,18 @@ import com.example.bankingApp.entity.Enums.Status;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.repository.CardRequests.*;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
+import com.example.bankingApp.service.Notification.NotificationService;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 public class CardRequestsServiceImpl implements CardRequestsService {
 
     private final CardRequestsRepo cardRequestsRepo;
@@ -35,7 +36,9 @@ public class CardRequestsServiceImpl implements CardRequestsService {
 
     private final NetworkBinRepo networkBinRepo;
 
-    public CardRequestsServiceImpl(CardRequestsRepo cardRequestsRepo, CustomersRepo customersRepo, CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, CardNetworkRepo cardNetworkRepo, ReasonForRequestRepo reasonForRequestRepo, NetworkBinRepo networkBinRepo) {
+    private final NotificationService notificationService;
+
+    public CardRequestsServiceImpl(CardRequestsRepo cardRequestsRepo, CustomersRepo customersRepo, CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, CardNetworkRepo cardNetworkRepo, ReasonForRequestRepo reasonForRequestRepo, NetworkBinRepo networkBinRepo, NotificationService notificationService) {
         this.cardRequestsRepo = cardRequestsRepo;
         this.customersRepo = customersRepo;
         this.cardTypeRepo = cardTypeRepo;
@@ -43,6 +46,7 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         this.cardNetworkRepo = cardNetworkRepo;
         this.reasonForRequestRepo = reasonForRequestRepo;
         this.networkBinRepo = networkBinRepo;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -152,12 +156,12 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         request.setReviewMessage(requestsDto.getReviewMessage());
         CardRequests saved = cardRequestsRepo.save(request);
 
-        notificationService.notify(
-                request.getCustomers().getId(),
-                "Card Request Update",
-                "Your card request has been " + request.getStatus() +
-                        ". Reason: " + request.getReviewMessage()
-        );
+//        notificationService.notify(
+//                request.getCustomers().getCustomerId(),
+//                "Card Request Update",
+//                "Your card request has been " + request.getStatus() +
+//                        ". Reason: " + request.getReviewMessage()
+//        );
 
         return new ResponseDto(saved);
     }

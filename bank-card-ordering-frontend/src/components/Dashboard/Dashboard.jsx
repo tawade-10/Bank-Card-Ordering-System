@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 
 import MyCards from "../MyCards/MyCards";
+import MyActiveCards from "../MyActiveCards/MyActiveCards";
 import RecentCardTable from "../RecentCardTable/RecentCardTable";
 
 import Tabs from "@mui/material/Tabs";
@@ -41,7 +42,7 @@ export default function Dashboard() {
       setRequests(response.data);
     } catch (error) {
       console.error("Error fetching requests:", error);
-      alert("Failed to fetch card requests.");
+//       alert("Failed to fetch card requests.");
     }
   };
 
@@ -169,8 +170,8 @@ export default function Dashboard() {
         </div>
       ) : (
         <>
-          <h3 className="section-title">My Active Cards</h3>
-          <MyCards />
+          <h3 className="section-title"></h3>
+          <MyActiveCards />
           <hr className="divider" />
           <h3 className="section-title">Recent Card Requests</h3>
           <RecentCardTable requests={recentTwoRequests} />

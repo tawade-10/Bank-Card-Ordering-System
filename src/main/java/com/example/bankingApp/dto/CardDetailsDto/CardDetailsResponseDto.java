@@ -28,7 +28,7 @@ public class CardDetailsResponseDto {
         this.cardId = card.getCardId();
         this.customerId = card.getCustomers().getCustomerId();
         this.customerName = card.getCustomers().getCustomerName();
-        this.maskedNumber = "**** **** **** " + card.getLast4();
+        this.maskedNumber = card.getNetworkBin().getBinNumber() + "** **** **** " + card.getLast4();
         this.cardTypeId = card.getCardType().getTypeId();
         this.cardType = card.getCardType().getTypeName();
         this.cardVariantId = card.getCardVariant().getVariantId();

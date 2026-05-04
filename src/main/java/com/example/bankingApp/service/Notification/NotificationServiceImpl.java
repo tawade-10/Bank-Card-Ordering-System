@@ -3,9 +3,12 @@ package com.example.bankingApp.service.Notification;
 import com.example.bankingApp.entity.Notification.Notification;
 import com.example.bankingApp.repository.Notification.NotificationRepo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class NotificationServiceImpl implements NotificationService{
 
     private final NotificationRepo notificationRepo;

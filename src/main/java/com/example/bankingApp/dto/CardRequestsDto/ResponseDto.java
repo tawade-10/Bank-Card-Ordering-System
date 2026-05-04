@@ -1,6 +1,5 @@
 package com.example.bankingApp.dto.CardRequestsDto;
 
-import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.Enums.Status;
 import com.example.bankingApp.entity.CardRequests.CardRequests;
 

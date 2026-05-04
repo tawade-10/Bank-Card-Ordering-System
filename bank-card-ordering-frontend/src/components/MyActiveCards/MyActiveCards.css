@@ -1,0 +1,68 @@
+.active-card-wrapper {
+  display: flex;
+  justify-content: center;        /* Centers horizontally */
+  align-items: center;
+  width: 100%;
+  gap: 200px;
+}
+
+.active-card-section {
+  flex: 0 0 380px;                /* Fixed width so both sections align perfectly */
+  text-align: center;
+}
+
+/* Section heading */
+.active-card-section h3 {
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+/* When card exists */
+.customer-card {
+  width: 90%;
+  height: 150px;
+  border-radius: 15px;
+  padding: 20px;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+
+/* When no card is shown */
+.no-cards {
+  margin-top: 20px;
+  color: #777;
+  font-size: 14px;
+}
+
+/* Card logo */
+.card-logo {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 55px;
+}
+
+/* Card number alignment */
+.card-number {
+  font-size: 20px;
+  letter-spacing: 2px;
+  margin-top: 40px;
+}
+
+/* Footer area */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.card-footer label {
+  display: block;
+  font-size: 11px;
+  opacity: 0.7;
+}

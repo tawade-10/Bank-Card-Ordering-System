@@ -1,5 +1,6 @@
 package com.example.bankingApp.entity.CardDetails;
 
+import com.example.bankingApp.entity.CardRequests.NetworkBin;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.CardRequests.CardType;
 import com.example.bankingApp.entity.CardRequests.CardVariant;
@@ -34,6 +35,13 @@ public class CardDetails {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_variant_id", nullable = false)
     private CardVariant cardVariant;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bin_id")
+    private NetworkBin networkBin;
+
+    @Column(name = "is_active")
+    private boolean isActive;
 
     @Column(name = "expiry")
     private YearMonth expiry;
@@ -99,9 +107,25 @@ public class CardDetails {
         this.expiry = expiry;
     }
 
-    public boolean isActiveCard() { return activeCard; }
+    public NetworkBin getNetworkBin() {
+        return networkBin;
+    }
 
-    public void setActiveCard(boolean activeCard) { this.activeCard = activeCard; }
+    public void setNetworkBin(NetworkBin networkBin) {
+        this.networkBin = networkBin;
+    }
+
+    public boolean isActiveCard() {
+        return activeCard;
+    }
+
+    public void setActiveCard(boolean activeCard) {
+        this.activeCard = activeCard;
+    }
+
+    public boolean isActive() { return isActive; }
+
+    public void setActive(boolean active) { isActive = active; }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;

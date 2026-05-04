@@ -100,3 +100,147 @@ export default function MyCards() {
     </div>
   );
 }
+
+//in this now as we are creating different jsx for mycards and myactive cards where on Dashboard we will render MyActiveCards.jsx which will show only the current active credit and debit card, currently make the MyActiveCard.jsx first such that left side half will show the active credit card and the right hand half will show the active debit card
+
+// .card-page-wrapper {
+//   width: 100%;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   font-family: "Poppins", sans-serif;
+// }
+//
+// .no-cards {
+//   margin-top: 50px;
+//   font-size: 18px;
+//   color: #666;
+// }
+//
+// .cards-grid {
+//   display: grid;
+//   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+//   gap: 25px;
+//   width: 100%;
+//   max-width: 1100px;
+// }
+//
+// .customer-card {
+//   height: 150px;
+//   width: 320px;
+//   border-radius: 12px;
+//   padding: 20px;
+//   position: relative;
+//   overflow: hidden;
+//   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+//   display: flex;
+//   flex-direction: column;
+//   transition: transform 0.25s ease, box-shadow 0.25s ease;
+// }
+//
+// .customer-card:hover {
+//   transform: translateY(-6px);
+//   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+// }
+//
+// .chip {
+//   position: absolute;
+//   top: 20px;
+//   left: 20px;
+//
+//   width: 60px;
+//   height: 40px;
+//   border-radius: 8px;
+//
+//   background: linear-gradient(135deg, #d4af37, #f5d76e, #d4af37);
+//
+//   box-shadow:
+//     inset 0 0 5px rgba(0, 0, 0, 0.4),
+//     0 2px 4px rgba(0, 0, 0, 0.3);
+//
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// }
+//
+// .chip-inner {
+//   width: 80%;
+//   height: 70%;
+//   position: relative;
+//   border-radius: 4px;
+//
+//   background: linear-gradient(135deg, #c9a227, #f1c40f);
+//
+//   box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.5);
+// }
+//
+// .line {
+//   position: absolute;
+//   background: rgba(0, 0, 0, 0.5);
+// }
+//
+// .v1 {
+//   width: 2px;
+//   height: 100%;
+//   left: 30%;
+// }
+//
+// .v2 {
+//   width: 2px;
+//   height: 100%;
+//   right: 30%;
+// }
+//
+// .h1 {
+//   height: 2px;
+//   width: 100%;
+//   top: 30%;
+// }
+//
+// .h2 {
+//   height: 2px;
+//   width: 100%;
+//   bottom: 30%;
+// }
+//
+// .card-logo {
+//   position: absolute;
+//   top: 15px;
+//   right: 20px;
+//   width: 60px;
+//   height: auto;
+//   opacity: 0.95;
+//   pointer-events: none;
+// }
+//
+// .card-number {
+//   position: absolute;
+//   bottom: 60px;
+//   left: 20px;
+//   font-size: 18px;
+//   font-weight: bold;
+//   letter-spacing: 2px;
+// }
+//
+// .card-footer {
+//   position: absolute;
+//   bottom: 15px;
+//   left: 20px;
+//   right: 20px;
+//   display: flex;
+//   justify-content: space-between;
+// }
+//
+// .card-holder label,
+// .card-expiry label {
+//   font-size: 12px;
+//   opacity: 0.7;
+// }
+//
+// .card-holder span,
+// .card-expiry span {
+//   font-size: 14px;
+//   font-weight: 600;
+//   display: block;
+//   margin-top: 3px;
+// }

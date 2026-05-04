@@ -19,7 +19,7 @@ ON CONFLICT DO NOTHING;
 
 INSERT INTO network_bin (network_id, bin_number) VALUES
     (1, '51'),
-    (2, '4'),
+    (2, '40'),
     (3, '60')
 ON CONFLICT DO NOTHING;
 

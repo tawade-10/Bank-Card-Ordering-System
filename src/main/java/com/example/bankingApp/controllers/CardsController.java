@@ -37,6 +37,13 @@ public class CardsController {
         return ResponseEntity.ok(allCards);
     }
 
+    @GetMapping("/active")
+    public ResponseEntity<List<CardDetailsResponseDto>> getActiveCards(@AuthenticationPrincipal UserDetails userDetails){
+        String email = userDetails.getUsername();
+        List<CardDetailsResponseDto> activeCards = cardDetailsFacade.getActiveCards(email);
+        return ResponseEntity.ok(activeCards);
+    }
+
     @GetMapping("/{customerId}")
     public ResponseEntity<List<CardDetailsResponseDto>> getCardsByCustomerId(@PathVariable Long customerId){
         List<CardDetailsResponseDto> cardById = cardDetailsFacade.getCardsByCustomerId(customerId);
