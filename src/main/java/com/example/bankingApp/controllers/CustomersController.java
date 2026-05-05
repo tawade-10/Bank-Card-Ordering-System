@@ -36,5 +36,4 @@ public class CustomersController {
         CustomersResponseDto updatedCustomer = customersFacade.updateCustomer(customerId,customersRequestDto);
         return ResponseEntity.ok(updatedCustomer);
     }
-
 }

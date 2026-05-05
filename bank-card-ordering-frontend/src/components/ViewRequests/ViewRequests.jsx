@@ -51,7 +51,6 @@ export default function ViewRequests() {
     }
   };
 
-  /** FLOW UPDATE → PRINTING → DISPATCHED → DELIVERED */
   const handleFlowUpdate = async (newStatus) => {
     try {
       const res = await axios.put(
@@ -69,104 +68,94 @@ export default function ViewRequests() {
 
   if (!request) return <h3>Loading...</h3>;
 
-  return (
-    <div className="view-req-wrapper">
-      <div className={`overlay ${showReasonBox ? "show" : ""}`} />
+return (
+  <div className="vr-wrapper">
+    <div className={`vr-overlay ${showReasonBox ? "show" : ""}`} />
 
-      <div className="view-req-container">
-        <h2 className="view-req-title">Request Details</h2>
-        <p><b>Request ID:</b> {request.requestId}</p>
-        <p><b>Customer Name:</b> {request.customers?.customerName}</p>
-        <p><b>Card Type:</b> {request.cardType}</p>
-        <p><b>Variant:</b> {request.cardVariant}</p>
-        <p><b>Reason:</b> {request.reason}</p>
-        <p><b>Status:</b> {request.status}</p>
-        <p><b>Date:</b> {request.localDate}</p>
-        <p><b>Review Message:</b> {request.reviewMessage || "None"}</p>
+    <div className="vr-card">
+      <h2 className="vr-title">Request Details</h2>
 
-        {request.status === "PENDING_REVIEW" && (
-          <>
-            {!showReasonBox ? (
-              <div className="button-group">
-                <button
-                  className="btn-approve"
-                  onClick={() => {
-                    setActionType("APPROVED");
-                    setShowReasonBox(true);
-                  }}
-                >
-                  Approve
-                </button>
+      <div className="vr-details">
+        <div className="vr-row"><b>Request ID:</b> {request.requestId}</div>
+        <div className="vr-row"><b>Customer Name:</b> {request.customerName}</div>
+        <div className="vr-row"><b>Card Type:</b> {request.cardType}</div>
+        <div className="vr-row"><b>Variant:</b> {request.cardVariant}</div>
+        <div className="vr-row"><b>Reason:</b> {request.reason}</div>
+        <div className="vr-row"><b>Status:</b> <span className={`status-badge ${request.status.toLowerCase()}`}>{request.status}</span></div>
+        <div className="vr-row"><b>Date:</b> {request.localDate}</div>
+        <div className="vr-row"><b>Review Message:</b> {request.reviewMessage || "None"}</div>
+      </div>
 
-                <button
-                  className="btn-reject"
-                  onClick={() => {
-                    setActionType("REJECTED");
-                    setShowReasonBox(true);
-                  }}
-                >
-                  Reject
-                </button>
-              </div>
-            ) : (
-              <ReasonBox
-                actionType={actionType}
-                onSubmit={(reason) => handleReview(actionType, reason)}
-                onCancel={() => setShowReasonBox(false)}
-              />
-            )}
-          </>
-        )}
-
-        {request.status === "APPROVED" && !showReasonBox && (
-          <div className="create-card-box">
+      {request.status === "PENDING_REVIEW" && (
+        !showReasonBox ? (
+          <div className="vr-btn-group">
             <button
-              className="btn-create-card"
-              onClick={() => navigate(`/admin/dashboard/create-card/${request.requestId}`)}
-            >
-              Create Card
-            </button>
-          </div>
-        )}
-
-        {["APPROVED", "PRINTING", "DISPATCHED"].includes(request.status) && (
-          <div className="status-dropdown-box">
-            <label><b>Update Status:</b></label>
-
-            <select
-              className="flow-dropdown"
-              value=""
-              onChange={(e) => {
-                const next = e.target.value;
-                if (next !== "") handleFlowUpdate(next);
+              className="btn-approve"
+              onClick={() => {
+                setActionType("APPROVED");
+                setShowReasonBox(true);
               }}
             >
-              <option value="">-- Select Next Status --</option>
+              Approve
+            </button>
 
-              {request.status === "APPROVED" && (
-                <option value="PRINTING">PRINTING</option>
-              )}
-
-              {request.status === "PRINTING" && (
-                <option value="DISPATCHED">DISPATCHED</option>
-              )}
-
-              {request.status === "DISPATCHED" && (
-                <option value="DELIVERED">DELIVERED</option>
-              )}
-            </select>
+            <button
+              className="btn-reject"
+              onClick={() => {
+                setActionType("REJECTED");
+                setShowReasonBox(true);
+              }}
+            >
+              Reject
+            </button>
           </div>
-        )}
+        ) : (
+          <ReasonBox
+            actionType={actionType}
+            onSubmit={(reason) => handleReview(actionType, reason)}
+            onCancel={() => setShowReasonBox(false)}
+          />
+        )
+      )}
 
-        {request.status === "DELIVERED" && (
+      {/* CREATE CARD */}
+      {request.status === "APPROVED" && !showReasonBox && (
+        <div className="vr-action">
           <button
-            className="btn-back"
-            onClick={() => navigate("/admin/dashboard")}
+            className="btn-create"
+            onClick={() => navigate(`/admin/dashboard/create-card/${request.requestId}`)}
           >
+            Create Card
+          </button>
+        </div>
+      )}
+
+      {["APPROVED", "PRINTED", "DISPATCHED"].includes(request.status) && (
+        <div className="vr-status-box">
+          <label><b>Update Status : </b></label>
+          <select
+            className="vr-select"
+            value=""
+            onChange={(e) => e.target.value && handleFlowUpdate(e.target.value)}
+          >
+            <option value="">-- Select Next Status --</option>
+
+            {request.status === "APPROVED" && <option value="PRINTED">PRINTED</option>}
+            {request.status === "PRINTED" && <option value="DISPATCHED">DISPATCHED</option>}
+            {request.status === "DISPATCHED" && <option value="DELIVERED">DELIVERED</option>}
+          </select>
+        </div>
+      )}
+
+      {request.status === "DELIVERED" && (
+        <div className="vr-action">
+          <button className="btn-back" onClick={() => navigate("/admin/dashboard")}>
             Back to Dashboard
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
-  );
+  </div>
+);
 }
+

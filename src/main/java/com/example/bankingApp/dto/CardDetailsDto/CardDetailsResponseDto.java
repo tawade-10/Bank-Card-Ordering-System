@@ -17,6 +17,10 @@ public class CardDetailsResponseDto {
     private Long cardVariantId;
     private String cardVariant;
 
+    private Long networkId;
+    private String networkName;
+    private String binNumber;
+
     private String cardColourFront;
     private String cardColourBack;
     private String chipColour;
@@ -35,6 +39,9 @@ public class CardDetailsResponseDto {
         this.cardVariant = card.getCardVariant().getVariantName();
         this.expiry = String.format("%02d/%02d", card.getExpiry().getMonthValue(),
                                                  card.getExpiry().getYear() % 100);
+        this.networkId = card.getNetworkBin().getCardNetwork().getNetworkId();
+        this.networkName = card.getNetworkBin().getCardNetwork().getNetworkName();
+        this.binNumber =card.getNetworkBin().getBinNumber();
         this.cardColourFront = card.getCardVariant().getCardColourFront();
         this.cardColourBack = card.getCardVariant().getCardColourBack();
         this.chipColour = card.getCardVariant().getChipColour();
@@ -115,6 +122,30 @@ public class CardDetailsResponseDto {
 
     public void setCardVariant(String cardVariant) {
         this.cardVariant = cardVariant;
+    }
+
+    public Long getNetworkId() {
+        return networkId;
+    }
+
+    public void setNetworkId(Long networkId) {
+        this.networkId = networkId;
+    }
+
+    public String getNetworkName() {
+        return networkName;
+    }
+
+    public void setNetworkName(String networkName) {
+        this.networkName = networkName;
+    }
+
+    public String getBinNumber() {
+        return binNumber;
+    }
+
+    public void setBinNumber(String binNumber) {
+        this.binNumber = binNumber;
     }
 
     public String getCardColourFront() {

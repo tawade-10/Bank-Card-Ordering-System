@@ -1,74 +1,146 @@
-/* Wrapper → centers everything on the page */
-.view-req-wrapper {
+.vr-wrapper {
   width: 100%;
-  height: calc(100vh - 50px);
+  height: 200px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding-top: 120px;
 }
 
-.overlay {
+/* Overlay Blur */
+.vr-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(3px);
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(4px);
   opacity: 0;
   visibility: hidden;
-  transition: 0.2s ease-in-out;
+  transition: 0.25s ease;
 }
-.overlay.show {
+.vr-overlay.show {
   opacity: 1;
   visibility: visible;
 }
 
-.view-req-container {
+/* Main Card */
+.vr-card {
   width: 100%;
-  max-width: 650px;
+  max-width: 680px;
   background: #ffffff;
-  padding: 20px 28px;
-  margin: 0 auto;
-  border-radius: 14px;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
-  max-height: 520px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
+  padding: 28px 32px;
+  border-radius: 16px;
+  box-shadow: 0 8px 35px rgba(0,0,0,0.12);
+  animation: fadeIn 0.3s ease;
 }
 
-/* Title */
-.view-req-title {
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.vr-title {
   text-align: center;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
-  margin-bottom: 10px;
-  color: #222;
+  margin-bottom: 22px;
+  color: #1a1a1a;
 }
 
-/* Each paragraph aligned */
-.view-req-container p {
-  margin: 4px 0;       /* tiny gap between fields */
+/* Details Section */
+.vr-details {
+  background: #fafafa;
+  padding: 18px 22px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+}
+
+.vr-row {
+  margin-bottom: 10px;
   font-size: 15px;
+  display: flex;
+  justify-content: space-between;
   color: #444;
 }
-.view-req-container p b {
+.vr-row b {
   color: #222;
 }
 
-.button-group,
-.create-card-box,
-.status-dropdown-box,
-.btn-back {
-  display: flex;
-  justify-content: center;
-  margin-top: 15px;
+/* Status Badge */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
-.flow-dropdown {
+.status-badge.pending_review { background: #fff2cc; color: #a67c00; }
+.status-badge.approved { background: #d7fada; color: #0a7d0a; }
+.status-badge.printing { background: #dce8ff; color: #2d59ff; }
+.status-badge.dispatched { background: #ffe7d6; color: #d66a00; }
+.status-badge.delivered { background: #e0ffe9; color: #008b2e; }
+
+/* Buttons */
+.vr-btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 22px;
+}
+
+button {
+  font-size: 15px;
+  padding: 12px 22px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-approve {
+  background: #1ecb71;
+  color: white;
+}
+.btn-approve:hover { background: #17a95e; }
+
+.btn-reject {
+  background: #ff4d4f;
+  color: white;
+}
+.btn-reject:hover { background: #d9363e; }
+
+.btn-create {
+  background: #2d7efb;
+  color: white;
+  margin-left: 270px;
+  margin-top: 10px;
+}
+.btn-create:hover { background: #1a5ed8; }
+
+.btn-back {
+  background: #555;
+  color: white;
+  width: 100%;
+}
+.btn-back:hover { background: #333; }
+
+/* Dropdown Section */
+.vr-status-box {
+  margin-top: 25px;
+}
+
+.vr-select {
   width: 60%;
-  padding: 10px;
+  padding: 12px;
+  margin-top: 8px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  background: #fff;
-  margin-top: 8px;
+  font-size: 15px;
+  background: white;
+}
+
+.vr-select:focus {
+  border-color: #2d7efb;
+  box-shadow: 0 0 6px rgba(45,126,251,0.25);
 }

@@ -1,5 +1,6 @@
 package com.example.bankingApp.dto.CardRequestsDto;
 
+import com.example.bankingApp.entity.CardDetails.CardDetails;
 import com.example.bankingApp.entity.Enums.Status;
 import com.example.bankingApp.entity.CardRequests.CardRequests;
 
@@ -45,6 +46,22 @@ public class ResponseDto {
         this.customerName = cardRequests.getCustomers().getCustomerName();
         this.reviewMessage = cardRequests.getReviewMessage();
         this.updatedAt = cardRequests.getUpdatedAt().toString();
+    }
+
+    public ResponseDto(Long requestId, Long cardTypeId, String cardType, Long cardVariantId, String cardVariant, Long cardNetworkId, String cardNetwork, String reason, Status status, String localDate, Long customerId, String customerName
+    ) {
+        this.requestId = requestId;
+        this.cardTypeId = cardTypeId;
+        this.cardType = cardType;
+        this.cardVariantId = cardVariantId;
+        this.cardVariant = cardVariant;
+        this.cardNetworkId = cardNetworkId;
+        this.cardNetwork = cardNetwork;
+        this.reason = reason;
+        this.status = status;
+        this.localDate = localDate;
+        this.customerId = customerId;
+        this.customerName = customerName;
     }
 
     public ResponseDto() {}

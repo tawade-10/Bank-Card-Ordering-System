@@ -4,7 +4,7 @@ public enum Status {
     PENDING_REVIEW,
     APPROVED,
     REJECTED,
-    PRINTING,
+    PRINTED,
     DISPATCHED,
     DELIVERED,
     CANCELLED,

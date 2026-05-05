@@ -33,8 +33,20 @@ export default function MyActiveCards() {
       );
 
       const data = response.data;
-      setCreditCard(data.find((c) => c.cardType === "CREDIT") || null);
-      setDebitCard(data.find((c) => c.cardType === "DEBIT") || null);
+      console.log("Active Cards Response:", data);
+
+      const credit = data.find((c) => c.cardType === "CREDIT") || null;
+      const debit = data.find((c) => c.cardType === "DEBIT") || null;
+
+      setCreditCard(credit);
+      setDebitCard(debit);
+
+      console.log("Credit Card:", credit);
+      console.log("Debit Card:", debit);
+
+      // UPDATED HERE
+      console.log("Credit BIN:", credit?.binNumber);
+      console.log("Debit BIN:", debit?.binNumber);
 
     } catch (error) {
       console.error("Error loading active cards:", error);
@@ -42,7 +54,6 @@ export default function MyActiveCards() {
       setLoading(false);
     }
   };
-
 
   if (loading) {
     return (
@@ -54,8 +65,11 @@ export default function MyActiveCards() {
 
   return (
     <div className="active-card-wrapper">
+
+      {/* ACTIVE CREDIT CARD */}
       <div className="active-card-section">
         <h3>Active Credit Card</h3>
+
         {creditCard ? (
           <div
             className="customer-card"
@@ -72,12 +86,15 @@ export default function MyActiveCards() {
                 <div className="line h2"></div>
               </div>
             </div>
+
             <img
-              src={NETWORK_LOGOS[creditCard.networkBin]}
+              src={NETWORK_LOGOS[creditCard.binNumber]}
               alt="network"
               className="card-logo"
             />
+
             <div className="card-number">{creditCard.maskedNumber}</div>
+
             <div className="card-footer">
               <div className="card-holder">
                 <label>Card Holder</label>
@@ -94,6 +111,7 @@ export default function MyActiveCards() {
         )}
       </div>
 
+      {/* ACTIVE DEBIT CARD */}
       <div className="active-card-section">
         <h3>Active Debit Card</h3>
 
@@ -113,12 +131,15 @@ export default function MyActiveCards() {
                 <div className="line h2"></div>
               </div>
             </div>
+
             <img
-              src={NETWORK_LOGOS[debitCard.networkBin]}
+              src={NETWORK_LOGOS[debitCard.binNumber]}     // FIXED
               alt="network"
               className="card-logo"
             />
+
             <div className="card-number">{debitCard.maskedNumber}</div>
+
             <div className="card-footer">
               <div className="card-holder">
                 <label>Card Holder</label>

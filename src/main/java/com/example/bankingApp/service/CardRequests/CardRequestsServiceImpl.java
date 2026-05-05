@@ -156,13 +156,11 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         request.setReviewMessage(requestsDto.getReviewMessage());
         CardRequests saved = cardRequestsRepo.save(request);
 
-//        notificationService.notify(
-//                request.getCustomers().getCustomerId(),
-//                "Card Request Update",
-//                "Your card request has been " + request.getStatus() +
-//                        ". Reason: " + request.getReviewMessage()
-//        );
-
+        notificationService.sendNotification(request.getCustomers().getCustomerId(),
+                "Card Request Update",
+                "Your card request has been " + request.getStatus() +
+                        ". Reason: " + request.getReviewMessage()
+        );
         return new ResponseDto(saved);
     }
 
@@ -184,11 +182,11 @@ public class CardRequestsServiceImpl implements CardRequestsService {
             throw new RuntimeException("Please review (approve/reject) the request first.");
         }
 
-        if (current == Status.APPROVED && next != Status.PRINTING) {
-            throw new RuntimeException("APPROVED → PRINTING is the only valid transition.");
+        if (current == Status.APPROVED && next != Status.PRINTED) {
+            throw new RuntimeException("APPROVED → PRINTED is the only valid transition.");
         }
 
-        if (current == Status.PRINTING && next != Status.DISPATCHED) {
+        if (current == Status.PRINTED && next != Status.DISPATCHED) {
             throw new RuntimeException("PRINTING → DISPATCHED only.");
         }
 

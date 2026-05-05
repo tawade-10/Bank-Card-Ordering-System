@@ -31,6 +31,13 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
+    public void sendNotification(Long userId, String title, String message) {
+        Notification notification = new Notification(userId, title, message);
+        notificationRepo.save(notification);
+        simpMessagingTemplate.convertAndSend("/topic/notifications/" + userId, notification);
+    }
+
+    @Override
     public List<Notification> getUserNotifications(Long userId) {
         return notificationRepo.findByUserIdOrderByCreatedAtDesc(userId);
     }

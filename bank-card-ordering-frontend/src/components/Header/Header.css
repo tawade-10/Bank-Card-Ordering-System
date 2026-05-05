@@ -40,3 +40,18 @@
   align-items: center;
   justify-content: center;
 }
+
+.notif-icon {
+  cursor: pointer;
+  font-size: 24px;
+  margin-left: 950px;
+  display: flex;
+  align-items: center;
+  color: white;
+  transition: 0.2s ease-in-out;
+}
+
+.notif-icon:hover {
+  color: #ffcc00;
+  transform: scale(1.1);
+}

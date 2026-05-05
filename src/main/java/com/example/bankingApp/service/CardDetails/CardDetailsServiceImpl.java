@@ -94,7 +94,6 @@ public class CardDetailsServiceImpl implements CardDetailsService{
         return new CardDetailsResponseDto(saved);
     }
 
-
     @Override
     public List<CardDetailsResponseDto> getAllCards() {
         List<CardDetails> cards = cardDetailsRepo.findAll();
