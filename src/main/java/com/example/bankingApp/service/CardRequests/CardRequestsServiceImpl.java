@@ -2,6 +2,9 @@ package com.example.bankingApp.service.CardRequests;
 
 import com.example.bankingApp.dto.CardRequestsDto.RequestsDto;
 import com.example.bankingApp.dto.CardRequestsDto.ResponseDto;
+import com.example.bankingApp.dto.NetworkDto.NetworkResponseDto;
+import com.example.bankingApp.dto.ReviewDto.ReviewRequestsDto;
+import com.example.bankingApp.dto.ReviewDto.ReviewResponseDto;
 import com.example.bankingApp.entity.CardRequests.*;
 import com.example.bankingApp.entity.CardRequests.NetworkBin;
 import com.example.bankingApp.entity.Enums.Status;
@@ -118,16 +121,14 @@ public class CardRequestsServiceImpl implements CardRequestsService {
     }
 
     @Override
-    public ResponseDto getBinByNetwork(Long networkId) {
+    public NetworkResponseDto getBinByNetwork(Long networkId) {
 
         CardNetwork network = cardNetworkRepo.findById(networkId)
                 .orElseThrow(() -> new RuntimeException("Network not found with ID: " + networkId));
 
         NetworkBin bin = networkBinRepo.findByCardNetwork(network);
 
-        ResponseDto dto = new ResponseDto();
-        dto.setCardNetworkId(network.getNetworkId());
-        dto.setCardNetwork(network.getNetworkName());
+        NetworkResponseDto dto = new NetworkResponseDto();
         dto.setBin(bin.getBinNumber());
 
         return dto;
@@ -135,7 +136,7 @@ public class CardRequestsServiceImpl implements CardRequestsService {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @Override
-    public ResponseDto reviewRequest(Long requestId, RequestsDto requestsDto) {
+    public ReviewResponseDto reviewRequest(Long requestId, ReviewRequestsDto reviewRequestsDto) {
 
         CardRequests request = cardRequestsRepo.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
@@ -144,16 +145,16 @@ public class CardRequestsServiceImpl implements CardRequestsService {
             throw new RuntimeException("Only PENDING_REVIEW requests can be approved or rejected.");
         }
 
-        if (requestsDto.getStatus() != Status.APPROVED && requestsDto.getStatus() != Status.REJECTED) {
+        if (reviewRequestsDto.getStatus() != Status.APPROVED && reviewRequestsDto.getStatus() != Status.REJECTED) {
             throw new RuntimeException("Invalid status. Only APPROVED or REJECTED allowed here.");
         }
 
-        if (requestsDto.getReviewMessage() == null || requestsDto.getReviewMessage().trim().isEmpty()) {
+        if (reviewRequestsDto.getReviewMessage() == null || reviewRequestsDto.getReviewMessage().trim().isEmpty()) {
             throw new RuntimeException("Reason cannot be empty");
         }
 
-        request.setStatus(requestsDto.getStatus());
-        request.setReviewMessage(requestsDto.getReviewMessage());
+        request.setStatus(reviewRequestsDto.getStatus());
+        request.setReviewMessage(reviewRequestsDto.getReviewMessage());
         CardRequests saved = cardRequestsRepo.save(request);
 
         notificationService.sendNotification(request.getCustomers().getCustomerId(),
@@ -161,18 +162,18 @@ public class CardRequestsServiceImpl implements CardRequestsService {
                 "Your card request has been " + request.getStatus() +
                         ". Reason: " + request.getReviewMessage()
         );
-        return new ResponseDto(saved);
+        return new ReviewResponseDto(saved);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @Override
-    public ResponseDto updateRequestStatus(Long requestId, RequestsDto requestsDto) {
+    public ReviewResponseDto updateRequestStatus(Long requestId, ReviewRequestsDto reviewRequestsDto) {
 
         CardRequests request = cardRequestsRepo.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
 
         Status current = request.getStatus();
-        Status next = requestsDto.getStatus();
+        Status next = reviewRequestsDto.getStatus();
 
         if (current == Status.REJECTED) {
             throw new RuntimeException("Request already rejected.");
@@ -199,6 +200,6 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         }
 
         request.setStatus(next);
-        return new ResponseDto(cardRequestsRepo.save(request));
+        return new ReviewResponseDto(cardRequestsRepo.save(request));
     }
 }

@@ -21,11 +21,6 @@ public class CardDetailsResponseDto {
     private String networkName;
     private String binNumber;
 
-    private String cardColourFront;
-    private String cardColourBack;
-    private String chipColour;
-    private String textColour;
-
     private String createdAt;
 
     public CardDetailsResponseDto(CardDetails card) {
@@ -42,10 +37,6 @@ public class CardDetailsResponseDto {
         this.networkId = card.getNetworkBin().getCardNetwork().getNetworkId();
         this.networkName = card.getNetworkBin().getCardNetwork().getNetworkName();
         this.binNumber =card.getNetworkBin().getBinNumber();
-        this.cardColourFront = card.getCardVariant().getCardColourFront();
-        this.cardColourBack = card.getCardVariant().getCardColourBack();
-        this.chipColour = card.getCardVariant().getChipColour();
-        this.textColour = card.getCardVariant().getTextColour();
         this.createdAt = card.getCreatedAt().toString();
     }
 
@@ -146,38 +137,6 @@ public class CardDetailsResponseDto {
 
     public void setBinNumber(String binNumber) {
         this.binNumber = binNumber;
-    }
-
-    public String getCardColourFront() {
-        return cardColourFront;
-    }
-
-    public void setCardColourFront(String cardColourFront) {
-        this.cardColourFront = cardColourFront;
-    }
-
-    public String getCardColourBack() {
-        return cardColourBack;
-    }
-
-    public void setCardColourBack(String cardColourBack) {
-        this.cardColourBack = cardColourBack;
-    }
-
-    public String getChipColour() {
-        return chipColour;
-    }
-
-    public void setChipColour(String chipColour) {
-        this.chipColour = chipColour;
-    }
-
-    public String getTextColour() {
-        return textColour;
-    }
-
-    public void setTextColour(String textColour) {
-        this.textColour = textColour;
     }
 
     public String getCreatedAt() {

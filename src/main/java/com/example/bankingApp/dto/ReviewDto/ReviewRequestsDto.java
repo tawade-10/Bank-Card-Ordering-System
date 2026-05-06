@@ -1,14 +1,17 @@
-package com.example.bankingApp.dto.MessageDto;
+package com.example.bankingApp.dto.ReviewDto;
 
 import com.example.bankingApp.entity.Enums.Status;
+import jakarta.validation.constraints.NotNull;
 
-public class MessageRequestDto {
+public class ReviewRequestsDto {
 
+    @NotNull(message = "Status cannot be empty")
     private Status status;
 
+    @NotNull(message = "Message cannot be empty")
     private String reviewMessage;
 
-    public MessageRequestDto() {
+    public ReviewRequestsDto() {
     }
 
     public Status getStatus() {

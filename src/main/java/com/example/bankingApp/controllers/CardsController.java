@@ -2,13 +2,12 @@ package com.example.bankingApp.controllers;
 
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
+import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
 import com.example.bankingApp.facade.CardDetailsFacade.CardDetailsFacade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,4 +56,9 @@ public class CardsController {
         return ResponseEntity.ok(cards);
     }
 
+    @GetMapping("/variant/{variantId}")
+    public ResponseEntity<CardVariantsResponseDto> getVariantById(@PathVariable Long variantId){
+        CardVariantsResponseDto variantById = cardDetailsFacade.getVariantById(variantId);
+        return ResponseEntity.ok(variantById);
+    }
 }

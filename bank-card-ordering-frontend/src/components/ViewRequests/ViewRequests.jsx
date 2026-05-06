@@ -32,7 +32,6 @@ export default function ViewRequests() {
     }
   };
 
-  /** For APPROVE / REJECT */
   const handleReview = async (newStatus, reason) => {
     try {
       const res = await axios.put(
@@ -118,7 +117,6 @@ return (
         )
       )}
 
-      {/* CREATE CARD */}
       {request.status === "APPROVED" && !showReasonBox && (
         <div className="vr-action">
           <button
@@ -130,7 +128,7 @@ return (
         </div>
       )}
 
-      {["APPROVED", "PRINTED", "DISPATCHED"].includes(request.status) && (
+      {["PRINTED", "DISPATCHED"].includes(request.status) && (
         <div className="vr-status-box">
           <label><b>Update Status : </b></label>
           <select
@@ -140,7 +138,7 @@ return (
           >
             <option value="">-- Select Next Status --</option>
 
-            {request.status === "APPROVED" && <option value="PRINTED">PRINTED</option>}
+{/*             {request.status === "APPROVED" && <option value="PRINTED">PRINTED</option>} */}
             {request.status === "PRINTED" && <option value="DISPATCHED">DISPATCHED</option>}
             {request.status === "DISPATCHED" && <option value="DELIVERED">DELIVERED</option>}
           </select>

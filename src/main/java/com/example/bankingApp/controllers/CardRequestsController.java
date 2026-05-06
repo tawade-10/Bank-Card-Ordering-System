@@ -2,6 +2,10 @@ package com.example.bankingApp.controllers;
 
 import com.example.bankingApp.dto.CardRequestsDto.RequestsDto;
 import com.example.bankingApp.dto.CardRequestsDto.ResponseDto;
+import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
+import com.example.bankingApp.dto.NetworkDto.NetworkResponseDto;
+import com.example.bankingApp.dto.ReviewDto.ReviewRequestsDto;
+import com.example.bankingApp.dto.ReviewDto.ReviewResponseDto;
 import com.example.bankingApp.facade.CardRequestsFacade.CardRequestsFacade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -47,21 +51,20 @@ public class CardRequestsController {
     }
 
     @GetMapping("/network/{networkId}")
-    public ResponseEntity<ResponseDto> getBinByNetwork(@PathVariable Long networkId){
-        ResponseDto network = cardRequestsFacade.getBinByNetwork(networkId);
+    public ResponseEntity<NetworkResponseDto> getBinByNetwork(@PathVariable Long networkId){
+        NetworkResponseDto network = cardRequestsFacade.getBinByNetwork(networkId);
         return ResponseEntity.ok(network);
     }
 
     @PutMapping("/{requestId}/review")
-    public ResponseEntity<ResponseDto> reviewRequest(@PathVariable Long requestId, @RequestBody RequestsDto requestsDto) {
-        ResponseDto updatedRequest = cardRequestsFacade.reviewRequest(requestId, requestsDto);
+    public ResponseEntity<ReviewResponseDto> reviewRequest(@PathVariable Long requestId, @RequestBody ReviewRequestsDto reviewRequestsDto) {
+        ReviewResponseDto updatedRequest = cardRequestsFacade.reviewRequest(requestId, reviewRequestsDto);
         return ResponseEntity.ok(updatedRequest);
     }
 
     @PutMapping("/{requestId}/status")
-    public ResponseEntity<ResponseDto> updateRequestStatus(@PathVariable Long requestId, @RequestBody RequestsDto requestsDto) {
-        ResponseDto updatedRequest = cardRequestsFacade.updateRequestStatus(requestId, requestsDto);
+    public ResponseEntity<ReviewResponseDto> updateRequestStatus(@PathVariable Long requestId, @RequestBody ReviewRequestsDto reviewRequestsDto) {
+        ReviewResponseDto updatedRequest = cardRequestsFacade.updateRequestStatus(requestId, reviewRequestsDto);
         return ResponseEntity.ok(updatedRequest);
     }
-
 }

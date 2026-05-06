@@ -40,14 +40,6 @@ export default function MyActiveCards() {
 
       setCreditCard(credit);
       setDebitCard(debit);
-
-      console.log("Credit Card:", credit);
-      console.log("Debit Card:", debit);
-
-      // UPDATED HERE
-      console.log("Credit BIN:", credit?.binNumber);
-      console.log("Debit BIN:", debit?.binNumber);
-
     } catch (error) {
       console.error("Error loading active cards:", error);
     } finally {
@@ -111,7 +103,6 @@ export default function MyActiveCards() {
         )}
       </div>
 
-      {/* ACTIVE DEBIT CARD */}
       <div className="active-card-section">
         <h3>Active Debit Card</h3>
 

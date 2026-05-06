@@ -2,6 +2,9 @@ package com.example.bankingApp.service.CardRequests;
 
 import com.example.bankingApp.dto.CardRequestsDto.RequestsDto;
 import com.example.bankingApp.dto.CardRequestsDto.ResponseDto;
+import com.example.bankingApp.dto.NetworkDto.NetworkResponseDto;
+import com.example.bankingApp.dto.ReviewDto.ReviewRequestsDto;
+import com.example.bankingApp.dto.ReviewDto.ReviewResponseDto;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
@@ -16,9 +19,9 @@ public interface CardRequestsService {
 
     List<ResponseDto> getRequestsByEmail(Authentication authentication);
 
-    ResponseDto reviewRequest(Long requestId, RequestsDto requestsDto);
+    ReviewResponseDto reviewRequest(Long requestId, ReviewRequestsDto reviewRequestsDto);
 
-    ResponseDto updateRequestStatus(Long requestId, RequestsDto requestsDto);
+    ReviewResponseDto updateRequestStatus(Long requestId, ReviewRequestsDto reviewRequestsDto);
 
-    ResponseDto getBinByNetwork(Long networkId);
+    NetworkResponseDto getBinByNetwork(Long networkId);
 }

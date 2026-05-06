@@ -52,45 +52,48 @@ export default function CardCreation() {
     fetchRequestDetails();
   }, []);
 
-  // Fetch request + card design + BIN number
   const fetchRequestDetails = async () => {
     try {
-      const res = await axios.get(
+      const token = localStorage.getItem("token");
+
+      const reqRes = await axios.get(
         `http://localhost:8080/api/request-card/${requestId}`,
         {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      const req = res.data;
+      const req = reqRes.data;
 
       setCardTypeId(req.cardTypeId);
       setCardVariantId(req.cardVariantId);
       setNetworkId(req.cardNetworkId);
 
+      const variantRes = await axios.get(
+        `http://localhost:8080/api/cards/variant/${req.cardVariantId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const variant = variantRes.data;
+
       setDesign({
-        front: req.cardColourFront,
-        back: req.cardColourBack,
-        chip: req.chipColour,
-        text: req.textColour,
+        front: variant.cardColourFront,
+        back: variant.cardColourBack,
+        chip: variant.chipColour,
+        text: variant.textColour,
       });
 
-      // Fetch BIN from backend
       const binRes = await axios.get(
         `http://localhost:8080/api/request-card/network/${req.cardNetworkId}`,
         {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
       const bin = binRes.data.bin;
       setBinNumber(bin);
-
-      // Pre-populate card number with BIN prefix
       setNumber(formatCardNumber(bin));
 
     } catch (err) {
@@ -101,17 +104,15 @@ export default function CardCreation() {
     }
   };
 
-  // Format number (1111222233334444 → 1111 2222 3333 4444)
   const formatCardNumber = (num) => {
     return num.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim();
   };
 
-  // Handle card number entry BUT BIN prefix cannot be removed
   const handleNumberChange = (e) => {
     const input = e.target.value.replace(/\s/g, "");
 
     if (!input.startsWith(binNumber)) {
-      return; // BLOCK USER from deleting bin prefix
+      return;
     }
 
     let cleaned = input.substring(0, 16);
@@ -120,11 +121,9 @@ export default function CardCreation() {
 
   const handleExpiryChange = (e) => {
     let input = e.target.value.replace(/\D/g, "").substring(0, 4);
-
     if (input.length >= 3) {
       input = input.substring(0, 2) + "/" + input.substring(2);
     }
-
     setExpiration(input || "__/__");
   };
 
@@ -162,13 +161,12 @@ export default function CardCreation() {
       };
 
       await axios.post("http://localhost:8080/api/cards/create-card", payload, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
       alert("Card Created Successfully!");
       navigate("/admin/dashboard");
+
     } catch (err) {
       console.error(err);
       alert("Error creating card");
@@ -177,6 +175,7 @@ export default function CardCreation() {
 
   return (
     <Container style={{ position: "relative" }}>
+
       <button
         onClick={handleGoBack}
         style={{ position: "absolute", top: "20px", left: "20px" }}
@@ -201,13 +200,8 @@ export default function CardCreation() {
         </Flipper>
       </Card>
 
-      {/* FORM */}
       <CardForm>
-        <Input
-          placeholder="Card Number"
-          value={number}
-          onChange={handleNumberChange}
-        />
+        <Input placeholder="Card Number" value={number} onChange={handleNumberChange} />
 
         <Input
           placeholder="Card Holder Name"
@@ -229,6 +223,7 @@ export default function CardCreation() {
           {loading ? "Loading..." : "Create Card"}
         </button>
       </CardForm>
+
     </Container>
   );
 }

@@ -2,6 +2,9 @@ package com.example.bankingApp.facade.CardRequestsFacade;
 
 import com.example.bankingApp.dto.CardRequestsDto.RequestsDto;
 import com.example.bankingApp.dto.CardRequestsDto.ResponseDto;
+import com.example.bankingApp.dto.NetworkDto.NetworkResponseDto;
+import com.example.bankingApp.dto.ReviewDto.ReviewRequestsDto;
+import com.example.bankingApp.dto.ReviewDto.ReviewResponseDto;
 import com.example.bankingApp.service.CardRequests.CardRequestsService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -37,17 +40,17 @@ public class CardRequestsFacadeImpl implements CardRequestsFacade {
     }
 
     @Override
-    public ResponseDto getBinByNetwork(Long networkId) {
+    public NetworkResponseDto getBinByNetwork(Long networkId) {
         return cardRequestsService.getBinByNetwork(networkId);
     }
 
     @Override
-    public ResponseDto reviewRequest(Long requestId, RequestsDto requestsDto) {
-        return cardRequestsService.reviewRequest(requestId,requestsDto);
+    public ReviewResponseDto reviewRequest(Long requestId, ReviewRequestsDto reviewRequestsDto) {
+        return cardRequestsService.reviewRequest(requestId,reviewRequestsDto);
     }
 
     @Override
-    public ResponseDto updateRequestStatus(Long requestId, RequestsDto requestsDto) {
-        return cardRequestsService.updateRequestStatus(requestId,requestsDto);
+    public ReviewResponseDto updateRequestStatus(Long requestId, ReviewRequestsDto reviewRequestsDto) {
+        return cardRequestsService.updateRequestStatus(requestId,reviewRequestsDto);
     }
 }

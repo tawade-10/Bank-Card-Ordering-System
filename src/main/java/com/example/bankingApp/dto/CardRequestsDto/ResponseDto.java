@@ -13,18 +13,11 @@ public class ResponseDto {
     private String cardVariant;
     private Long cardNetworkId;
     private String cardNetwork;
-    private String bin;
-    private String cardColourFront;
-    private String cardColourBack;
-    private String chipColour;
-    private String textColour;
     private String reason;
     private Status status;
     private String localDate;
     private Long customerId;
     private String customerName;
-    private String reviewMessage;
-    private String updatedAt;
 
     public ResponseDto(CardRequests cardRequests) {
         this.requestId = cardRequests.getRequestId();
@@ -34,34 +27,11 @@ public class ResponseDto {
         this.cardVariant = cardRequests.getCardVariant().getVariantName();
         this.cardNetworkId = cardRequests.getCardNetwork().getNetworkId();
         this.cardNetwork = cardRequests.getCardNetwork().getNetworkName();
-        this.bin = cardRequests.getNetworkBin().getBinNumber();
-        this.cardColourFront = cardRequests.getCardVariant().getCardColourFront();
-        this.cardColourBack = cardRequests.getCardVariant().getCardColourBack();
-        this.chipColour = cardRequests.getCardVariant().getChipColour();
-        this.textColour = cardRequests.getCardVariant().getTextColour();
         this.reason = cardRequests.getReason().getReasonName();
         this.status = cardRequests.getStatus();
         this.localDate = cardRequests.getLocalDate().toString();
         this.customerId = cardRequests.getCustomers().getCustomerId();
         this.customerName = cardRequests.getCustomers().getCustomerName();
-        this.reviewMessage = cardRequests.getReviewMessage();
-        this.updatedAt = cardRequests.getUpdatedAt().toString();
-    }
-
-    public ResponseDto(Long requestId, Long cardTypeId, String cardType, Long cardVariantId, String cardVariant, Long cardNetworkId, String cardNetwork, String reason, Status status, String localDate, Long customerId, String customerName
-    ) {
-        this.requestId = requestId;
-        this.cardTypeId = cardTypeId;
-        this.cardType = cardType;
-        this.cardVariantId = cardVariantId;
-        this.cardVariant = cardVariant;
-        this.cardNetworkId = cardNetworkId;
-        this.cardNetwork = cardNetwork;
-        this.reason = reason;
-        this.status = status;
-        this.localDate = localDate;
-        this.customerId = customerId;
-        this.customerName = customerName;
     }
 
     public ResponseDto() {}
@@ -122,46 +92,6 @@ public class ResponseDto {
         this.cardNetwork = cardNetwork;
     }
 
-    public String getBin() {
-        return bin;
-    }
-
-    public void setBin(String bin) {
-        this.bin = bin;
-    }
-
-    public String getCardColourFront() {
-        return cardColourFront;
-    }
-
-    public void setCardColourFront(String cardColourFront) {
-        this.cardColourFront = cardColourFront;
-    }
-
-    public String getCardColourBack() {
-        return cardColourBack;
-    }
-
-    public void setCardColourBack(String cardColourBack) {
-        this.cardColourBack = cardColourBack;
-    }
-
-    public String getChipColour() {
-        return chipColour;
-    }
-
-    public void setChipColour(String chipColour) {
-        this.chipColour = chipColour;
-    }
-
-    public String getTextColour() {
-        return textColour;
-    }
-
-    public void setTextColour(String textColour) {
-        this.textColour = textColour;
-    }
-
     public String getReason() {
         return reason;
     }
@@ -200,21 +130,5 @@ public class ResponseDto {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
-    }
-
-    public String getReviewMessage() {
-        return reviewMessage;
-    }
-
-    public void setReviewMessage(String reviewMessage) {
-        this.reviewMessage = reviewMessage;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }

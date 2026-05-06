@@ -2,8 +2,8 @@ package com.example.bankingApp.facade.CardDetailsFacade;
 
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
+import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
 import com.example.bankingApp.service.CardDetails.CardDetailsService;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,6 +35,11 @@ public class CardDetailsFacadeImpl implements CardDetailsFacade{
     @Override
     public List<CardDetailsResponseDto> getActiveCards(String email) {
         return cardDetailsService.getActiveCards(email);
+    }
+
+    @Override
+    public CardVariantsResponseDto getVariantById(Long variantId) {
+        return cardDetailsService.getVariantById(variantId);
     }
 
     @Override

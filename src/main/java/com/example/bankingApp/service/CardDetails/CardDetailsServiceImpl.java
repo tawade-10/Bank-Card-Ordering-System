@@ -2,12 +2,14 @@ package com.example.bankingApp.service.CardDetails;
 
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
+import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
 import com.example.bankingApp.entity.CardDetails.CardDetails;
 import com.example.bankingApp.entity.CardRequests.CardRequests;
 import com.example.bankingApp.entity.CardRequests.NetworkBin;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.CardRequests.CardType;
 import com.example.bankingApp.entity.CardRequests.CardVariant;
+import com.example.bankingApp.entity.Enums.Status;
 import com.example.bankingApp.repository.CardDetails.CardDetailsRepo;
 import com.example.bankingApp.repository.CardRequests.CardRequestsRepo;
 import com.example.bankingApp.repository.CardRequests.NetworkBinRepo;
@@ -90,7 +92,11 @@ public class CardDetailsServiceImpl implements CardDetailsService{
         card.setActive(true);
         card.setCreatedAt(LocalDateTime.now());
 
+        request.setStatus(Status.PRINTED);
+        cardRequestsRepo.save(request);
+
         CardDetails saved = cardDetailsRepo.save(card);
+
         return new CardDetailsResponseDto(saved);
     }
 
@@ -109,6 +115,15 @@ public class CardDetailsServiceImpl implements CardDetailsService{
         List<CardDetails> cards = cardDetailsRepo.findActiveCards(customer.getCustomerId());
 
         return cards.stream().map(CardDetailsResponseDto::new).toList();
+    }
+
+    @Override
+    public CardVariantsResponseDto getVariantById(Long variantId) {
+
+        CardVariant variant = cardVariantRepo.findById(variantId)
+                .orElseThrow(() -> new RuntimeException("Variant Not found"));
+
+        return new CardVariantsResponseDto(variant);
     }
 
     @Override
