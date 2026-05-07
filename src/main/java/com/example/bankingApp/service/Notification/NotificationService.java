@@ -7,7 +7,7 @@ import java.util.List;
 public interface NotificationService {
     List<Notification> getUserNotifications(Long userId);
 
-    void notify(Long customerId, String cardRequestUpdate, String s);
+//    void notify(Long customerId, String cardRequestUpdate, String s);
 
     void sendNotification(Long userId, String testNotification, String s);
 }

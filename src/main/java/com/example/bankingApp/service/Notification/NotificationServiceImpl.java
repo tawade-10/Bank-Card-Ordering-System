@@ -19,16 +19,16 @@ public class NotificationServiceImpl implements NotificationService{
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    public void notify(Long userId, String title, String message) {
-
-        Notification notification = new Notification();
-        notification.setUserId(userId);
-        notification.setTitle(title);
-        notification.setMessage(message);
-        notificationRepo.save(notification);
-
-        simpMessagingTemplate.convertAndSend("/topic/notifications/" + userId, notification);
-    }
+//    public void notify(Long userId, String title, String message) {
+//
+//        Notification notification = new Notification();
+//        notification.setUserId(userId);
+//        notification.setTitle(title);
+//        notification.setMessage(message);
+//        notificationRepo.save(notification);
+//
+//        simpMessagingTemplate.convertAndSend("/topic/notifications/" + userId, notification);
+//    }
 
     @Override
     public void sendNotification(Long userId, String title, String message) {

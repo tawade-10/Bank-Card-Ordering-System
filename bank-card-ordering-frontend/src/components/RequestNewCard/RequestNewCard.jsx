@@ -84,7 +84,7 @@ export default function RequestNewCard() {
                 onChange={handleChange}
                 checked={formData.cardTypeId === "1"}
               />
-              Debit Card
+              Credit Card
             </label>
 
             <label className="radio-box">
@@ -95,7 +95,7 @@ export default function RequestNewCard() {
                 onChange={handleChange}
                 checked={formData.cardTypeId === "2"}
               />
-              Credit Card
+              Debit Card
             </label>
 
           </div>

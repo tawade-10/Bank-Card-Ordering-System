@@ -1,23 +1,26 @@
 .active-card-wrapper {
   display: flex;
-  justify-content: center;        /* Centers horizontally */
-  align-items: center;
+  justify-content: center;
+  align-items: flex-start;
   width: 100%;
-  gap: 200px;
+  gap: 120px;
+  min-height: 230px;
 }
 
 .active-card-section {
-  flex: 0 0 380px;                /* Fixed width so both sections align perfectly */
+  flex: 0 0 380px;
   text-align: center;
+  padding-bottom: 30px;
 }
 
-/* Section heading */
-.active-card-section h3 {
-  margin-bottom: 15px;
-  font-weight: 600;
+.active-card-section h4 {
+  margin-bottom: 18px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0F172A;
+  letter-spacing: 0.5px;
 }
 
-/* When card exists */
 .customer-card {
   width: 90%;
   height: 150px;
@@ -31,14 +34,13 @@
   margin: 0 auto;
 }
 
-/* When no card is shown */
 .no-cards {
   margin-top: 20px;
-  color: #777;
-  font-size: 14px;
+  color: #64748B;
+  font-size: 15px;
+  font-weight: 500;
 }
 
-/* Card logo */
 .card-logo {
   position: absolute;
   top: 15px;
@@ -46,14 +48,12 @@
   width: 55px;
 }
 
-/* Card number alignment */
 .card-number {
   font-size: 20px;
   letter-spacing: 2px;
   margin-top: 40px;
 }
 
-/* Footer area */
 .card-footer {
   display: flex;
   justify-content: space-between;

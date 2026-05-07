@@ -7,6 +7,7 @@ import com.example.bankingApp.dto.CustomersDto.LoginResponse;
 import com.example.bankingApp.entity.CustomUserDetails;
 import com.example.bankingApp.entity.Enums.Roles;
 import com.example.bankingApp.service.Auth.AuthService;
+import com.example.bankingApp.service.Notification.NotificationService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,14 +21,16 @@ public class AuthFacadeImpl implements AuthFacade {
     private final AuthenticationManager authenticationManager;
     private final AuthService authService;
     private final BCryptPasswordEncoder encoder;
+    private final NotificationService notificationService;
 
     public AuthFacadeImpl(JwtService jwtService,
                           AuthenticationManager authenticationManager,
-                          AuthService authService, BCryptPasswordEncoder encoder) {
+                          AuthService authService, BCryptPasswordEncoder encoder, NotificationService notificationService) {
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.authService = authService;
         this.encoder = encoder;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -51,6 +54,9 @@ public class AuthFacadeImpl implements AuthFacade {
         String name = customerDetails.getCustomers().getCustomerName();
         String email = customerDetails.getCustomers().getEmail();
         Roles role = customerDetails.getCustomers().getRoles();
+        Long userId = customerDetails.getCustomers().getCustomerId();
+
+        notificationService.sendNotification(userId,"Login Successful","Welcome Back");
 
         return new LoginResponse(token, name, email, role);
     }

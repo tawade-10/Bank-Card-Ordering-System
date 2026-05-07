@@ -35,8 +35,8 @@ public class CardRequestsFacadeImpl implements CardRequestsFacade {
     }
 
     @Override
-    public List<ResponseDto> getRequestsByEmail(Authentication authentication) {
-        return cardRequestsService.getRequestsByEmail(authentication);
+    public List<ResponseDto> getRequestsByEmail() {
+        return cardRequestsService.getRequestsByEmail();
     }
 
     @Override

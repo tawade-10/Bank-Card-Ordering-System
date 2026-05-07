@@ -45,8 +45,8 @@ public class CardRequestsController {
     }
 
     @GetMapping("/email")
-    public ResponseEntity<List<ResponseDto>> getRequestsByEmail(Authentication authentication){
-        List<ResponseDto> requestByEmail = cardRequestsFacade.getRequestsByEmail(authentication);
+    public ResponseEntity<List<ResponseDto>> getRequestsByEmail() {
+        List<ResponseDto> requestByEmail = cardRequestsFacade.getRequestsByEmail();
         return ResponseEntity.ok(requestByEmail);
     }
 

@@ -57,11 +57,8 @@ export default function MyActiveCards() {
 
   return (
     <div className="active-card-wrapper">
-
-      {/* ACTIVE CREDIT CARD */}
       <div className="active-card-section">
-        <h3>Active Credit Card</h3>
-
+          <h4>Active Credit Card</h4>
         {creditCard ? (
           <div
             className="customer-card"
@@ -104,8 +101,7 @@ export default function MyActiveCards() {
       </div>
 
       <div className="active-card-section">
-        <h3>Active Debit Card</h3>
-
+          <h4>Active Debit Card</h4>
         {debitCard ? (
           <div
             className="customer-card"

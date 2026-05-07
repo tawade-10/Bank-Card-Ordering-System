@@ -108,7 +108,13 @@ public class CardRequestsServiceImpl implements CardRequestsService {
     }
 
     @Override
-    public List<ResponseDto> getRequestsByEmail(Authentication authentication) {
+    public List<ResponseDto> getRequestsByEmail() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("User not authenticated");
+        }
 
         String email = authentication.getName();
 

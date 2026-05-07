@@ -1,6 +1,6 @@
 INSERT INTO card_type (type_name) VALUES
-('DEBIT'),
-('CREDIT')
+('CREDIT'),
+('DEBIT')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO card_variant

@@ -94,6 +94,7 @@ export default function LoginForm() {
                 localStorage.setItem("customerName", data.customerName);
                 localStorage.setItem("email", data.email);
                 localStorage.setItem("role", data.roles);
+                localStorage.setItem("userId", data.userId);
                 toast.success("Login Successful!");
                 if (data.roles === "ADMIN") {
                     navigate("/admin/dashboard");

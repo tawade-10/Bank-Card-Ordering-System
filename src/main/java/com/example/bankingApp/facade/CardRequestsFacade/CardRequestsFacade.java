@@ -17,7 +17,7 @@ public interface CardRequestsFacade {
 
     ResponseDto getRequestById(Long requestId);
 
-    List<ResponseDto> getRequestsByEmail(Authentication authentication);
+    List<ResponseDto> getRequestsByEmail();
 
     ReviewResponseDto reviewRequest(Long requestId, ReviewRequestsDto reviewRequestsDto);
 
