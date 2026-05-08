@@ -55,7 +55,6 @@ export default function CardCreation() {
   const fetchRequestDetails = async () => {
     try {
       const token = localStorage.getItem("token");
-
       const reqRes = await axios.get(
         `http://localhost:8080/api/request-card/${requestId}`,
         {

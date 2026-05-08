@@ -1,5 +1,6 @@
 package com.example.bankingApp.controllers;
 
+import com.example.bankingApp.dto.ActiveCardsDto.ActiveCardsResponseDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
@@ -37,9 +38,9 @@ public class CardsController {
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<CardDetailsResponseDto>> getActiveCards(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<List<ActiveCardsResponseDto>> getActiveCards(@AuthenticationPrincipal UserDetails userDetails){
         String email = userDetails.getUsername();
-        List<CardDetailsResponseDto> activeCards = cardDetailsFacade.getActiveCards(email);
+        List<ActiveCardsResponseDto> activeCards = cardDetailsFacade.getActiveCards(email);
         return ResponseEntity.ok(activeCards);
     }
 

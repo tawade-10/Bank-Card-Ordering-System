@@ -1,5 +1,6 @@
 package com.example.bankingApp.service.CardDetails;
 
+import com.example.bankingApp.dto.ActiveCardsDto.ActiveCardsResponseDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
@@ -16,7 +17,7 @@ public interface CardDetailsService {
 
     List<CardDetailsResponseDto> getCardsByEmail(String email);
 
-    List<CardDetailsResponseDto> getActiveCards(String email);
+    List<ActiveCardsResponseDto> getActiveCards(String email);
 
     CardVariantsResponseDto getVariantById(Long variantId);
 }

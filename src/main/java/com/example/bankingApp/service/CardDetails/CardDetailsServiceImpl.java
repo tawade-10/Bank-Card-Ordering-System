@@ -1,5 +1,6 @@
 package com.example.bankingApp.service.CardDetails;
 
+import com.example.bankingApp.dto.ActiveCardsDto.ActiveCardsResponseDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
@@ -107,14 +108,14 @@ public class CardDetailsServiceImpl implements CardDetailsService{
     }
 
     @Override
-    public List<CardDetailsResponseDto> getActiveCards(String email) {
+    public List<ActiveCardsResponseDto> getActiveCards(String email) {
 
         Customers customer = customersRepo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         List<CardDetails> cards = cardDetailsRepo.findActiveCards(customer.getCustomerId());
 
-        return cards.stream().map(CardDetailsResponseDto::new).toList();
+        return cards.stream().map(ActiveCardsResponseDto::new).toList();
     }
 
     @Override

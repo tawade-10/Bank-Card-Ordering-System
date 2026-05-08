@@ -1,68 +1,74 @@
-.active-card-wrapper {
+.active-container {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  width: 100%;
-  gap: 120px;
-  min-height: 230px;
+  justify-content: space-between;
+  padding: 10px 5px;
+  gap: 20px;
 }
 
-.active-card-section {
-  flex: 0 0 380px;
+.section {
+  width: 48%;
   text-align: center;
-  padding-bottom: 30px;
 }
 
-.active-card-section h4 {
-  margin-bottom: 18px;
-  font-size: 18px;
-  font-weight: 700;
-  color: #0F172A;
-  letter-spacing: 0.5px;
+.section-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #0f172a;
+  letter-spacing: 0.3px;
 }
 
-.customer-card {
-  width: 90%;
-  height: 150px;
-  border-radius: 15px;
-  padding: 20px;
+.empty {
+  font-size: 14px;
+  color: #64748b;
+  margin-top: 5px;
+}
+
+.card-ui {
+  width: 50%;
+  height: 140px;
+  padding: 15px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
   position: relative;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 0 auto;
-}
-
-.no-cards {
-  margin-top: 20px;
-  color: #64748B;
-  font-size: 15px;
-  font-weight: 500;
+  margin-left: 140px;
 }
 
 .card-logo {
+  width: 48px;
   position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 55px;
+  top: 12px;
+  right: 12px;
 }
 
-.card-number {
-  font-size: 20px;
+.chip-ui {
+  width: 28px;
+  height: 22px;
+  border-radius: 5px;
+}
+
+.number {
+  font-size: 17px;
+  font-weight: 500;
   letter-spacing: 2px;
-  margin-top: 40px;
 }
 
-.card-footer {
+.details {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
-  font-size: 14px;
+  font-size: 13px;
 }
 
-.card-footer label {
-  display: block;
-  font-size: 11px;
+.details label {
+  font-size: 10px;
   opacity: 0.7;
+  display: block;
+}
+
+.active-loading {
+  text-align: center;
+  padding: 20px;
 }

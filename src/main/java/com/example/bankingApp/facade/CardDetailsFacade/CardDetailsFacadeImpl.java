@@ -1,5 +1,6 @@
 package com.example.bankingApp.facade.CardDetailsFacade;
 
+import com.example.bankingApp.dto.ActiveCardsDto.ActiveCardsResponseDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
@@ -33,7 +34,7 @@ public class CardDetailsFacadeImpl implements CardDetailsFacade{
     }
 
     @Override
-    public List<CardDetailsResponseDto> getActiveCards(String email) {
+    public List<ActiveCardsResponseDto> getActiveCards(String email) {
         return cardDetailsService.getActiveCards(email);
     }
 

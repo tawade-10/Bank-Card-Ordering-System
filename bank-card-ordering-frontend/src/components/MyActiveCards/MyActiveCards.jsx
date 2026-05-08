@@ -11,6 +11,9 @@ export default function MyActiveCards() {
   const [debitCard, setDebitCard] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [creditDesign, setCreditDesign] = useState(null);
+  const [debitDesign, setDebitDesign] = useState(null);
+
   const token = localStorage.getItem("token");
 
   const NETWORK_LOGOS = {
@@ -27,119 +30,107 @@ export default function MyActiveCards() {
     try {
       const response = await axios.get(
         "http://localhost:8080/api/cards/active",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      const data = response.data;
-      console.log("Active Cards Response:", data);
+      const data = response.data || [];
 
       const credit = data.find((c) => c.cardType === "CREDIT") || null;
       const debit = data.find((c) => c.cardType === "DEBIT") || null;
 
       setCreditCard(credit);
       setDebitCard(debit);
-    } catch (error) {
-      console.error("Error loading active cards:", error);
+
+      if (credit) fetchVariant(credit.cardVariantId, true);
+      if (debit) fetchVariant(debit.cardVariantId, false);
+
+    } catch (err) {
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="card-page-wrapper">
-        <h3>Loading active cards...</h3>
-      </div>
+  const fetchVariant = async (variantId, isCredit) => {
+    const variantRes = await axios.get(
+      `http://localhost:8080/api/cards/variant/${variantId}`,
+      { headers: { Authorization: `Bearer ${token}` } }
     );
-  }
+
+    const v = variantRes.data;
+
+    const design = {
+      front: v.cardColourFront,
+      chip: v.chipColour,
+      text: v.textColour,
+    };
+
+    if (isCredit) setCreditDesign(design);
+    else setDebitDesign(design);
+  };
+
+  const getCardLogo = (bin) => {
+    return bin ? NETWORK_LOGOS[bin.toString().slice(0, 2)] : null;
+  };
+
+  if (loading) return <div className="active-loading">Loading...</div>;
 
   return (
-    <div className="active-card-wrapper">
-      <div className="active-card-section">
-          <h4>Active Credit Card</h4>
+    <div className="active-container">
+      <div className="section">
+        <h3 className="section-title">Active Credit Card</h3>
         {creditCard ? (
           <div
-            className="customer-card"
+            className="card-ui"
             style={{
-              background: creditCard.cardColourFront,
-              color: creditCard.textColour,
+              background: creditDesign?.front,
+              color: creditDesign?.text,
             }}
           >
-            <div className="chip">
-              <div className="chip-inner">
-                <div className="line v1"></div>
-                <div className="line v2"></div>
-                <div className="line h1"></div>
-                <div className="line h2"></div>
-              </div>
-            </div>
-
-            <img
-              src={NETWORK_LOGOS[creditCard.binNumber]}
-              alt="network"
-              className="card-logo"
-            />
-
-            <div className="card-number">{creditCard.maskedNumber}</div>
-
-            <div className="card-footer">
-              <div className="card-holder">
-                <label>Card Holder</label>
+            <div className="chip-ui" style={{ background: creditDesign?.chip }}></div>
+            <img src={getCardLogo(creditCard.binNumber)} alt="" className="card-logo" />
+            <div className="number">{creditCard.maskedNumber}</div>
+            <div className="details">
+              <div>
+                <label>Holder</label>
                 <span>{creditCard.customerName}</span>
               </div>
-              <div className="card-expiry">
+              <div>
                 <label>Expiry</label>
                 <span>{creditCard.expiry}</span>
               </div>
             </div>
           </div>
         ) : (
-          <p className="no-cards">No active credit card</p>
+          <p className="empty">No Active Credit Card</p>
         )}
       </div>
-
-      <div className="active-card-section">
-          <h4>Active Debit Card</h4>
+      <div className="section">
+        <h3 className="section-title">Active Debit Card</h3>
         {debitCard ? (
           <div
-            className="customer-card"
+            className="card-ui"
             style={{
-              background: debitCard.cardColourFront,
-              color: debitCard.textColour,
+              background: debitDesign?.front,
+              color: debitDesign?.text,
             }}
           >
-            <div className="chip">
-              <div className="chip-inner">
-                <div className="line v1"></div>
-                <div className="line v2"></div>
-                <div className="line h1"></div>
-                <div className="line h2"></div>
-              </div>
-            </div>
-
-            <img
-              src={NETWORK_LOGOS[debitCard.binNumber]}     // FIXED
-              alt="network"
-              className="card-logo"
-            />
-
-            <div className="card-number">{debitCard.maskedNumber}</div>
-
-            <div className="card-footer">
-              <div className="card-holder">
-                <label>Card Holder</label>
+            <div className="chip-ui" style={{ background: debitDesign?.chip }}></div>
+            <img src={getCardLogo(debitCard.binNumber)} alt="" className="card-logo" />
+            <div className="number">{debitCard.maskedNumber}</div>
+            <div className="details">
+              <div>
+                <label>Holder</label>
                 <span>{debitCard.customerName}</span>
               </div>
-              <div className="card-expiry">
+              <div>
                 <label>Expiry</label>
                 <span>{debitCard.expiry}</span>
               </div>
             </div>
           </div>
         ) : (
-          <p className="no-cards">No active debit card</p>
+          <p className="empty">No Active Debit Card</p>
         )}
       </div>
     </div>

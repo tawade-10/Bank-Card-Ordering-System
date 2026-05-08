@@ -30,7 +30,34 @@ export default function MyCards() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setCards(response.data);
+
+      const baseCards = response.data;
+
+      const cardsWithDesign = await Promise.all(
+        baseCards.map(async (card) => {
+          try {
+            const res = await axios.get(
+              `http://localhost:8080/api/cards/variant/${card.cardVariantId}`,
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            const design = res.data;
+
+            return {
+              ...card,
+              cardColourFront: design.cardColourFront,
+              cardColourBack: design.cardColourBack,
+              chipColour: design.chipColour,
+              textColour: design.textColour,
+            };
+          } catch (err) {
+            console.error("Variant fetch error", err);
+            return card;
+          }
+        })
+      );
+
+      setCards(cardsWithDesign);
     } catch (error) {
       console.error("Error loading cards:", error);
     } finally {
@@ -67,7 +94,10 @@ export default function MyCards() {
             }}
           >
             <div className="chip">
-              <div className="chip-inner">
+              <div
+                className="chip-inner"
+                style={{ background: card.chipColour }}
+              >
                 <div className="line v1"></div>
                 <div className="line v2"></div>
                 <div className="line h1"></div>
@@ -76,7 +106,7 @@ export default function MyCards() {
             </div>
 
             <img
-              src={NETWORK_LOGOS[card.cardNetwork] || visaLogo}
+              src={NETWORK_LOGOS[card.networkName] || visaLogo}
               alt="network"
               className="card-logo"
             />
