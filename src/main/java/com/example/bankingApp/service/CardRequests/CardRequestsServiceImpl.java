@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,6 +79,13 @@ public class CardRequestsServiceImpl implements CardRequestsService {
 
         Reason reason = reasonForRequestRepo.findById(requestsDto.getReasonId())
                 .orElseThrow(() -> new RuntimeException("Invalid Reason ID"));
+
+        Optional<CardRequests> existingPending =
+                cardRequestsRepo.findPendingRequest(customer, cardType);
+
+        if (existingPending.isPresent()) {
+            throw new RuntimeException("A request for this card is already pending review.");
+        }
 
         CardRequests request = new CardRequests();
         request.setCardType(cardType);

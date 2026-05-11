@@ -5,6 +5,9 @@ import com.example.bankingApp.entity.CardDetails.CardDetails;
 public class ActiveCardsResponseDto {
 
     private Long cardId;
+    private Long customerId;
+    private String customerName;
+
     private String maskedNumber;
     private String expiry;
 
@@ -17,6 +20,8 @@ public class ActiveCardsResponseDto {
 
     public ActiveCardsResponseDto(CardDetails cardDetails) {
         this.cardId = cardDetails.getCardId();
+        this.customerId = cardDetails.getCustomers().getCustomerId();
+        this.customerName = cardDetails.getCustomers().getCustomerName();
         this.maskedNumber = cardDetails.getNetworkBin().getBinNumber() + "** **** **** " + cardDetails.getLast4();
         this.expiry = String.format("%02d/%02d", cardDetails.getExpiry().getMonthValue(),
                 cardDetails.getExpiry().getYear() % 100);
@@ -36,6 +41,22 @@ public class ActiveCardsResponseDto {
 
     public void setCardId(Long cardId) {
         this.cardId = cardId;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public String getMaskedNumber() {

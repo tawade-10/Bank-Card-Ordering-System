@@ -4,11 +4,11 @@ INSERT INTO card_type (type_name) VALUES
 ON CONFLICT DO NOTHING;
 
 INSERT INTO card_variant
-(variant_name, card_colour_front, card_colour_back, chip_colour, text_colour)
+(variant_name, card_colour_front, card_colour_back, chip_image, text_colour)
 VALUES
-('CLASSIC', '#1D3557', '#0A1A2F', '#D4AF37', '#FFFFFF'),
-('GOLD', '#C9A227', '#A7893D', '#F1D17B', '#000000'),
-('PLATINUM', '#2E2E2E', '#1A1A1A', '#E3C169', '#FFFFFF')
+('CLASSIC', '#1D3557', '#0A1A2F', 'GoldChip.png', '#FFFFFF'),
+('GOLD', '#C9A227', '#A7893D', 'SilverChip.png', '#000000'),
+('PLATINUM', '#2E2E2E', '#1A1A1A', 'ShinyChip.png', '#FFFFFF')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO card_network (network_name) VALUES

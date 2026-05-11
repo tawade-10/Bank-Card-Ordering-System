@@ -104,10 +104,8 @@ class CardRequestsServiceImplTest {
 
         when(cardRequestsRepo.save(any(CardRequests.class))).thenReturn(saved);
 
-        // ---------- Call Service ----------
         ResponseDto responseDto = cardRequestsServiceImpl.createRequest(dto);
 
-        // ---------- Verification ----------
         assertNotNull(responseDto);
         assertEquals(100L, responseDto.getRequestId());
         verify(cardRequestsRepo, times(1)).save(any(CardRequests.class));
@@ -123,5 +121,15 @@ class CardRequestsServiceImplTest {
             cardRequestsServiceImpl.createRequest(dto);
         });
     }
+
+//    @Test
+//    void getAllRequestsSuccess(){
+//        CardRequests request1 = new CardRequests();
+//        request1.setCardType();
+//        request1.setCardVariantId(2L);
+//        request1.setCardNetworkId(3L);
+//        request1.setReasonId(4L);
+//
+//    }
 
 }

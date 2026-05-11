@@ -11,7 +11,6 @@ import java.util.List;
 
 public interface CardDetailsRepo extends JpaRepository<CardDetails, Long> {
 
-
     List<CardDetails> findByCustomersCustomerId(Long customerId);
 
     List<CardDetails> findByCustomers(Customers customers);

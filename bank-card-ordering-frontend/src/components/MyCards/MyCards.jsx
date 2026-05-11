@@ -2,20 +2,35 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./MyCards.css";
 
-import visaLogo from "../../assets/visaLogo.svg";
-import mastercard from "../../assets/mastercard.png";
-import rupay from "../../assets/rupay.png";
+import visaLogo from "../../assets/cards/visaLogo.svg";
+import mastercard from "../../assets/cards/mastercard.png";
+import rupay from "../../assets/cards/rupay.png";
+
+import GoldChip from "../../assets/chips/GoldChip.png";
+import ShinyChip from "../../assets/chips/ShinyChip.png";
+import SilverChip from "../../assets/chips/SilverChip.png";
 
 export default function MyCards() {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const token = localStorage.getItem("token");
 
   const NETWORK_LOGOS = {
     VISA: visaLogo,
     MASTERCARD: mastercard,
     RUPAY: rupay,
+  };
+
+  const CHIP_IMAGES = {
+    GoldChip: GoldChip,
+    SilverChip: SilverChip,
+    ShinyChip: ShinyChip,
+  };
+
+  const getChip = (chipName) => {
+    if (!chipName) return null;
+    const clean = chipName.replace(".png", "").trim();
+    return CHIP_IMAGES[clean] || null;
   };
 
   useEffect(() => {
@@ -26,9 +41,7 @@ export default function MyCards() {
     try {
       const response = await axios.get(
         "http://localhost:8080/api/cards/my-cards",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       const baseCards = response.data;
@@ -47,7 +60,7 @@ export default function MyCards() {
               ...card,
               cardColourFront: design.cardColourFront,
               cardColourBack: design.cardColourBack,
-              chipColour: design.chipColour,
+              chipImage: design.chipImage,
               textColour: design.textColour,
             };
           } catch (err) {
@@ -67,7 +80,7 @@ export default function MyCards() {
 
   if (loading) {
     return (
-      <div className="card-page-wrapper">
+      <div className="flip-wrapper">
         <h3>Loading cards...</h3>
       </div>
     );
@@ -75,58 +88,68 @@ export default function MyCards() {
 
   if (cards.length === 0) {
     return (
-      <div className="card-page-wrapper">
-        <p className="no-cards">No active cards available</p>
+      <div className="flip-wrapper">
+        <p>No active cards available</p>
       </div>
     );
   }
 
   return (
-    <div className="card-page-wrapper">
-      <div className="cards-grid">
-        {cards.map((card) => (
-          <div
-            className="customer-card"
-            key={card.cardId}
-            style={{
-              background: card.cardColourFront,
-              color: card.textColour,
-            }}
-          >
-            <div className="chip">
-              <div
-                className="chip-inner"
-                style={{ background: card.chipColour }}
-              >
-                <div className="line v1"></div>
-                <div className="line v2"></div>
-                <div className="line h1"></div>
-                <div className="line h2"></div>
+    <div className="flip-grid">
+      {cards.map((card) => (
+        <div className="flip-container" key={card.cardId}>
+          <div className="flip-card">
+            <div
+              className="card front-side"
+              style={{
+                background: card.cardColourFront,
+                color: card.textColour,
+              }}
+            >
+              <header className="front-header">
+                <img
+                  src={NETWORK_LOGOS[card.networkName]}
+                  className="network-logo"
+                  alt="network"
+                />
+                <img
+                  className="chip-image"
+                  src={getChip(card.chipImage)}
+                  alt="chip"
+                />
+              </header>
+              <div className="card-number-real">
+                {card.maskedNumber}
+              </div>
+              <div className="card-bottom-row">
+                <div className="holder-info">
+                  <label>Cardholder Name</label>
+                  <div className="holder-name">{card.customerName}</div>
+                </div>
+                <div className="expiry-info">
+                  <label>Valid Thru</label>
+                  <div className="expiry-date">{card.expiry}</div>
+                </div>
               </div>
             </div>
-
-            <img
-              src={NETWORK_LOGOS[card.networkName] || visaLogo}
-              alt="network"
-              className="card-logo"
-            />
-
-            <div className="card-number">{card.maskedNumber}</div>
-
-            <div className="card-footer">
-              <div className="card-holder">
-                <label>Card Holder</label>
-                <span>{card.customerName}</span>
+            <div
+              className="card back-side"
+              style={{ background: card.cardColourBack }}
+            >
+              <h6>
+                For customer service call +91 9191919191 or email support@bank.com
+              </h6>
+              <span className="magnetic-strap"></span>
+              <div className="signature">
+                <i>{card.cvv || "XXX"}</i>
               </div>
-
-              <div className="card-expiry">
-                <label>Expiry</label>
-                <span>{card.expiry}</span>
-              </div>
+              <h5>
+                This card is property of the issuing bank. If found, return to nearest branch.
+              </h5>
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 }

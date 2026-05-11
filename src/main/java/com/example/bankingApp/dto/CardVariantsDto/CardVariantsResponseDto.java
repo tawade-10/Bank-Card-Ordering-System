@@ -10,7 +10,7 @@
 
         private String cardColourBack;
 
-        private String chipColour;
+        private String chipImage;
 
         private String textColour;
 
@@ -18,7 +18,7 @@
             this.cardVariantId = cardVariant.getVariantId();
             this.cardColourFront = cardVariant.getCardColourFront();
             this.cardColourBack = cardVariant.getCardColourBack();
-            this.chipColour = cardVariant.getChipColour();
+            this.chipImage = cardVariant.getChipImage();
             this.textColour = cardVariant.getTextColour();
         }
 
@@ -49,12 +49,12 @@
             this.cardColourBack = cardColourBack;
         }
 
-        public String getChipColour() {
-            return chipColour;
+        public String getChipImage() {
+            return chipImage;
         }
 
-        public void setChipColour(String chipColour) {
-            this.chipColour = chipColour;
+        public void setChipImage(String chipImage) {
+            this.chipImage = chipImage;
         }
 
         public String getTextColour() {

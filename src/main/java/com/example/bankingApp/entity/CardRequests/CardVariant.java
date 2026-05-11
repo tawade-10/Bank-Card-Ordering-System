@@ -20,8 +20,8 @@ public class CardVariant {
     @Column(name = "card_colour_back")
     private String cardColourBack;
 
-    @Column(name = "chip_colour")
-    private String chipColour;
+    @Column(name = "chip_image")
+    private String chipImage;
 
     @Column(name = "text_colour")
     private String textColour;
@@ -58,12 +58,12 @@ public class CardVariant {
         this.cardColourBack = cardColourBack;
     }
 
-    public String getChipColour() {
-        return chipColour;
+    public String getChipImage() {
+        return chipImage;
     }
 
-    public void setChipColour(String chipColour) {
-        this.chipColour = chipColour;
+    public void setChipImage(String chipImage) {
+        this.chipImage = chipImage;
     }
 
     public String getTextColour() {

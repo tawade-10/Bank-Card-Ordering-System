@@ -8,7 +8,7 @@ CREATE TABLE card_variant (
     variant_name VARCHAR(255) NOT NULL,
     card_colour_front VARCHAR(100),
     card_colour_back VARCHAR(100),
-    chip_colour VARCHAR(50),
+    chip_image VARCHAR(50),
     text_colour VARCHAR(50)
 );
 

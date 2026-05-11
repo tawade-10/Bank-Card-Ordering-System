@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./MyActiveCards.css";
 
-import visaLogo from "../../assets/visaLogo.svg";
-import mastercard from "../../assets/mastercard.png";
-import rupay from "../../assets/rupay.png";
+import visaLogo from "../../assets/cards/visaLogo.svg";
+import mastercard from "../../assets/cards/mastercard.png";
+import rupay from "../../assets/cards/rupay.png";
+
+import GoldChip from "../../assets/chips/GoldChip.png";
+import ShinyChip from "../../assets/chips/ShinyChip.png";
+import SilverChip from "../../assets/chips/SilverChip.png";
 
 export default function MyActiveCards() {
   const [creditCard, setCreditCard] = useState(null);
@@ -17,9 +21,15 @@ export default function MyActiveCards() {
   const token = localStorage.getItem("token");
 
   const NETWORK_LOGOS = {
-    "40": visaLogo,
-    "51": mastercard,
-    "60": rupay,
+    VISA: visaLogo,
+    MASTERCARD: mastercard,
+    RUPAY: rupay,
+  };
+
+  const CHIP_IMAGES = {
+    GoldChip: GoldChip,
+    SilverChip: SilverChip,
+    ShinyChip: ShinyChip,
   };
 
   useEffect(() => {
@@ -52,44 +62,59 @@ export default function MyActiveCards() {
   };
 
   const fetchVariant = async (variantId, isCredit) => {
-    const variantRes = await axios.get(
-      `http://localhost:8080/api/cards/variant/${variantId}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    try {
+      const res = await axios.get(
+        `http://localhost:8080/api/cards/variant/${variantId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-    const v = variantRes.data;
+      const v = res.data;
 
-    const design = {
-      front: v.cardColourFront,
-      chip: v.chipColour,
-      text: v.textColour,
-    };
+      const design = {
+        front: v.cardColourFront,
+        back: v.cardColourBack,
+        text: v.textColour,
+        chip: CHIP_IMAGES[v.chipImage.replace(".png", "")],
+      };
 
-    if (isCredit) setCreditDesign(design);
-    else setDebitDesign(design);
+      if (isCredit) setCreditDesign(design);
+      else setDebitDesign(design);
+    } catch (err) {
+      console.error("Variant fetch failed", err);
+    }
   };
 
-  const getCardLogo = (bin) => {
-    return bin ? NETWORK_LOGOS[bin.toString().slice(0, 2)] : null;
+  const getLogo = (network) => {
+    return NETWORK_LOGOS[network] || null;
   };
 
   if (loading) return <div className="active-loading">Loading...</div>;
 
   return (
-    <div className="active-container">
-      <div className="section">
-        <h3 className="section-title">Active Credit Card</h3>
+    <div className="active-wrapper">
+
+      {/* CREDIT CARD */}
+      <div className="active-box">
+        <h3 className="title">Active Credit Card</h3>
+
         {creditCard ? (
           <div
-            className="card-ui"
+            className="active-card"
             style={{
               background: creditDesign?.front,
               color: creditDesign?.text,
             }}
           >
-            <div className="chip-ui" style={{ background: creditDesign?.chip }}></div>
-            <img src={getCardLogo(creditCard.binNumber)} alt="" className="card-logo" />
+            <div className="card-header">
+              <img src={getLogo(creditCard.networkName)} alt="" className="logo" />
+
+              <div className="chip">
+                <img src={creditDesign?.chip} alt="chip" className="chip-img" />
+              </div>
+            </div>
+
             <div className="number">{creditCard.maskedNumber}</div>
+
             <div className="details">
               <div>
                 <label>Holder</label>
@@ -105,19 +130,29 @@ export default function MyActiveCards() {
           <p className="empty">No Active Credit Card</p>
         )}
       </div>
-      <div className="section">
-        <h3 className="section-title">Active Debit Card</h3>
+
+      {/* DEBIT CARD */}
+      <div className="active-box">
+        <h3 className="title">Active Debit Card</h3>
+
         {debitCard ? (
           <div
-            className="card-ui"
+            className="active-card"
             style={{
               background: debitDesign?.front,
               color: debitDesign?.text,
             }}
           >
-            <div className="chip-ui" style={{ background: debitDesign?.chip }}></div>
-            <img src={getCardLogo(debitCard.binNumber)} alt="" className="card-logo" />
+            <div className="card-header">
+              <img src={getLogo(debitCard.networkName)} alt="" className="logo" />
+
+              <div className="chip">
+                <img src={debitDesign?.chip} alt="chip" className="chip-img" />
+              </div>
+            </div>
+
             <div className="number">{debitCard.maskedNumber}</div>
+
             <div className="details">
               <div>
                 <label>Holder</label>
@@ -133,6 +168,7 @@ export default function MyActiveCards() {
           <p className="empty">No Active Debit Card</p>
         )}
       </div>
+
     </div>
   );
 }
