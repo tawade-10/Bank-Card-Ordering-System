@@ -58,6 +58,6 @@ public class AuthFacadeImpl implements AuthFacade {
 
         notificationService.sendNotification(userId,"Login Successful","Welcome Back");
 
-        return new LoginResponse(token, name, email, role);
+        return new LoginResponse(token, name, email, role, userId);
     }
 }

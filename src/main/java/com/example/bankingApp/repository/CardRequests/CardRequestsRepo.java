@@ -5,6 +5,7 @@ import com.example.bankingApp.entity.CardRequests.CardRequests;
 import com.example.bankingApp.entity.CardRequests.CardType;
 import com.example.bankingApp.entity.CardRequests.CardVariant;
 import com.example.bankingApp.entity.Customers.Customers;
+import com.example.bankingApp.entity.Enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -22,4 +23,6 @@ public interface CardRequestsRepo extends JpaRepository<CardRequests,Long> {
        """)
     Optional<CardRequests> findPendingRequest(Customers customer,
                                               CardType cardType);
+
+    long countByStatus(Status status);
 }

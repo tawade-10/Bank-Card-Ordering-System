@@ -2,6 +2,7 @@ package com.example.bankingApp.repository.CardDetails;
 
 import com.example.bankingApp.entity.CardDetails.CardDetails;
 import com.example.bankingApp.entity.Customers.Customers;
+import com.example.bankingApp.entity.Enums.Status;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

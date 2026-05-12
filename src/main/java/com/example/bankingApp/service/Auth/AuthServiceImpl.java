@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -23,6 +24,11 @@ public class AuthServiceImpl implements AuthService {
     public CustomersResponseDto registerCustomer(CustomersRequestDto customersRequestDto) {
 
         Customers customer = new Customers();
+
+        Optional<Customers> existingCustomerByEmail = customersRepo.findByEmail(customersRequestDto.getEmail());
+        if (existingCustomerByEmail.isPresent()) {
+            return new CustomersResponseDto(existingCustomerByEmail.get());
+        }
 
         customer.setCustomerName(customersRequestDto.getCustomerName());
         customer.setEmail(customersRequestDto.getEmail());

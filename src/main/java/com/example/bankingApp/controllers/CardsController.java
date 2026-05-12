@@ -4,6 +4,7 @@ import com.example.bankingApp.dto.ActiveCardsDto.ActiveCardsResponseDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
+import com.example.bankingApp.dto.CardsStatusSummaryResponse.CardsStatusSummaryResponse;
 import com.example.bankingApp.facade.CardDetailsFacade.CardDetailsFacade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -62,4 +63,11 @@ public class CardsController {
         CardVariantsResponseDto variantById = cardDetailsFacade.getVariantById(variantId);
         return ResponseEntity.ok(variantById);
     }
+
+    @GetMapping("/status")
+    public ResponseEntity<CardsStatusSummaryResponse> getCardsByStatus(){
+        CardsStatusSummaryResponse getStatus = cardDetailsFacade.getCardsByStatus();
+        return ResponseEntity.ok(getStatus);
+    }
+
 }

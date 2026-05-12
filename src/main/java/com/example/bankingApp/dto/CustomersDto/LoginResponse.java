@@ -8,12 +8,14 @@ public class LoginResponse {
     private String customerName;
     private String email;
     private Roles roles;
+    private Long userId;
 
-    public LoginResponse(String token, String customerName, String email, Roles roles) {
+    public LoginResponse(String token, String customerName, String email, Roles roles, Long userId) {
         this.token = token;
         this.customerName = customerName;
         this.email = email;
         this.roles = roles;
+        this.userId = userId;
     }
 
     public String getToken() {
@@ -29,4 +31,6 @@ public class LoginResponse {
     }
 
     public Roles getRoles() { return roles; }
+
+    public Long getUserId() { return userId; }
 }

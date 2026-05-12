@@ -64,7 +64,6 @@ export default function MyCards() {
               textColour: design.textColour,
             };
           } catch (err) {
-            console.error("Variant fetch error", err);
             return card;
           }
         })
@@ -95,61 +94,166 @@ export default function MyCards() {
   }
 
   return (
-    <div className="flip-grid">
-      {cards.map((card) => (
-        <div className="flip-container" key={card.cardId}>
-          <div className="flip-card">
-            <div
-              className="card front-side"
-              style={{
-                background: card.cardColourFront,
-                color: card.textColour,
-              }}
-            >
-              <header className="front-header">
-                <img
-                  src={NETWORK_LOGOS[card.networkName]}
-                  className="network-logo"
-                  alt="network"
-                />
-                <img
-                  className="chip-image"
-                  src={getChip(card.chipImage)}
-                  alt="chip"
-                />
-              </header>
-              <div className="card-number-real">
-                {card.maskedNumber}
-              </div>
-              <div className="card-bottom-row">
-                <div className="holder-info">
-                  <label>Cardholder Name</label>
-                  <div className="holder-name">{card.customerName}</div>
+    <div className="cards-page">
+      {/* CREDIT CARDS */}
+      <div className="card-column">
+        <h2 className="column-title">Credit Cards</h2>
+
+        {cards.filter((c) => c.cardType === "CREDIT").length === 0 ? (
+          <p className="empty">No credit cards available</p>
+        ) : (
+          <div className="card-list">
+            {cards
+              .filter((c) => c.cardType === "CREDIT")
+              .map((card) => (
+                <div className="flip-container" key={card.cardId}>
+                  <div className="flip-card">
+                    {/* FRONT */}
+                    <div
+                      className="card front-side"
+                      style={{
+                        background: card.cardColourFront,
+                        color: card.textColour,
+                      }}
+                    >
+                      <header className="front-header">
+                        <img
+                          src={NETWORK_LOGOS[card.networkName]}
+                          className="network-logo"
+                          alt="network"
+                        />
+                        <img
+                          className="chip-image"
+                          src={getChip(card.chipImage)}
+                          alt="chip"
+                        />
+                      </header>
+
+                      <div className="card-number-real">
+                        {card.maskedNumber}
+                      </div>
+
+                      <div className="card-bottom-row">
+                        <div className="holder-info">
+                          <label>Cardholder Name</label>
+                          <div className="holder-name">
+                            {card.customerName}
+                          </div>
+                        </div>
+
+                        <div className="expiry-info">
+                          <label>Valid Thru</label>
+                          <div className="expiry-date">{card.expiry}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* BACK */}
+                    <div
+                      className="card back-side"
+                      style={{ background: card.cardColourBack }}
+                    >
+                      <h6>
+                        For customer service call +91 9191919191 or email
+                        support@bank.com
+                      </h6>
+                      <span className="magnetic-strap"></span>
+
+                      <div className="signature">
+                        <i>{card.cvv || "XXX"}</i>
+                      </div>
+
+                      <h5>
+                        This card is property of the issuing bank. If found,
+                        return to the nearest branch.
+                      </h5>
+                    </div>
+                  </div>
                 </div>
-                <div className="expiry-info">
-                  <label>Valid Thru</label>
-                  <div className="expiry-date">{card.expiry}</div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="card back-side"
-              style={{ background: card.cardColourBack }}
-            >
-              <h6>
-                For customer service call +91 9191919191 or email support@bank.com
-              </h6>
-              <span className="magnetic-strap"></span>
-              <div className="signature">
-                <i>{card.cvv || "XXX"}</i>
-              </div>
-              <h5>
-                This card is property of the issuing bank. If found, return to nearest branch.
-              </h5>
-            </div>
+              ))}
           </div>
-        </div>
-      ))}
+        )}
+      </div>
+
+      {/* DEBIT CARDS */}
+      <div className="card-column">
+        <h2 className="column-title">Debit Cards</h2>
+
+        {cards.filter((c) => c.cardType === "DEBIT").length === 0 ? (
+          <p className="empty">No debit cards available</p>
+        ) : (
+          <div className="card-list">
+            {cards
+              .filter((c) => c.cardType === "DEBIT")
+              .map((card) => (
+                <div className="flip-container" key={card.cardId}>
+                  <div className="flip-card">
+                    {/* FRONT */}
+                    <div
+                      className="card front-side"
+                      style={{
+                        background: card.cardColourFront,
+                        color: card.textColour,
+                      }}
+                    >
+                      <header className="front-header">
+                        <img
+                          src={NETWORK_LOGOS[card.networkName]}
+                          className="network-logo"
+                          alt="network"
+                        />
+                        <img
+                          className="chip-image"
+                          src={getChip(card.chipImage)}
+                          alt="chip"
+                        />
+                      </header>
+
+                      <div className="card-number-real">
+                        {card.maskedNumber}
+                      </div>
+
+                      <div className="card-bottom-row">
+                        <div className="holder-info">
+                          <label>Cardholder Name</label>
+                          <div className="holder-name">
+                            {card.customerName}
+                          </div>
+                        </div>
+
+                        <div className="expiry-info">
+                          <label>Valid Thru</label>
+                          <div className="expiry-date">{card.expiry}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* BACK */}
+                    <div
+                      className="card back-side"
+                      style={{ background: card.cardColourBack }}
+                    >
+                      <h6>
+                        For customer service call +91 9191919191 or email
+                        support@bank.com
+                      </h6>
+                      <span className="magnetic-strap"></span>
+
+                      <div className="signature">
+                        <i>{card.cvv || "XXX"}</i>
+                      </div>
+
+                      <h5>
+                        This card is property of the issuing bank. If found,
+                        return to the nearest branch.
+                      </h5>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

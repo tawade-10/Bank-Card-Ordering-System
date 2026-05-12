@@ -4,6 +4,7 @@ import com.example.bankingApp.dto.ActiveCardsDto.ActiveCardsResponseDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
+import com.example.bankingApp.dto.CardsStatusSummaryResponse.CardsStatusSummaryResponse;
 import com.example.bankingApp.service.CardDetails.CardDetailsService;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +42,11 @@ public class CardDetailsFacadeImpl implements CardDetailsFacade{
     @Override
     public CardVariantsResponseDto getVariantById(Long variantId) {
         return cardDetailsService.getVariantById(variantId);
+    }
+
+    @Override
+    public CardsStatusSummaryResponse getCardsByStatus() {
+        return cardDetailsService.getCardsByStatus();
     }
 
     @Override

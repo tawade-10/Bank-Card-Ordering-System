@@ -4,6 +4,7 @@ import com.example.bankingApp.dto.ActiveCardsDto.ActiveCardsResponseDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
+import com.example.bankingApp.dto.CardsStatusSummaryResponse.CardsStatusSummaryResponse;
 import com.example.bankingApp.entity.CardDetails.CardDetails;
 import com.example.bankingApp.entity.CardRequests.CardRequests;
 import com.example.bankingApp.entity.CardRequests.NetworkBin;
@@ -125,6 +126,20 @@ public class CardDetailsServiceImpl implements CardDetailsService{
                 .orElseThrow(() -> new RuntimeException("Variant Not found"));
 
         return new CardVariantsResponseDto(variant);
+    }
+
+    @Override
+    public CardsStatusSummaryResponse getCardsByStatus() {
+
+        long pending = cardRequestsRepo.countByStatus(Status.PENDING_REVIEW);
+        long approved = cardRequestsRepo.countByStatus(Status.APPROVED);
+        long rejected = cardRequestsRepo.countByStatus(Status.REJECTED);
+        long printed = cardRequestsRepo.countByStatus(Status.PRINTED);
+        long dispatched = cardRequestsRepo.countByStatus(Status.DISPATCHED);
+        long delivered = cardRequestsRepo.countByStatus(Status.DELIVERED);
+        long cancelled = cardRequestsRepo.countByStatus(Status.CANCELLED);
+
+        return new CardsStatusSummaryResponse(pending,approved,rejected,printed,dispatched,delivered,cancelled);
     }
 
     @Override
