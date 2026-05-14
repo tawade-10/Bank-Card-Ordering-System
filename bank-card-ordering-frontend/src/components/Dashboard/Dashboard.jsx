@@ -189,16 +189,20 @@ import CustomerDashboard from "./CustomerDashboard/CustomerDashboard";
 
 export default function Dashboard() {
 
-  useEffect(() => {
-    const userId = localStorage.getItem("userId");
+     useEffect(() => {
 
-    if (userId) {
-      connectWebSocket(userId, (notification) => {
-        toast.info(`${notification.title}: ${notification.message}`);
-      });
-    }
+        const userId = localStorage.getItem("userId");
 
-  }, []);
+        if (!userId) return;
+
+        connectWebSocket(userId, (notification) => {
+
+            // 🔥 YOUR REQUIRED TOAST FORMAT
+            toast.info(`${notification.title}: ${notification.message}`);
+
+        });
+
+    }, []);
 
   const role = localStorage.getItem("role");
 

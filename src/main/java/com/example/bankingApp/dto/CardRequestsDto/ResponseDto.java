@@ -1,6 +1,5 @@
 package com.example.bankingApp.dto.CardRequestsDto;
 
-import com.example.bankingApp.entity.CardDetails.CardDetails;
 import com.example.bankingApp.entity.Enums.Status;
 import com.example.bankingApp.entity.CardRequests.CardRequests;
 
@@ -18,6 +17,7 @@ public class ResponseDto {
     private String localDate;
     private Long customerId;
     private String customerName;
+    private String updatedAt;
 
     public ResponseDto(CardRequests cardRequests) {
         this.requestId = cardRequests.getRequestId();
@@ -32,6 +32,7 @@ public class ResponseDto {
         this.localDate = cardRequests.getLocalDate().toString();
         this.customerId = cardRequests.getCustomers().getCustomerId();
         this.customerName = cardRequests.getCustomers().getCustomerName();
+        this.updatedAt = cardRequests.getUpdatedAt().toString();
     }
 
     public ResponseDto() {}
@@ -130,5 +131,13 @@ public class ResponseDto {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

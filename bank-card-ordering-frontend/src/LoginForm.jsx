@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaLock } from "react-icons/fa6";
@@ -15,12 +14,8 @@ export default function LoginForm() {
     const signUpRef = useRef(null);
 
     useEffect(() => {
-        if (isLogin && loginRef.current) {
-            loginRef.current.focus();
-        }
-        if (!isLogin && signUpRef.current) {
-            signUpRef.current.focus();
-        }
+        if (isLogin && loginRef.current) loginRef.current.focus();
+        if (!isLogin && signUpRef.current) signUpRef.current.focus();
     }, [isLogin]);
 
     const [formData, setFormData] = useState({
@@ -79,7 +74,10 @@ export default function LoginForm() {
     const handleLogin = async () => {
         if (!validateLogin()) return;
 
-        const body = { email: formData.loginEmail, password: formData.loginPassword };
+        const body = {
+            email: formData.loginEmail,
+            password: formData.loginPassword
+        };
 
         try {
             const response = await fetch("http://localhost:8080/api/login", {
@@ -90,23 +88,29 @@ export default function LoginForm() {
 
             if (response.ok) {
                 const data = await response.json();
+
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("customerName", data.customerName);
                 localStorage.setItem("email", data.email);
                 localStorage.setItem("role", data.roles);
                 localStorage.setItem("userId", data.userId);
+
                 toast.success("Login Successful!");
-                if (data.roles === "ADMIN") {
-                    navigate("/admin/dashboard");
-                } else if (data.roles === "CUSTOMER") {
-                    navigate("/dashboard");
-                } else {
-                    toast.error("Unknown Role Assigned!");
-                }
+
+                // ✅ IMPORTANT: give time for websocket init in dashboard
+                setTimeout(() => {
+                    if (data.roles === "ADMIN") {
+                        navigate("/admin/dashboard");
+                    } else {
+                        navigate("/dashboard");
+                    }
+                }, 500);
+
             } else {
                 toast.error("Wrong Credentials!");
             }
-        } catch {
+        } catch (err) {
+            console.log(err);
             toast.error("Server Error!");
         }
     };
@@ -127,14 +131,16 @@ export default function LoginForm() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
             });
+
             if (response.ok) {
                 toast.success("Signup Successful!");
                 handleSignupReset();
                 setIsLogin(true);
             } else {
-                toast.error("Signup failed!");
+                toast.error("Signup Failed!");
             }
-        } catch {
+        } catch (err) {
+            console.log(err);
             toast.error("Something went wrong!");
         }
     };
@@ -149,7 +155,6 @@ export default function LoginForm() {
 
     return (
         <div className='container'>
-            <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
 
             <div className='form-container'>
                 <div className='form-toggle'>
@@ -157,7 +162,6 @@ export default function LoginForm() {
                     <button className={!isLogin ? 'active' : ''} onClick={() => setIsLogin(false)}>SignUp</button>
                 </div>
 
-                {/* LOGIN FORM */}
                 {isLogin ? (
                     <div className='form'>
                         <h2>User Login</h2>
@@ -184,30 +188,26 @@ export default function LoginForm() {
                                 value={formData.loginPassword}
                                 onChange={handleChange}
                             />
-                            <span className="password-icon" onClick={() => setShowPassword(prev => !prev)}>
+                            <span className="password-icon" onClick={() => setShowPassword(!showPassword)}>
                                 {showPassword ? <FaEyeSlash /> : <FaEye />}
                             </span>
                         </div>
                         {errors.loginPassword && <span className='error'>{errors.loginPassword}</span>}
 
                         <div className="reset-links">
-                            <a href="#">Forgot Password?</a>
+                            <a href="/forget-password">Forgot Password?</a>
                             <span onClick={handleLoginReset} className="reset-btn">Reset Fields</span>
                         </div>
 
                         <button className="primary-btn" onClick={handleLogin}>Login</button>
-                        <p>Not a User?{" "}<a href="#" onClick={() => {setIsLogin(false);
-                                                                       handleLoginReset();
 
-                            }}
-                          >
-                            Register Here
-                          </a>
+                        <p>Not a User?{" "}
+                            <a href="#" onClick={() => { setIsLogin(false); handleLoginReset(); }}>
+                                Register Here
+                            </a>
                         </p>
                     </div>
                 ) : (
-
-                    /* SIGNUP FORM */
                     <div className='form'>
                         <h2>Signup Form</h2>
 
@@ -245,7 +245,7 @@ export default function LoginForm() {
                                 value={formData.signupPassword}
                                 onChange={handleChange}
                             />
-                            <span className="password-icon" onClick={() => setShowPassword(prev => !prev)}>
+                            <span className="password-icon" onClick={() => setShowPassword(!showPassword)}>
                                 {showPassword ? <FaEyeSlash /> : <FaEye />}
                             </span>
                         </div>
@@ -260,7 +260,7 @@ export default function LoginForm() {
                                 value={formData.signupConfirmPassword}
                                 onChange={handleChange}
                             />
-                            <span className="password-icon" onClick={() => setShowConfirmPassword(prev => !prev)}>
+                            <span className="password-icon" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                             </span>
                         </div>

@@ -4,13 +4,15 @@ import "./TrackRequests.css";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import { useNavigate } from "react-router-dom";
+import ViewRequestsCustomer from "../ViewRequestsCustomer/ViewRequestsCustomer";
 
 export default function TrackRequests() {
   const [requests, setRequests] = useState([]);
   const [tabValue, setTabValue] = useState(-1);
 
-  const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -19,43 +21,35 @@ export default function TrackRequests() {
 
   const loadRequests = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:8080/api/request-card/email",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.get("http://localhost:8080/api/request-card/email", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setRequests(res.data);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
+  const handleTabChange = (event, newValue) => setTabValue(newValue);
 
   const filteredRequests = requests.filter((req) => {
     if (tabValue === 1) return req.status === "PENDING_REVIEW";
     if (tabValue === 2) return req.status === "APPROVED";
     if (tabValue === 3) return req.status === "REJECTED";
+    if (tabValue === 4) return req.status === "PRINTED";
+    if (tabValue === 5) return req.status === "DISPATCHED";
+    if (tabValue === 6) return req.status === "DELIVERED";
     return true;
   });
 
-  const getProgress = (status) => {
-    const steps = ["PENDING_REVIEW", "APPROVED", "PRINTING", "DISPATCHED", "DELIVERED"];
-    const currentIndex = steps.indexOf(status);
+  const openViewModal = (id) => {
+    setSelectedId(id);
+    setOpenModal(true);
+  };
 
-    return (
-      <div className="progress-bar">
-        {steps.map((step, index) => (
-          <span
-            key={index}
-            className={index <= currentIndex ? "step active" : "step"}
-          ></span>
-        ))}
-      </div>
-    );
+  const closeModal = () => {
+    setOpenModal(false);
+    setSelectedId(null);
   };
 
   return (
@@ -66,12 +60,15 @@ export default function TrackRequests() {
           onChange={handleTabChange}
           centered
           indicatorColor="primary"
-          textColor="primary"
+          textColor="tertiary"
         >
           <Tab label="All" />
           <Tab label="Pending" />
           <Tab label="Approved" />
           <Tab label="Rejected" />
+          <Tab label="Printed" />
+          <Tab label="Dispatched" />
+          <Tab label="Delivered" />
         </Tabs>
       </Box>
 
@@ -87,7 +84,6 @@ export default function TrackRequests() {
               <th>Reason</th>
               <th>Status</th>
               <th>Date</th>
-{/*               <th>Progress</th> */}
               <th>Actions</th>
             </tr>
           </thead>
@@ -101,18 +97,14 @@ export default function TrackRequests() {
                   <td>{req.cardVariant}</td>
                   <td>{req.reason}</td>
                   <td>
-                    <span className={`status ${req.status.toLowerCase()}`}>
-                      {req.status}
-                    </span>
+                    <span className={`status ${req.status.toLowerCase()}`}>{req.status}</span>
                   </td>
                   <td>{req.localDate}</td>
-{/*                   <td>{getProgress(req.status)}</td> */}
+
                   <td>
                     <button
                       className="view-btn"
-                      onClick={() =>
-                        navigate(`/dashboard/view-request/${req.requestId}`)
-                      }
+                      onClick={() => openViewModal(req.requestId)}
                     >
                       View
                     </button>
@@ -129,6 +121,9 @@ export default function TrackRequests() {
           </tbody>
         </table>
       </div>
+      {openModal && (
+        <ViewRequestsCustomer requestId={selectedId} closeModal={closeModal} />
+      )}
     </div>
   );
 }

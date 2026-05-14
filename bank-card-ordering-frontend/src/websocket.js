@@ -1,32 +1,29 @@
-// websocket.js
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 
 let stompClient = null;
 
-export const connectWebSocket = (userId, onMessageReceived) => {
-  const socket = new SockJS("http://localhost:8080/ws");
+export const connectWebSocket = (userId, callback) => {
+    const socket = new SockJS("http://localhost:8080/ws");
 
-  stompClient = new Client({
-    webSocketFactory: () => socket,
-    reconnectDelay: 5000, // auto reconnect
-    onConnect: () => {
-      console.log("WebSocket Connected");
+    stompClient = new Client({
+        webSocketFactory: () => socket,
+        reconnectDelay: 5000,
 
-      stompClient.subscribe(`/topic/notifications/${userId}`, (message) => {
-        if (message.body) {
-          const notification = JSON.parse(message.body);
-          onMessageReceived(notification);
+        onConnect: () => {
+            console.log("WebSocket Connected");
+
+            stompClient.subscribe(`/topic/notifications/${userId}`, (msg) => {
+                const notification = JSON.parse(msg.body);
+
+                callback(notification);
+            });
         }
-      });
-    },
-  });
+    });
 
-  stompClient.activate();
+    stompClient.activate();
 };
 
 export const disconnectWebSocket = () => {
-  if (stompClient) {
-    stompClient.deactivate();
-  }
+    if (stompClient) stompClient.deactivate();
 };

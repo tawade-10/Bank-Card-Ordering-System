@@ -1,6 +1,6 @@
 .track-container {
   width: 100%;
-  padding-top: 70px;
+  padding-top: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,7 +11,6 @@
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 20px;
-  color: #063970;
 }
 
 .table-wrapper {

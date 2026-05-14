@@ -80,12 +80,12 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         Reason reason = reasonForRequestRepo.findById(requestsDto.getReasonId())
                 .orElseThrow(() -> new RuntimeException("Invalid Reason ID"));
 
-        Optional<CardRequests> existingPending =
-                cardRequestsRepo.findPendingRequest(customer, cardType);
-
-        if (existingPending.isPresent()) {
-            throw new RuntimeException("A request for this card is already pending review.");
-        }
+//        Optional<CardRequests> existingPending =
+//                cardRequestsRepo.findPendingRequest(customer, cardType);
+//
+//        if (existingPending.isPresent()) {
+//            throw new RuntimeException("A request for this card is already pending review.");
+//        }
 
         CardRequests request = new CardRequests();
         request.setCardType(cardType);

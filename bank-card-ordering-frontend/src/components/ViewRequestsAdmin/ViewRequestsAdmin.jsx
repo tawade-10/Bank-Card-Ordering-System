@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import ReasonBox from "../ReasonBox/ReasonBox";
-import "./ViewRequests.css";
+import "./ViewRequestsAdmin.css";
 
 export default function ViewRequests() {
   const { requestId } = useParams();
