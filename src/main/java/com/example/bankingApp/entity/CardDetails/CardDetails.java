@@ -50,9 +50,6 @@ public class CardDetails {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "active_card")
-    private boolean activeCard;
-
     public Long getCardId() {
         return cardId;
     }
@@ -113,14 +110,6 @@ public class CardDetails {
 
     public void setNetworkBin(NetworkBin networkBin) {
         this.networkBin = networkBin;
-    }
-
-    public boolean isActiveCard() {
-        return activeCard;
-    }
-
-    public void setActiveCard(boolean activeCard) {
-        this.activeCard = activeCard;
     }
 
     public boolean isActive() { return isActive; }

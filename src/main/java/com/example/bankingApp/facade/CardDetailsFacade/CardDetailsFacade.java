@@ -1,6 +1,6 @@
 package com.example.bankingApp.facade.CardDetailsFacade;
 
-import com.example.bankingApp.dto.ActiveCardsDto.ActiveCardsResponseDto;
+import com.example.bankingApp.dto.CardsDto.CardsResponseDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
@@ -18,9 +18,11 @@ public interface CardDetailsFacade {
 
     List<CardDetailsResponseDto> getCardsByEmail(String email);
 
-    List<ActiveCardsResponseDto> getActiveCards(String email);
+    List<CardsResponseDto> getActiveCards(String email);
 
     CardVariantsResponseDto getVariantById(Long variantId);
 
     CardsStatusSummaryResponse getCardsByStatus();
+
+    List<CardsResponseDto> getInactiveCards(String email);
 }

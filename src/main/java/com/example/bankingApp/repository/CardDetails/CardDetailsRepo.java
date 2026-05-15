@@ -2,12 +2,12 @@ package com.example.bankingApp.repository.CardDetails;
 
 import com.example.bankingApp.entity.CardDetails.CardDetails;
 import com.example.bankingApp.entity.Customers.Customers;
-import com.example.bankingApp.entity.Enums.Status;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface CardDetailsRepo extends JpaRepository<CardDetails, Long> {
@@ -36,9 +36,10 @@ public interface CardDetailsRepo extends JpaRepository<CardDetails, Long> {
     @Query("""
     SELECT c FROM CardDetails c
     WHERE c.customers.customerId = :customerId
-    AND c.cardType.typeName = :cardType
-    AND c.isActive = true
+    AND c.isActive = false
     ORDER BY c.createdAt DESC
     """)
-    List<CardDetails> findActiveCardsByType(Long customerId, String cardType);
+    List<CardDetails> findInactiveCards(Long customerId);
+
+    List<CardDetails> findByExpiryDateBetween(LocalDate today, LocalDate oneMonthLater);
 }

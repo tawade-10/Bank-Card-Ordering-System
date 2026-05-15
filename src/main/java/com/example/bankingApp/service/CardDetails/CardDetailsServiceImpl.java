@@ -1,20 +1,18 @@
 package com.example.bankingApp.service.CardDetails;
 
-import com.example.bankingApp.dto.ActiveCardsDto.ActiveCardsResponseDto;
+import com.example.bankingApp.dto.CardsDto.CardsResponseDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
 import com.example.bankingApp.dto.CardsStatusSummaryResponse.CardsStatusSummaryResponse;
 import com.example.bankingApp.entity.CardDetails.CardDetails;
 import com.example.bankingApp.entity.CardRequests.CardRequests;
-import com.example.bankingApp.entity.CardRequests.NetworkBin;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.CardRequests.CardType;
 import com.example.bankingApp.entity.CardRequests.CardVariant;
 import com.example.bankingApp.entity.Enums.Status;
 import com.example.bankingApp.repository.CardDetails.CardDetailsRepo;
 import com.example.bankingApp.repository.CardRequests.CardRequestsRepo;
-import com.example.bankingApp.repository.CardRequests.NetworkBinRepo;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
 import com.example.bankingApp.repository.CardRequests.CardTypeRepo;
 import com.example.bankingApp.repository.CardRequests.CardVariantRepo;
@@ -109,14 +107,25 @@ public class CardDetailsServiceImpl implements CardDetailsService{
     }
 
     @Override
-    public List<ActiveCardsResponseDto> getActiveCards(String email) {
+    public List<CardsResponseDto> getActiveCards(String email) {
 
         Customers customer = customersRepo.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
 
         List<CardDetails> cards = cardDetailsRepo.findActiveCards(customer.getCustomerId());
 
-        return cards.stream().map(ActiveCardsResponseDto::new).toList();
+        return cards.stream().map(CardsResponseDto::new).toList();
+    }
+
+    @Override
+    public List<CardsResponseDto> getInactiveCards(String email) {
+
+        Customers customer = customersRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        List<CardDetails> cards = cardDetailsRepo.findInactiveCards(customer.getCustomerId());
+
+        return cards.stream().map(CardsResponseDto::new).toList();
     }
 
     @Override
@@ -162,4 +171,5 @@ public class CardDetailsServiceImpl implements CardDetailsService{
 
         return cards.stream().map(CardDetailsResponseDto::new).toList();
     }
+
 }

@@ -44,39 +44,57 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import axios from "axios";
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [stompClient, setStompClient] = useState(null);
 
-  const userId = localStorage.getItem("customerId"); // store this after login
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [notifications, setNotifications] = useState([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const userId = localStorage.getItem("customerId");
   const token = localStorage.getItem("token");
 
   const isLoginPage = location.pathname === "/";
 
   useEffect(() => {
-   if (!userId) return;
+    if (!userId) return;
 
-   const socket = new SockJS("http://localhost:8080/ws");
+    axios
+      .get(`http://localhost:8080/api/notifications/${userId}`)
+      .then((res) => {
+        setNotifications(res.data);
+        setUnreadCount(res.data.length);
+      })
+      .catch((err) => console.log(err));
+  }, [userId]);
 
-   const client = new Client({
-     webSocketFactory: () => socket,
-     reconnectDelay: 5000,
-     debug: (str) => console.log(str),
-     onConnect: () => {
-       client.subscribe(`/topic/notifications/${userId}`, () => {
-         setUnreadCount((prev) => prev + 1);
-       });
-     }
-   });
+  useEffect(() => {
+    if (!userId) return;
 
-   client.activate();
-   setStompClient(client);
+    const socket = new SockJS("http://localhost:8080/ws");
 
-   return () => client.deactivate();
- }, [userId]);
+    const client = new Client({
+      webSocketFactory: () => socket,
+      reconnectDelay: 5000,
+      debug: (str) => console.log(str),
+
+      onConnect: () => {
+        client.subscribe(`/topic/notifications/${userId}`, (msg) => {
+          const data = JSON.parse(msg.body);
+
+          setNotifications((prev) => [data, ...prev]);
+          setUnreadCount((prev) => prev + 1);
+        });
+      },
+    });
+
+    client.activate();
+
+    return () => client.deactivate();
+  }, [userId]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -84,9 +102,9 @@ export default function Header() {
     navigate("/");
   };
 
-  const goToNotifications = () => {
-    navigate("/notifications");
-    setUnreadCount(0); // reset on view
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+    setUnreadCount(0);
   };
 
   return (
@@ -94,11 +112,29 @@ export default function Header() {
       <div className="logo">Bank Name</div>
 
       {!isLoginPage && token && (
-        <div className="notif-wrapper" onClick={goToNotifications}>
-          <IoNotificationsOutline size={26} className="notif-icon" />
+        <div className="notification-area">
+          <div className="notif-wrapper" onClick={toggleDropdown}>
+            <IoNotificationsOutline size={26} className="notif-icon" />
 
-          {unreadCount > 0 && (
-            <span className="notif-badge">{unreadCount}</span>
+            {unreadCount > 0 && (
+              <span className="notif-badge">{unreadCount}</span>
+            )}
+          </div>
+          {dropdownOpen && (
+            <div className="notif-dropdown">
+              <h4 className="notif-title">Notifications</h4>
+
+              {notifications.length === 0 ? (
+                <p className="notif-empty">No notifications</p>
+              ) : (
+                notifications.map((n, i) => (
+                  <div key={i} className="notif-card">
+                    <p className="notif-text">{n.message}</p>
+                    <p className="notif-time">{n.time}</p>
+                  </div>
+                ))
+              )}
+            </div>
           )}
         </div>
       )}

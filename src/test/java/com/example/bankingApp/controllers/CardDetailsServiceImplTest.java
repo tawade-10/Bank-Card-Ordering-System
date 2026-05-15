@@ -116,22 +116,16 @@ public class CardDetailsServiceImplTest {
 
         when(cardTypeRepo.findById(2L)).thenReturn(Optional.of(type));
 
-        // --- Mock CardVariant ---
         CardVariant variant = new CardVariant();
         variant.setVariantId(3L);
         variant.setVariantName("PLATINUM");
 
         when(cardVariantRepo.findById(3L)).thenReturn(Optional.of(variant));
 
-        // --- Encryption ---
-        when(encryptionService.encrypt("6483573593522541"))
-                .thenReturn("ENCRYPTED_CARD");
+        when(encryptionService.encrypt("6483573593522541")).thenReturn("ENCRYPTED_CARD");
 
-        // deactivate
-        doNothing().when(cardDetailsRepo)
-                .deactivatePreviousCard(10L, "DEBIT");
+        doNothing().when(cardDetailsRepo).deactivatePreviousCard(10L, "DEBIT");
 
-        // --- Mock saved entity ---
         CardDetails saved = new CardDetails();
         saved.setCardId(100L);
         saved.setCustomers(customer);
@@ -145,10 +139,8 @@ public class CardDetailsServiceImplTest {
 
         when(cardDetailsRepo.save(any(CardDetails.class))).thenReturn(saved);
 
-        // --- CALL SERVICE ---
         CardDetailsResponseDto response = cardDetailsService.createCard(dto);
 
-        // --- Assertions ---
         assertNotNull(response);
         assertEquals(100L, response.getCardId());
         assertEquals("DEBIT", response.getCardType());
@@ -156,7 +148,6 @@ public class CardDetailsServiceImplTest {
         assertEquals("648357** **** **** 2541", response.getMaskedNumber());
         assertEquals("03/30", response.getExpiry());
 
-        // Verify
         verify(cardRequestsRepo, times(1)).findById(1L);
         verify(cardTypeRepo, times(1)).findById(2L);
         verify(cardVariantRepo, times(1)).findById(3L);

@@ -3,7 +3,6 @@ package com.example.bankingApp.service.Notification;
 import com.example.bankingApp.entity.Notification.Notification;
 import com.example.bankingApp.repository.Notification.NotificationRepo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,8 +31,10 @@ public class NotificationServiceImpl implements NotificationService{
 
     @Override
     public void sendNotification(Long userId, String title, String message) {
+
         Notification notification = new Notification(userId, title, message);
         notificationRepo.save(notification);
+
         simpMessagingTemplate.convertAndSend("/topic/notifications/" + userId, notification);
     }
 

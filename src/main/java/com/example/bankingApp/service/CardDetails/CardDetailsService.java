@@ -1,11 +1,10 @@
 package com.example.bankingApp.service.CardDetails;
 
-import com.example.bankingApp.dto.ActiveCardsDto.ActiveCardsResponseDto;
+import com.example.bankingApp.dto.CardsDto.CardsResponseDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
 import com.example.bankingApp.dto.CardsStatusSummaryResponse.CardsStatusSummaryResponse;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -18,9 +17,11 @@ public interface CardDetailsService {
 
     List<CardDetailsResponseDto> getCardsByEmail(String email);
 
-    List<ActiveCardsResponseDto> getActiveCards(String email);
+    List<CardsResponseDto> getActiveCards(String email);
 
     CardVariantsResponseDto getVariantById(Long variantId);
 
     CardsStatusSummaryResponse getCardsByStatus();
+
+    List<CardsResponseDto> getInactiveCards(String email);
 }

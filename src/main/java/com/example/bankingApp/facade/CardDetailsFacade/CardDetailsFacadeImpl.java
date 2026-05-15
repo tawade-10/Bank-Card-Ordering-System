@@ -1,6 +1,6 @@
 package com.example.bankingApp.facade.CardDetailsFacade;
 
-import com.example.bankingApp.dto.ActiveCardsDto.ActiveCardsResponseDto;
+import com.example.bankingApp.dto.CardsDto.CardsResponseDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
@@ -35,7 +35,7 @@ public class CardDetailsFacadeImpl implements CardDetailsFacade{
     }
 
     @Override
-    public List<ActiveCardsResponseDto> getActiveCards(String email) {
+    public List<CardsResponseDto> getActiveCards(String email) {
         return cardDetailsService.getActiveCards(email);
     }
 
@@ -47,6 +47,11 @@ public class CardDetailsFacadeImpl implements CardDetailsFacade{
     @Override
     public CardsStatusSummaryResponse getCardsByStatus() {
         return cardDetailsService.getCardsByStatus();
+    }
+
+    @Override
+    public List<CardsResponseDto> getInactiveCards(String email) {
+        return cardDetailsService.getInactiveCards(email);
     }
 
     @Override

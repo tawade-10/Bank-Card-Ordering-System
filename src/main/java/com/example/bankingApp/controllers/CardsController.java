@@ -1,6 +1,6 @@
 package com.example.bankingApp.controllers;
 
-import com.example.bankingApp.dto.ActiveCardsDto.ActiveCardsResponseDto;
+import com.example.bankingApp.dto.CardsDto.CardsResponseDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
@@ -39,10 +39,16 @@ public class CardsController {
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<ActiveCardsResponseDto>> getActiveCards(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<List<CardsResponseDto>> getActiveCards(@AuthenticationPrincipal UserDetails userDetails){
         String email = userDetails.getUsername();
-        List<ActiveCardsResponseDto> activeCards = cardDetailsFacade.getActiveCards(email);
+        List<CardsResponseDto> activeCards = cardDetailsFacade.getActiveCards(email);
         return ResponseEntity.ok(activeCards);
+    }
+
+    @GetMapping("/inactive")
+    public ResponseEntity<List<CardsResponseDto>> getInactiveCards(@AuthenticationPrincipal UserDetails userDetails) {
+        String email = userDetails.getUsername();
+        return ResponseEntity.ok(cardDetailsFacade.getInactiveCards(email));
     }
 
     @GetMapping("/{customerId}")

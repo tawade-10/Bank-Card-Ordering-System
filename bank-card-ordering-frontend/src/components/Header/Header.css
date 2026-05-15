@@ -1,3 +1,4 @@
+/* HEADER WRAPPER */
 .header-bar {
   position: fixed;
   top: 0;
@@ -18,6 +19,7 @@
   font-weight: bold;
 }
 
+/* LOGOUT BUTTON */
 .logout-btn {
   background-color: #ff4d4d;
   border: none;
@@ -33,20 +35,23 @@
   background-color: #e60000;
 }
 
-.box {
-  text-decoration: none;
-  color: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* NOTIFICATION AREA (new, clean) */
+.notification-area {
+  position: relative;
+  margin-left: 1000px;
 }
 
-.notif-icon {
+/* Bell Wrapper */
+.notif-wrapper {
   cursor: pointer;
-  font-size: 24px;
-  margin-left: 950px;
+  position: relative;
   display: flex;
   align-items: center;
+}
+
+/* Bell Icon */
+.notif-icon {
+  font-size: 26px;
   color: white;
   transition: 0.2s ease-in-out;
 }
@@ -54,4 +59,62 @@
 .notif-icon:hover {
   color: #ffcc00;
   transform: scale(1.1);
+}
+
+/* Red Badge */
+.notif-badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  background: red;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* DROPDOWN BOX */
+.notif-dropdown {
+  position: absolute;
+  right: 0;
+  top: 40px; /* sits under header bar */
+  width: 260px;
+  background: white;
+  color: black;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+  z-index: 2000;
+}
+
+.notif-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.notif-empty {
+  color: #666;
+  text-align: center;
+  font-size: 14px;
+  margin: 15px 0;
+}
+
+/* EACH NOTIFICATION CARD */
+.notif-card {
+  background: #f3f4f6;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.notif-text {
+  font-size: 14px;
+  margin: 0;
+}
+
+.notif-time {
+  font-size: 12px;
+  color: #555;
+  margin-top: 4px;
 }
