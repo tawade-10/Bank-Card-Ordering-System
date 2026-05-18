@@ -5,6 +5,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import ViewRequestsCustomer from "../ViewRequestsCustomer/ViewRequestsCustomer";
+import { useNavigate } from "react-router-dom";
 
 export default function TrackRequests() {
   const [requests, setRequests] = useState([]);
@@ -13,6 +14,7 @@ export default function TrackRequests() {
   const [openModal, setOpenModal] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
 
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -54,6 +56,9 @@ export default function TrackRequests() {
 
   return (
     <div className="track-container">
+              <button className="back-btn" onClick={() => navigate("/dashboard")}>
+                ← Back
+              </button>
       <Box sx={{ width: "100%" }}>
         <Tabs
           value={tabValue}
@@ -71,7 +76,6 @@ export default function TrackRequests() {
           <Tab label="Delivered" />
         </Tabs>
       </Box>
-
       <h2 className="track-title">Track Your Card Requests</h2>
 
       <div className="table-wrapper">
@@ -121,6 +125,7 @@ export default function TrackRequests() {
           </tbody>
         </table>
       </div>
+
       {openModal && (
         <ViewRequestsCustomer requestId={selectedId} closeModal={closeModal} />
       )}

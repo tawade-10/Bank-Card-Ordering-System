@@ -5,6 +5,7 @@ import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.Enums.Roles;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
+import com.example.bankingApp.service.Notification.NotificationService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,8 +17,11 @@ public class AuthServiceImpl implements AuthService {
 
     private final CustomersRepo customersRepo;
 
-    public AuthServiceImpl(CustomersRepo customersRepo) {
+    private final NotificationService notificationService;
+
+    public AuthServiceImpl(CustomersRepo customersRepo, NotificationService notificationService) {
         this.customersRepo = customersRepo;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -37,6 +41,14 @@ public class AuthServiceImpl implements AuthService {
         customer.setCreatedDate(LocalDate.now());
         customer.setCreatedTime(LocalTime.now());
         Customers savedCustomer = customersRepo.save(customer);
+
+        notificationService.sendNotification(
+                savedCustomer.getCustomerId(),
+                "Registration Successful",
+                "Welcome to our banking system!",
+                "REGISTER",
+                savedCustomer.getCustomerId()
+        );
 
         return new CustomersResponseDto(savedCustomer);
     }

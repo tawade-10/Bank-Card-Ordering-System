@@ -5,7 +5,7 @@ import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
 import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
 import com.example.bankingApp.dto.CustomersDto.LoginResponse;
 import com.example.bankingApp.entity.CustomUserDetails;
-import com.example.bankingApp.entity.Enums.Roles;
+import com.example.bankingApp.repository.Customers.CustomersRepo;
 import com.example.bankingApp.service.Auth.AuthService;
 import com.example.bankingApp.service.Notification.NotificationService;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,15 +22,17 @@ public class AuthFacadeImpl implements AuthFacade {
     private final AuthService authService;
     private final BCryptPasswordEncoder encoder;
     private final NotificationService notificationService;
+    private final CustomersRepo customersRepo;
 
     public AuthFacadeImpl(JwtService jwtService,
                           AuthenticationManager authenticationManager,
-                          AuthService authService, BCryptPasswordEncoder encoder, NotificationService notificationService) {
+                          AuthService authService, BCryptPasswordEncoder encoder, NotificationService notificationService, CustomersRepo customersRepo) {
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.authService = authService;
         this.encoder = encoder;
         this.notificationService = notificationService;
+        this.customersRepo = customersRepo;
     }
 
     @Override
@@ -41,23 +43,43 @@ public class AuthFacadeImpl implements AuthFacade {
 
     @Override
     public Object loginCustomer(CustomersRequestDto customersRequestDto) {
-        Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        customersRequestDto.getEmail(),
-                        customersRequestDto.getPassword()
-                )
-        );
-
-        CustomUserDetails customerDetails = (CustomUserDetails) auth.getPrincipal();
-        String token = jwtService.generateToken(customerDetails);
-
-        String name = customerDetails.getCustomers().getCustomerName();
-        String email = customerDetails.getCustomers().getEmail();
-        Roles role = customerDetails.getCustomers().getRoles();
-        Long userId = customerDetails.getCustomers().getCustomerId();
-
-        notificationService.sendNotification(userId,"Login Successful","Welcome Back");
-
-        return new LoginResponse(token, name, email, role, userId);
+        try {
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            customersRequestDto.getEmail(),
+                            customersRequestDto.getPassword()
+                    )
+            );
+            CustomUserDetails customerDetails = (CustomUserDetails) auth.getPrincipal();
+            Long userId = customerDetails.getCustomers().getCustomerId();
+            String customerName = customerDetails.getCustomers().getCustomerName();
+            notificationService.sendNotification(
+                    userId,
+                    "Login Successful",
+                    "Welcome back, " + customerName + "!",
+                    "LOGIN_SUCCESS",
+                    userId
+            );
+            String token = jwtService.generateToken(customerDetails);
+            return new LoginResponse(
+                    token,
+                    customerDetails.getCustomers().getCustomerName(),
+                    customerDetails.getCustomers().getEmail(),
+                    customerDetails.getCustomers().getRoles(),
+                    userId
+            );
+        } catch (Exception ex) {
+            customersRepo.findByEmail(customersRequestDto.getEmail())
+                    .ifPresent(c -> {
+                        notificationService.sendNotification(
+                                c.getCustomerId(),
+                                "Login Failed",
+                                "Incorrect Email or Password",
+                                "LOGIN_FAILED",
+                                c.getCustomerId()
+                        );
+                    });
+            throw new RuntimeException("Invalid Credentials");
+        }
     }
 }

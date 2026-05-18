@@ -2,10 +2,7 @@ package com.example.bankingApp.controllers;
 
 import com.example.bankingApp.entity.Notification.Notification;
 import com.example.bankingApp.service.Notification.NotificationService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,14 +21,20 @@ public class NotificationController {
         return notificationService.getUserNotifications(userId);
     }
 
+    @PatchMapping("/read/{id}")
+    public String markAsRead(@PathVariable Long id) {
+        notificationService.markAsRead(id);
+        return "Notification marked as read";
+    }
+
     @GetMapping("/notify/{userId}")
     public String testNotify(@PathVariable Long userId) {
-        notificationService.sendNotification(
-                userId,
-                "Test Notification",
-                "This is a test message!"
-        );
-
+        notificationService.sendNotification(userId, "Test Notification", "This is a test message!", "TEST", 1L);
         return "Notification Sent!";
+    }
+
+    @GetMapping("/latest/{userId}")
+    public Notification getLatestNotification(@PathVariable Long userId) {
+        return notificationService.getLatestNotification(userId);
     }
 }

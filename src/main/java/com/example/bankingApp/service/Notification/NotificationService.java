@@ -5,9 +5,17 @@ import com.example.bankingApp.entity.Notification.Notification;
 import java.util.List;
 
 public interface NotificationService {
+
+    Notification sendNotification(Long userId, String title, String message);
+
+    Notification sendNotification(
+            Long userId, String title, String message,
+            String type, Long referenceId
+    );
+
     List<Notification> getUserNotifications(Long userId);
 
-//    void notify(Long customerId, String cardRequestUpdate, String s);
+    void markAsRead(Long id);
 
-    void sendNotification(Long userId, String testNotification, String s);
+    Notification getLatestNotification(Long userId);
 }

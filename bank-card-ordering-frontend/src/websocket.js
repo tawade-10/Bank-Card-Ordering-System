@@ -3,21 +3,29 @@ import { Client } from "@stomp/stompjs";
 
 let stompClient = null;
 
-export const connectWebSocket = (userId, callback) => {
-    const socket = new SockJS("http://localhost:8080/ws");
+export const connectWebSocket = (userId, onNotification) => {
+    const socketUrl = "http://localhost:8080/ws";
 
     stompClient = new Client({
-        webSocketFactory: () => socket,
-        reconnectDelay: 5000,
+        webSocketFactory: () => new SockJS(socketUrl),
+        reconnectDelay: 3000,
 
         onConnect: () => {
-            console.log("WebSocket Connected");
+            console.log("Connected to WebSocket");
 
             stompClient.subscribe(`/topic/notifications/${userId}`, (msg) => {
+                if (!msg.body) return;
                 const notification = JSON.parse(msg.body);
-
-                callback(notification);
+                onNotification(notification);
             });
+        },
+
+        onStompError: (frame) => {
+            console.error("Broker error:", frame.headers["message"]);
+        },
+
+        onWebSocketClose: () => {
+            console.warn("WebSocket closed, attempting reconnect...");
         }
     });
 
@@ -25,5 +33,7 @@ export const connectWebSocket = (userId, callback) => {
 };
 
 export const disconnectWebSocket = () => {
-    if (stompClient) stompClient.deactivate();
+    if (stompClient && stompClient.active) {
+        stompClient.deactivate();
+    }
 };

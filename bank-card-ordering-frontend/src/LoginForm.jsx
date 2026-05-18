@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 import { toast } from 'react-toastify';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
@@ -95,7 +96,13 @@ export default function LoginForm() {
                 localStorage.setItem("role", data.roles);
                 localStorage.setItem("userId", data.userId);
 
-                toast.success("Login Successful!");
+               axios
+                 .get(`http://localhost:8080/api/notification/latest/${data.userId}`)
+                 .then(res => {
+                   if (res.data) {
+                     toast.success(res.data.message);
+                   }
+                 });
 
                 // ✅ IMPORTANT: give time for websocket init in dashboard
                 setTimeout(() => {

@@ -141,39 +141,39 @@ export default function RequestNewCard() {
           <label className="label">Select Card Network:</label>
           <div className="radio-group">
 
-                      <label className="radio-box">
-                        <input
-                          type="radio"
-                          name="cardNetworkId"
-                          value="1"
-                          onChange={handleChange}
-                          checked={formData.cardNetworkId === "1"}
-                        />
-                        MasterCard
-                      </label>
+            <label className="radio-box">
+              <input
+                type="radio"
+                name="cardNetworkId"
+                value="1"
+                onChange={handleChange}
+                checked={formData.cardNetworkId === "1"}
+              />
+              MasterCard
+            </label>
 
-                      <label className="radio-box">
-                        <input
-                          type="radio"
-                          name="cardNetworkId"
-                          value="2"
-                          onChange={handleChange}
-                          checked={formData.cardNetworkId === "2"}
-                        />
-                        Visa
-                      </label>
+            <label className="radio-box">
+              <input
+                type="radio"
+                name="cardNetworkId"
+                value="2"
+                onChange={handleChange}
+                checked={formData.cardNetworkId === "2"}
+              />
+              Visa
+            </label>
 
-                      <label className="radio-box">
-                          <input
-                            type="radio"
-                            name="cardNetworkId"
-                            value="3"
-                            onChange={handleChange}
-                            checked={formData.cardNetworkId === "3"}
-                          />
-                          Rupay
-                      </label>
-                    </div>
+            <label className="radio-box">
+              <input
+                type="radio"
+                name="cardNetworkId"
+                value="3"
+                onChange={handleChange}
+                checked={formData.cardNetworkId === "3"}
+              />
+              Rupay
+            </label>
+          </div>
 
           <label className="label">Reason for Request:</label>
           <select
