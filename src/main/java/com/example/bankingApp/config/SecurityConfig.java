@@ -43,7 +43,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/register", "/api/login", "/api/notification/**",
-                                "/api/cards/variant/**")
+                                "/api/cards/variant/**","/api/batch/**")
                         .permitAll()
                         .requestMatchers("/api/cards/my-cards").hasAuthority("CUSTOMER")
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")

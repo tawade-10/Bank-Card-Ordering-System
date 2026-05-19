@@ -7,15 +7,15 @@ export default function Notifications() {
   const [alerts, setAlerts] = useState([]);
   const [open, setOpen] = useState(false);
 
+  const customerId = localStorage.getItem("customerId");
+
   useEffect(() => {
     fetchAlerts();
-    const interval = setInterval(fetchAlerts, 60000); // fetch every 1 min
-    return () => clearInterval(interval);
   }, []);
 
   const fetchAlerts = () => {
     axios
-      .get("http://localhost:8080/api/cards/expiry-alerts")
+      .get(`http://localhost:8080/api/notifications/${customerId}`)
       .then((res) => setAlerts(res.data))
       .catch((err) => console.log(err));
   };
@@ -24,7 +24,10 @@ export default function Notifications() {
     <div className="notif-container">
       <div className="notif-icon-wrapper" onClick={() => setOpen(!open)}>
         <IoNotificationsOutline className="notif-icon" />
-        {alerts.length > 0 && <span className="notif-badge">{alerts.length}</span>}
+
+        {alerts.length > 0 && (
+          <span className="notif-badge">{alerts.length}</span>
+        )}
       </div>
 
       {open && (
@@ -36,10 +39,8 @@ export default function Notifications() {
           ) : (
             alerts.map((alert, index) => (
               <div className="notif-card" key={index}>
-                <p className="notif-text">
-                  Your card <b>{alert.cardNumber}</b> will expire on <b>{alert.expiryDate}</b>
-                </p>
-                <p className="notif-days-left">{alert.daysLeft} days remaining</p>
+                <p className="notif-text">{alert.message}</p>
+                <p className="notif-days-left">{alert.createdAt}</p>
               </div>
             ))
           )}

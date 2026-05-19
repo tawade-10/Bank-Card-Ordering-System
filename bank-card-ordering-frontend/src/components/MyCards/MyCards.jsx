@@ -3,6 +3,8 @@ import axios from "axios";
 import "./MyCards.css";
 import { useNavigate } from "react-router-dom";
 
+import BackButton from "../BackButton/BackButton";
+
 import visaLogo from "../../assets/cards/visaLogo.svg";
 import mastercard from "../../assets/cards/mastercard.png";
 import rupay from "../../assets/cards/rupay.png";
@@ -85,147 +87,159 @@ export default function MyCards() {
     return <div className="cards-loading">No active cards available</div>;
 
   return (
-    <div className="cards-wrapper">
-      <button className="back-btn" onClick={() => navigate("/dashboard")}>
-        ← Back
-      </button>
+    <div className="cards-page">
 
-      <div className="cards-layout">
-        <div className="card-column">
-          <h2 className="column-title">Credit Cards</h2>
+      {/* BACK BUTTON THAT SCROLLS WITH PAGE */}
+      <div className="back-btn-normal">
+        <BackButton />
+      </div>
 
-          <div className="card-list">
-            {cards
-              .filter((c) => c.cardType === "CREDIT")
-              .map((card) => (
-                <div className="flip-container" key={card.cardId}>
-                  <div className="flip-card">
+      <div className="cards-wrapper">
+        <div className="cards-layout">
 
-                    {/* FRONT */}
-                    <div
-                      className="card front-side"
-                      style={{
-                        background: card.cardColourFront,
-                        color: card.textColour,
-                      }}
-                    >
-                      <header className="front-header">
-                        <img
-                          src={NETWORK_LOGOS[card.networkName]}
-                          className="network-logo"
-                          alt="network"
-                        />
+          {/* CREDIT CARDS */}
+          <div className="card-column">
+            <h2 className="column-title">Credit Cards</h2>
 
-                        <img
-                          className="chip-image"
-                          src={getChip(card.chipImage)}
-                          alt="chip"
-                        />
-                      </header>
+            <div className="card-list">
+              {cards
+                .filter((c) => c.cardType === "CREDIT")
+                .map((card) => (
+                  <div className="flip-container" key={card.cardId}>
+                    <div className="flip-card">
 
-                      <div className="card-number-real">{card.maskedNumber}</div>
+                      {/* FRONT */}
+                      <div
+                        className="card front-side"
+                        style={{
+                          background: card.cardColourFront,
+                          color: card.textColour,
+                        }}
+                      >
+                        <header className="front-header">
+                          <img
+                            src={NETWORK_LOGOS[card.networkName]}
+                            className="network-logo"
+                            alt="network"
+                          />
+                          <img
+                            className="chip-image"
+                            src={getChip(card.chipImage)}
+                            alt="chip"
+                          />
+                        </header>
 
-                      <div className="card-bottom-row">
-                        <div className="holder-info">
-                          <label>Holder Name</label>
-                          <div className="holder-name">{card.customerName}</div>
+                        <div className="card-number-real">
+                          {card.maskedNumber}
                         </div>
 
-                        <div className="expiry-info">
-                          <label>Valid Thru</label>
-                          <div className="expiry-date">{card.expiry}</div>
+                        <div className="card-bottom-row">
+                          <div className="holder-info">
+                            <label>Holder Name</label>
+                            <div className="holder-name">
+                              {card.customerName}
+                            </div>
+                          </div>
+
+                          <div className="expiry-info">
+                            <label>Valid Thru</label>
+                            <div className="expiry-date">{card.expiry}</div>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* BACK */}
-                    <div
-                      className="card back-side"
-                      style={{ background: card.cardColourBack }}
-                    >
-                      <div className="magnetic-strip-top"></div>
-
-                      <div className="signature">
-                        <i>{card.cvv || "XXX"}</i>
+                      {/* BACK */}
+                      <div
+                        className="card back-side"
+                        style={{ background: card.cardColourBack }}
+                      >
+                        <div className="magnetic-strip-top"></div>
+                        <div className="signature">
+                          <i>{card.cvv || "XXX"}</i>
+                        </div>
+                        <h5 className="description">
+                          This card is property of the issuing bank. If found,
+                          return to the nearest branch.
+                        </h5>
                       </div>
-
-                      <h5 className="description">
-                        This card is property of the issuing bank. If found,
-                        return to the nearest branch.
-                      </h5>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+            </div>
           </div>
-        </div>
 
-        {/* DEBIT CARDS */}
-        <div className="card-column">
-          <h2 className="column-title">Debit Cards</h2>
+          {/* DEBIT CARDS */}
+          <div className="card-column">
+            <h2 className="column-title">Debit Cards</h2>
 
-          <div className="card-list">
-            {cards
-              .filter((c) => c.cardType === "DEBIT")
-              .map((card) => (
-                <div className="flip-container" key={card.cardId}>
-                  <div className="flip-card">
-                    <div
-                      className="card front-side"
-                      style={{
-                        background: card.cardColourFront,
-                        color: card.textColour,
-                      }}
-                    >
-                      <header className="front-header">
-                        <img
-                          src={NETWORK_LOGOS[card.networkName]}
-                          className="network-logo"
-                          alt="network"
-                        />
-                        <img
-                          className="chip-image"
-                          src={getChip(card.chipImage)}
-                          alt="chip"
-                        />
-                      </header>
+            <div className="card-list">
+              {cards
+                .filter((c) => c.cardType === "DEBIT")
+                .map((card) => (
+                  <div className="flip-container" key={card.cardId}>
+                    <div className="flip-card">
 
-                      <div className="card-number-real">{card.maskedNumber}</div>
+                      {/* FRONT */}
+                      <div
+                        className="card front-side"
+                        style={{
+                          background: card.cardColourFront,
+                          color: card.textColour,
+                        }}
+                      >
+                        <header className="front-header">
+                          <img
+                            src={NETWORK_LOGOS[card.networkName]}
+                            className="network-logo"
+                            alt="network"
+                          />
+                          <img
+                            className="chip-image"
+                            src={getChip(card.chipImage)}
+                            alt="chip"
+                          />
+                        </header>
 
-                      <div className="card-bottom-row">
-                        <div className="holder-info">
-                          <label>Holder Name</label>
-                          <div className="holder-name">{card.customerName}</div>
+                        <div className="card-number-real">
+                          {card.maskedNumber}
                         </div>
 
-                        <div className="expiry-info">
-                          <label>Valid Thru</label>
-                          <div className="expiry-date">{card.expiry}</div>
+                        <div className="card-bottom-row">
+                          <div className="holder-info">
+                            <label>Holder Name</label>
+                            <div className="holder-name">
+                              {card.customerName}
+                            </div>
+                          </div>
+
+                          <div className="expiry-info">
+                            <label>Valid Thru</label>
+                            <div className="expiry-date">{card.expiry}</div>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div
-                      className="card back-side"
-                      style={{ background: card.cardColourBack }}
-                    >
-                      <div className="magnetic-strip-top"></div>
-
-                      <div className="signature">
-                        <i>{card.cvv || "XXX"}</i>
+                      {/* BACK */}
+                      <div
+                        className="card back-side"
+                        style={{ background: card.cardColourBack }}
+                      >
+                        <div className="magnetic-strip-top"></div>
+                        <div className="signature">
+                          <i>{card.cvv || "XXX"}</i>
+                        </div>
+                        <h5 className="description">
+                          This card is property of the issuing bank. If found,
+                          return to the nearest branch.
+                        </h5>
                       </div>
-
-                      <h5 className="description">
-                        This card is property of the issuing bank. If found,
-                        return to the nearest branch.
-                      </h5>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+            </div>
           </div>
-        </div>
 
+        </div>
       </div>
     </div>
   );

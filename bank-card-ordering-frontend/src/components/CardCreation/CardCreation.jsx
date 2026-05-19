@@ -17,7 +17,7 @@ import {
   Expiration,
   Chip,
   BlackStripe,
-  CVC
+  CVC,
 } from "./style";
 
 export default function CardCreation() {
@@ -52,14 +52,45 @@ export default function CardCreation() {
     fetchRequestDetails();
   }, []);
 
+  function generateCardNumber(bin) {
+    bin = bin.replace(/\s/g, "");
+    const remaining = 16 - bin.length;
+    let randomDigits = "";
+
+    for (let i = 0; i < remaining; i++) {
+      randomDigits += Math.floor(Math.random() * 10);
+    }
+
+    const finalNumber = bin + randomDigits;
+    return finalNumber.replace(/(.{4})/g, "$1 ").trim();
+  }
+
+  function generateCvvNumber() {
+    let cvv = "";
+    for (let i = 0; i < 3; i++) {
+      cvv += Math.floor(Math.random() * 10);
+    }
+    return cvv;
+  }
+
+  function generateExpiryDate() {
+    const today = new Date();
+    const expiryYear = today.getFullYear() + 5;
+    const month = today.getMonth() + 1;
+
+    const formattedMonth = month < 10 ? "0" + month : month.toString();
+    const formattedYear = expiryYear.toString().slice(-2);
+
+    return `${formattedMonth}/${formattedYear}`;
+  }
+
   const fetchRequestDetails = async () => {
     try {
       const token = localStorage.getItem("token");
+
       const reqRes = await axios.get(
         `http://localhost:8080/api/request-card/${requestId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       const req = reqRes.data;
@@ -68,11 +99,17 @@ export default function CardCreation() {
       setCardVariantId(req.cardVariantId);
       setNetworkId(req.cardNetworkId);
 
+      const customerRes = await axios.get(
+        `http://localhost:8080/api/customers/${req.customerId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      const customer = customerRes.data;
+      setName(customer.customerName);
+
       const variantRes = await axios.get(
         `http://localhost:8080/api/cards/variant/${req.cardVariantId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       const variant = variantRes.data;
@@ -84,20 +121,29 @@ export default function CardCreation() {
         text: variant.textColour,
       });
 
+      // Fetch BIN number
       const binRes = await axios.get(
         `http://localhost:8080/api/request-card/network/${req.cardNetworkId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       const bin = binRes.data.bin;
       setBinNumber(bin);
-      setNumber(formatCardNumber(bin));
+
+      // Generate card number
+      const generatedCardNum = generateCardNumber(bin);
+      setNumber(generatedCardNum);
+
+      // Generate CVC
+      const generatedCVC = generateCvvNumber();
+      setCvc(generatedCVC);
+
+      const generatedExpiry = generateExpiryDate();
+      setExpiration(generatedExpiry);
 
     } catch (err) {
       console.error(err);
-      alert("Failed to load request");
+      alert("Failed to load request details");
     } finally {
       setLoading(false);
     }
@@ -110,9 +156,7 @@ export default function CardCreation() {
   const handleNumberChange = (e) => {
     const input = e.target.value.replace(/\s/g, "");
 
-    if (!input.startsWith(binNumber)) {
-      return;
-    }
+    if (!input.startsWith(binNumber)) return;
 
     let cleaned = input.substring(0, 16);
     setNumber(formatCardNumber(cleaned));
@@ -120,9 +164,11 @@ export default function CardCreation() {
 
   const handleExpiryChange = (e) => {
     let input = e.target.value.replace(/\D/g, "").substring(0, 4);
+
     if (input.length >= 3) {
       input = input.substring(0, 2) + "/" + input.substring(2);
     }
+
     setExpiration(input || "__/__");
   };
 
@@ -144,7 +190,7 @@ export default function CardCreation() {
         return;
       }
 
-      if (cvc.length < 3) {
+      if (cvc.length !== 3) {
         alert("Invalid CVC");
         return;
       }
@@ -174,7 +220,6 @@ export default function CardCreation() {
 
   return (
     <Container style={{ position: "relative" }}>
-
       <button
         onClick={handleGoBack}
         style={{ position: "absolute", top: "20px", left: "20px" }}
@@ -184,13 +229,18 @@ export default function CardCreation() {
 
       <Card>
         <Flipper ref={flipper}>
+          {/* FRONT SIDE */}
           <CardFront style={{ background: design.front, color: design.text }}>
             <Chip style={{ background: design.chip }} />
+
             <Name>{name || "CARD HOLDER"}</Name>
+
             <CardNumber>{number || "____ ____ ____ ____"}</CardNumber>
+
             <Expiration>{expiration}</Expiration>
           </CardFront>
 
+          {/* BACK SIDE */}
           <CardBack style={{ background: design.back, color: design.text }}>
             <BlackStripe>
               <CVC>{cvc || "***"}</CVC>
@@ -200,19 +250,29 @@ export default function CardCreation() {
       </Card>
 
       <CardForm>
-        <Input placeholder="Card Number" value={number} onChange={handleNumberChange} />
+        <Input
+          value={number}
+          onChange={handleNumberChange}
+          placeholder="Card Number"
+        />
 
         <Input
-          placeholder="Card Holder Name"
+          value={name}
           onChange={(e) => setName(e.target.value)}
+          placeholder="Card Holder Name"
         />
 
         <FormRow>
-          <Input placeholder="MM/YY" onChange={handleExpiryChange} />
+          <Input
+            value={expiration}
+            onChange={handleExpiryChange}
+            placeholder="MM/YY"
+          />
 
           <Input
-            placeholder="CVC"
+            value={cvc}
             onChange={(e) => setCvc(e.target.value)}
+            placeholder="CVC"
             onFocus={turnAround}
             onBlur={turnAround}
           />
@@ -222,7 +282,6 @@ export default function CardCreation() {
           {loading ? "Loading..." : "Create Card"}
         </button>
       </CardForm>
-
     </Container>
   );
 }

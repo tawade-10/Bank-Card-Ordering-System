@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 public interface CardDetailsRepo extends JpaRepository<CardDetails, Long> {
@@ -42,5 +43,5 @@ public interface CardDetailsRepo extends JpaRepository<CardDetails, Long> {
     """)
     List<CardDetails> findInactiveCards(Long customerId);
 
-    List<CardDetails> findByExpiryBetween(LocalDate startDate, LocalDate endDate);
+    List<CardDetails> findByExpiryLessThanEqual(YearMonth target);
 }

@@ -1,43 +1,3 @@
-// import React from "react";
-// import "./Header.css";
-// import { useNavigate, useLocation } from "react-router-dom";
-// import { IoNotificationsOutline } from "react-icons/io5"; // bell icon
-//
-// export default function Header() {
-//   const navigate = useNavigate();
-//   const location = useLocation();
-//
-//   const handleLogout = () => {
-//     localStorage.removeItem("token");
-//     navigate("/");
-//   };
-//
-//   const isLoginPage = location.pathname === "/";
-//
-//   const goToNotifications = () => {
-//     navigate("/notifications");
-//   };
-//
-//   return (
-//     <div className="header-bar">
-//       <div className="logo">Bank Name</div>
-//
-//       {/* 🔔 Clickable Bell Icon */}
-//       {!isLoginPage && localStorage.getItem("token") && (
-//         <div className="notif-icon" onClick={goToNotifications}>
-//           <IoNotificationsOutline size={26} />
-//         </div>
-//       )}
-//
-//       {!isLoginPage && localStorage.getItem("token") && (
-//         <button className="logout-btn" onClick={handleLogout}>
-//           Logout
-//         </button>
-//       )}
-//     </div>
-//   );
-// }
-
 import React, { useEffect, useState } from "react";
 import "./Header.css";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -50,18 +10,25 @@ export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const userId = localStorage.getItem("customerId");
-  const token = localStorage.getItem("token");
-
   const isLoginPage = location.pathname === "/";
 
   useEffect(() => {
-    if (!userId) return;
+    const refresh = () => {
+      setToken(localStorage.getItem("token"));
+    };
 
+    window.addEventListener("login", refresh);
+    return () => window.removeEventListener("login", refresh);
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
     axios
       .get(`http://localhost:8080/api/notifications/${userId}`)
       .then((res) => {
@@ -73,9 +40,7 @@ export default function Header() {
 
   useEffect(() => {
     if (!userId) return;
-
     const socket = new SockJS("http://localhost:8080/ws");
-
     const client = new Client({
       webSocketFactory: () => socket,
       reconnectDelay: 5000,
@@ -100,6 +65,7 @@ export default function Header() {
     localStorage.removeItem("token");
     localStorage.removeItem("customerId");
     navigate("/");
+    setToken(null);
   };
 
   const toggleDropdown = () => {
@@ -120,6 +86,7 @@ export default function Header() {
               <span className="notif-badge">{unreadCount}</span>
             )}
           </div>
+
           {dropdownOpen && (
             <div className="notif-dropdown">
               <h4 className="notif-title">Notifications</h4>
