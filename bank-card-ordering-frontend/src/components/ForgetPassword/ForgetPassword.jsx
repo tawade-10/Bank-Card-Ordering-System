@@ -7,20 +7,24 @@ import { useNavigate } from "react-router-dom";
 export default function ForgetPassword() {
   const [email, setEmail] = useState("");
   const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMsg("");
+    setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:8080/api/auth/forgot-password", {
-        email,
-      });
+      const res = await axios.post(
+        `http://localhost:8080/api/forgot-password?email=${email}`
+      );
 
       setMsg("Reset password link has been sent to your email.");
     } catch (error) {
       setMsg("Email not found or something went wrong.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -33,12 +37,10 @@ export default function ForgetPassword() {
         </button>
 
         <h2 className="fp-title">Forgot Password?</h2>
-{/*         <p className="fp-subtitle"> */}
-{/*           Enter your registered email and we will send you the instructions to reset your password. */}
-{/*         </p> */}
 
         <form className="fp-form" onSubmit={handleSubmit}>
           <label className="fp-label">Email Address</label>
+
           <input
             type="email"
             className="fp-input"
@@ -48,8 +50,8 @@ export default function ForgetPassword() {
             required
           />
 
-          <button type="submit" className="fp-submit">
-            Send Reset Link
+          <button type="submit" className="fp-submit" disabled={loading}>
+            {loading ? "Sending..." : "Send Reset Link"}
           </button>
         </form>
 

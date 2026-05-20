@@ -59,7 +59,7 @@ public class CardExpiryBatchService {
             notificationRepo.save(notification);
             messagingTemplate.convertAndSend(
                     "/topic/notifications/" + card.getCustomers().getCustomerId(),
-                    msg
+                    notification
             );
         }
     }

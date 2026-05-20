@@ -10,22 +10,24 @@ export const connectWebSocket = (userId, onNotification) => {
         webSocketFactory: () => new SockJS(socketUrl),
         reconnectDelay: 3000,
 
-        onConnect: () => {
-            console.log("Connected to WebSocket");
+        debug: (str) => console.log(str),
 
-            stompClient.subscribe(`/topic/notifications/${userId}`, (msg) => {
-                if (!msg.body) return;
-                const notification = JSON.parse(msg.body);
-                onNotification(notification);
-            });
+        onConnect: (frame) => {
+            console.log("🔥 STOMP Connected:", frame);
+
+            // IMPORTANT FIX: Wait a tick before subscribing
+            setTimeout(() => {
+                stompClient.subscribe(`/topic/notifications/${userId}`, (msg) => {
+                    if (!msg.body) return;
+                    const notification = JSON.parse(msg.body);
+                    onNotification(notification);
+                });
+                console.log(`📡 Subscribed to /topic/notifications/${userId}`);
+            }, 50);
         },
 
         onStompError: (frame) => {
-            console.error("Broker error:", frame.headers["message"]);
-        },
-
-        onWebSocketClose: () => {
-            console.warn("WebSocket closed, attempting reconnect...");
+            console.error("❌ STOMP Broker error:", frame.headers["message"]);
         }
     });
 

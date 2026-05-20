@@ -6,4 +6,8 @@ import jakarta.validation.Valid;
 
 public interface AuthService {
     CustomersResponseDto registerCustomer(@Valid CustomersRequestDto customersRequestDto);
+
+    String generateResetToken(String email);
+
+    String resetPassword(String token, String newPassword);
 }

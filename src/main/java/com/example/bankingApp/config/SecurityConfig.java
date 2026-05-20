@@ -24,7 +24,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
-
     private final JwtFilter jwtFilter;
 
     public SecurityConfig(UserDetailsService userDetailsService, JwtFilter jwtFilter) {
@@ -42,9 +41,17 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/register", "/api/login", "/api/notification/**",
-                                "/api/cards/variant/**","/api/batch/**")
+                        .requestMatchers("/ws/**", "/ws-direct/**", "/topic/**", "/queue/**")
                         .permitAll()
+                        .requestMatchers(
+                                "/api/register",
+                                "/api/login",
+                                "/api/notification/**",
+                                "/api/cards/variant/**",
+                                "/api/batch/**",
+                                "/api/forgot-password",
+                                "/api/reset-password"
+                        ).permitAll()
                         .requestMatchers("/api/cards/my-cards").hasAuthority("CUSTOMER")
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/cards/create-card").hasAuthority("ADMIN")
@@ -54,6 +61,7 @@ public class SecurityConfig {
                 )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
@@ -70,7 +78,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 

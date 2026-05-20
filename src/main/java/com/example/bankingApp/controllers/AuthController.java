@@ -30,4 +30,16 @@ public class AuthController {
         Object loginCustomer = authFacade.loginCustomer(customersRequestDto);
         return ResponseEntity.ok(loginCustomer);
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestParam String email) {
+        String response = authFacade.generateResetToken(email);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        String response = authFacade.resetPassword(token, newPassword);
+        return ResponseEntity.ok(response);
+    }
 }

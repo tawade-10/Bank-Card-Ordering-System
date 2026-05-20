@@ -8,4 +8,8 @@ public interface AuthFacade {
     CustomersResponseDto registerCustomer(@Valid CustomersRequestDto customersRequestDto);
 
     Object loginCustomer(CustomersRequestDto customersRequestDto);
+
+    String generateResetToken(String email);
+
+    String resetPassword(String token, String newPassword);
 }

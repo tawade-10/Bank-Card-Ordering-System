@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { IoNotificationsOutline } from "react-icons/io5";
+import { connectWebSocket } from "../../websocket";
 import "./Notifications.css";
 
 export default function Notifications() {
@@ -10,37 +11,40 @@ export default function Notifications() {
   const customerId = localStorage.getItem("customerId");
 
   useEffect(() => {
-    fetchAlerts();
-  }, []);
+    if (!customerId) return;
 
-  const fetchAlerts = () => {
-    axios
-      .get(`http://localhost:8080/api/notifications/${customerId}`)
-      .then((res) => setAlerts(res.data))
-      .catch((err) => console.log(err));
+    fetchAlerts();
+
+    connectWebSocket(customerId, (newNotification) => {
+      console.log("📩 New WebSocket notification:", newNotification);
+      setAlerts((prev) => [newNotification, ...prev]);
+    });
+
+  }, [customerId]);
+
+  const fetchAlerts = async () => {
+    const res = await axios.get(`http://localhost:8080/api/notification/${customerId}`);
+    setAlerts(res.data);
   };
 
   return (
-    <div className="notif-container">
-      <div className="notif-icon-wrapper" onClick={() => setOpen(!open)}>
-        <IoNotificationsOutline className="notif-icon" />
-
-        {alerts.length > 0 && (
-          <span className="notif-badge">{alerts.length}</span>
-        )}
-      </div>
+    <div className="notification-wrapper">
+      <IoNotificationsOutline
+        size={28}
+        className="notification-icon"
+        onClick={() => setOpen(!open)}
+      />
 
       {open && (
-        <div className="notif-dropdown">
-          <h4 className="notif-title">Notifications</h4>
-
+        <div className="notification-container">
           {alerts.length === 0 ? (
-            <p className="notif-empty">No notifications</p>
+            <p>No notifications yet</p>
           ) : (
-            alerts.map((alert, index) => (
-              <div className="notif-card" key={index}>
-                <p className="notif-text">{alert.message}</p>
-                <p className="notif-days-left">{alert.createdAt}</p>
+            alerts.map((n) => (
+              <div className="notification-item" key={n.id}>
+                <strong>{n.title}</strong>
+                <p>{n.message}</p>
+                <small>{new Date(n.createdAt).toLocaleString()}</small>
               </div>
             ))
           )}

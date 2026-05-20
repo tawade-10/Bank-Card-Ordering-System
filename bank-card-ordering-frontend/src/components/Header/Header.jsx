@@ -48,9 +48,9 @@ export default function Header() {
 
       onConnect: () => {
         client.subscribe(`/topic/notifications/${userId}`, (msg) => {
-          const data = JSON.parse(msg.body);
+          const notif = JSON.parse(msg.body);
 
-          setNotifications((prev) => [data, ...prev]);
+          setNotifications((prev) => [notif, ...prev]);
           setUnreadCount((prev) => prev + 1);
         });
       },

@@ -82,4 +82,14 @@ public class AuthFacadeImpl implements AuthFacade {
             throw new RuntimeException("Invalid Credentials");
         }
     }
+
+    @Override
+    public String generateResetToken(String email) {
+        return authService.generateResetToken(email);
+    }
+
+    @Override
+    public String resetPassword(String token, String newPassword) {
+        return authService.resetPassword(token,newPassword);
+    }
 }
