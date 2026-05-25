@@ -1,7 +1,7 @@
 package com.example.bankingApp.service.Auth;
 
-import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
-import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationRequestDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationResponseDto;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.Enums.Roles;
 import com.example.bankingApp.entity.Token.PasswordResetToken;
@@ -41,19 +41,19 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public CustomersResponseDto registerCustomer(CustomersRequestDto customersRequestDto) {
+    public CustomersCreationResponseDto registerCustomer(CustomersCreationRequestDto customersCreationRequestDto) {
 
         Customers customer = new Customers();
 
-        Optional<Customers> existingCustomerByEmail = customersRepo.findByEmail(customersRequestDto.getEmail());
+        Optional<Customers> existingCustomerByEmail = customersRepo.findByEmail(customersCreationRequestDto.getEmail());
         if (existingCustomerByEmail.isPresent()) {
-            return new CustomersResponseDto(existingCustomerByEmail.get());
+            return new CustomersCreationResponseDto(existingCustomerByEmail.get());
         }
 
-        customer.setCustomerName(customersRequestDto.getCustomerName());
-        customer.setEmail(customersRequestDto.getEmail());
+        customer.setCustomerName(customersCreationRequestDto.getCustomerName());
+        customer.setEmail(customersCreationRequestDto.getEmail());
         customer.setRoles(Roles.CUSTOMER);
-        customer.setPassword(customersRequestDto.getPassword());
+        customer.setPassword(customersCreationRequestDto.getPassword());
         customer.setCreatedDate(LocalDate.now());
         customer.setCreatedTime(LocalTime.now());
         Customers savedCustomer = customersRepo.save(customer);
@@ -66,7 +66,7 @@ public class AuthServiceImpl implements AuthService {
                 savedCustomer.getCustomerId()
         );
 
-        return new CustomersResponseDto(savedCustomer);
+        return new CustomersCreationResponseDto(savedCustomer);
     }
 
     @Transactional
@@ -92,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
 
         passwordResetTokenRepo.save(resetToken);
 
-        String resetLink = "http://localhost:3000/reset-password?token=" + token;
+        String resetLink = "http://localhost:5173/reset-password?token=" + token;
 
         emailService.sendSimpleMessage(
                 customer.getEmail(),

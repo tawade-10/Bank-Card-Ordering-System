@@ -75,5 +75,4 @@ public class CardsController {
         CardsStatusSummaryResponse getStatus = cardDetailsFacade.getCardsByStatus();
         return ResponseEntity.ok(getStatus);
     }
-
 }

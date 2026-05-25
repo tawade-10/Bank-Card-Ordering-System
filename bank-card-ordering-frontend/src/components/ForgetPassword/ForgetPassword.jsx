@@ -16,13 +16,10 @@ export default function ForgetPassword() {
     setLoading(true);
 
     try {
-      const res = await axios.post(
-        `http://localhost:8080/api/forgot-password?email=${email}`
-      );
-
+      await axios.post(`http://localhost:8080/api/forgot-password?email=${email}`);
       setMsg("Reset password link has been sent to your email.");
     } catch (error) {
-      setMsg("Email not found or something went wrong.");
+      setMsg("Email not found!");
     } finally {
       setLoading(false);
     }
@@ -31,7 +28,6 @@ export default function ForgetPassword() {
   return (
     <div className="fp-container">
       <div className="fp-card">
-
         <button className="fp-back-btn" onClick={() => navigate("/login")}>
           <IoArrowBack size={22} />
         </button>
@@ -40,7 +36,6 @@ export default function ForgetPassword() {
 
         <form className="fp-form" onSubmit={handleSubmit}>
           <label className="fp-label">Email Address</label>
-
           <input
             type="email"
             className="fp-input"

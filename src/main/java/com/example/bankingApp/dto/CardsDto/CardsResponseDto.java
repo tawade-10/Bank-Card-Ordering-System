@@ -1,7 +1,20 @@
 package com.example.bankingApp.dto.CardsDto;
 
 import com.example.bankingApp.entity.CardDetails.CardDetails;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonPropertyOrder({
+        "cardId",
+        "customerId",
+        "customerName",
+        "maskedNumber",
+        "expiry",
+        "cardType",
+        "networkName",
+        "binNumber",
+        "cardVariantId",
+        "cardVariant"
+})
 public class CardsResponseDto {
 
     private Long cardId;

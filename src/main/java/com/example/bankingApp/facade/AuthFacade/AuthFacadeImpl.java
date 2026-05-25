@@ -1,8 +1,8 @@
 package com.example.bankingApp.facade.AuthFacade;
 
 import com.example.bankingApp.config.JwtService;
-import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
-import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationRequestDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationResponseDto;
 import com.example.bankingApp.dto.CustomersDto.LoginResponse;
 import com.example.bankingApp.entity.CustomUserDetails;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
@@ -36,18 +36,18 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
     @Override
-    public CustomersResponseDto registerCustomer(CustomersRequestDto customersRequestDto) {
-        customersRequestDto.setPassword(encoder.encode(customersRequestDto.getPassword()));
-        return authService.registerCustomer(customersRequestDto);
+    public CustomersCreationResponseDto registerCustomer(CustomersCreationRequestDto customersCreationRequestDto) {
+        customersCreationRequestDto.setPassword(encoder.encode(customersCreationRequestDto.getPassword()));
+        return authService.registerCustomer(customersCreationRequestDto);
     }
 
     @Override
-    public Object loginCustomer(CustomersRequestDto customersRequestDto) {
+    public Object loginCustomer(CustomersCreationRequestDto customersCreationRequestDto) {
         try {
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            customersRequestDto.getEmail(),
-                            customersRequestDto.getPassword()
+                            customersCreationRequestDto.getEmail(),
+                            customersCreationRequestDto.getPassword()
                     )
             );
             CustomUserDetails customerDetails = (CustomUserDetails) auth.getPrincipal();
@@ -69,7 +69,7 @@ public class AuthFacadeImpl implements AuthFacade {
                     userId
             );
         } catch (Exception ex) {
-            customersRepo.findByEmail(customersRequestDto.getEmail())
+            customersRepo.findByEmail(customersCreationRequestDto.getEmail())
                     .ifPresent(c -> {
                         notificationService.sendNotification(
                                 c.getCustomerId(),

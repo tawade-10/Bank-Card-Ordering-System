@@ -1,7 +1,15 @@
 package com.example.bankingApp.dto.CustomersDto;
 
 import com.example.bankingApp.entity.Enums.Roles;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonPropertyOrder({
+        "token",
+        "customerName",
+        "email",
+        "roles",
+        "userId"
+})
 public class LoginResponse {
 
     private String token;

@@ -1,14 +1,15 @@
 package com.example.bankingApp.service.Customers;
 
-import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
-import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationRequestDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationResponseDto;
+import com.example.bankingApp.dto.CustomersDto.UpdateDto.CustomersUpdateResponseDto;
 
 import java.util.List;
 
 public interface CustomersService {
-    List<CustomersResponseDto> getAllCustomers();
+    List<CustomersCreationResponseDto> getAllCustomers();
 
-    CustomersResponseDto getCustomerById(Long customerId);
+    CustomersCreationResponseDto getCustomerById(Long customerId);
 
-    CustomersResponseDto updateCustomer(Long customerId, CustomersRequestDto customersRequestDto);
+    CustomersUpdateResponseDto updateCustomer(Long customerId, CustomersCreationRequestDto customersCreationRequestDto);
 }

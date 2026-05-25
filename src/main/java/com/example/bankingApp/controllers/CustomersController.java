@@ -1,7 +1,8 @@
 package com.example.bankingApp.controllers;
 
-import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
-import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationRequestDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationResponseDto;
+import com.example.bankingApp.dto.CustomersDto.UpdateDto.CustomersUpdateResponseDto;
 import com.example.bankingApp.facade.CustomersFacade.CustomersFacade;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,20 +21,20 @@ public class CustomersController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CustomersResponseDto>> getAllCustomers(){
-        List<CustomersResponseDto> allCustomers = customersFacade.getAllCustomers();
+    public ResponseEntity<List<CustomersCreationResponseDto>> getAllCustomers(){
+        List<CustomersCreationResponseDto> allCustomers = customersFacade.getAllCustomers();
         return ResponseEntity.ok(allCustomers);
     }
 
     @GetMapping("/{customerId}")
-    public ResponseEntity<CustomersResponseDto> getCustomerById(@PathVariable Long customerId){
-        CustomersResponseDto customerById = customersFacade.getCustomerById(customerId);
+    public ResponseEntity<CustomersCreationResponseDto> getCustomerById(@PathVariable Long customerId){
+        CustomersCreationResponseDto customerById = customersFacade.getCustomerById(customerId);
         return ResponseEntity.ok(customerById);
     }
 
     @PutMapping("/{customerId}")
-    public ResponseEntity<CustomersResponseDto> updateCustomer(@PathVariable Long customerId, @RequestBody CustomersRequestDto customersRequestDto){
-        CustomersResponseDto updatedCustomer = customersFacade.updateCustomer(customerId,customersRequestDto);
+    public ResponseEntity<CustomersUpdateResponseDto> updateCustomer(@PathVariable Long customerId, @RequestBody CustomersCreationRequestDto customersCreationRequestDto){
+        CustomersUpdateResponseDto updatedCustomer = customersFacade.updateCustomer(customerId, customersCreationRequestDto);
         return ResponseEntity.ok(updatedCustomer);
     }
 }

@@ -1,12 +1,21 @@
-    package com.example.bankingApp.dto.CustomersDto;
+    package com.example.bankingApp.dto.CustomersDto.CreationDto;
 
     import com.example.bankingApp.entity.Customers.Customers;
     import com.example.bankingApp.entity.Enums.Roles;
+    import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
     import java.time.LocalDate;
     import java.time.LocalTime;
 
-    public class CustomersResponseDto {
+    @JsonPropertyOrder({
+            "customerId",
+            "customerName",
+            "email",
+            "roles",
+            "createdDate",
+            "createdTime",
+    })
+    public class CustomersCreationResponseDto {
 
         private Long customerId;
 
@@ -20,7 +29,7 @@
 
         private LocalTime createdTime;
 
-        public CustomersResponseDto(Customers customers) {
+        public CustomersCreationResponseDto(Customers customers) {
             this.customerId = customers.getCustomerId();
             this.customerName = customers.getCustomerName();
             this.email = customers.getEmail();

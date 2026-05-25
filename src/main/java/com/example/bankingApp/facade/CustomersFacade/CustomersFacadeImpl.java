@@ -1,7 +1,8 @@
 package com.example.bankingApp.facade.CustomersFacade;
 
-import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
-import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationRequestDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationResponseDto;
+import com.example.bankingApp.dto.CustomersDto.UpdateDto.CustomersUpdateResponseDto;
 import com.example.bankingApp.service.Customers.CustomersService;
 import org.springframework.stereotype.Component;
 
@@ -17,17 +18,17 @@ public class CustomersFacadeImpl implements CustomersFacade{
     }
 
     @Override
-    public List<CustomersResponseDto> getAllCustomers() {
+    public List<CustomersCreationResponseDto> getAllCustomers() {
         return customersService.getAllCustomers();
     }
 
     @Override
-    public CustomersResponseDto getCustomerById(Long customerId) {
+    public CustomersCreationResponseDto getCustomerById(Long customerId) {
         return customersService.getCustomerById(customerId);
     }
 
     @Override
-    public CustomersResponseDto updateCustomer(Long customerId, CustomersRequestDto customersRequestDto) {
-        return customersService.updateCustomer(customerId,customersRequestDto);
+    public CustomersUpdateResponseDto updateCustomer(Long customerId, CustomersCreationRequestDto customersCreationRequestDto) {
+        return customersService.updateCustomer(customerId, customersCreationRequestDto);
     }
 }

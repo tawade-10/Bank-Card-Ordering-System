@@ -1,8 +1,14 @@
 package com.example.bankingApp.dto;
 
-import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.time.YearMonth;
 
+@JsonPropertyOrder({
+        "cardNumber",
+        "expiryDate",
+        "customerName"
+})
 public class ExpiryNotificationsDto {
 
     private String cardNumber;

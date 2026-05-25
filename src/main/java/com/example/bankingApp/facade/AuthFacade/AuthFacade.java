@@ -1,13 +1,13 @@
 package com.example.bankingApp.facade.AuthFacade;
 
-import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
-import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationRequestDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationResponseDto;
 import jakarta.validation.Valid;
 
 public interface AuthFacade {
-    CustomersResponseDto registerCustomer(@Valid CustomersRequestDto customersRequestDto);
+    CustomersCreationResponseDto registerCustomer(@Valid CustomersCreationRequestDto customersCreationRequestDto);
 
-    Object loginCustomer(CustomersRequestDto customersRequestDto);
+    Object loginCustomer(CustomersCreationRequestDto customersCreationRequestDto);
 
     String generateResetToken(String email);
 

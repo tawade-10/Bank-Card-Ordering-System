@@ -12,18 +12,31 @@ export default function ViewRequestsCustomer({ requestId, closeModal }) {
     { key: "APPROVED", label: "Approved" },
     { key: "PRINTED", label: "Printed" },
     { key: "DISPATCHED", label: "Dispatched" },
-    { key: "DELIVERED", label: "Delivered" }
+    { key: "DELIVERED", label: "Delivered" },
   ];
 
-  const formatDateTime = (dateTime) => {
-    const d = new Date(dateTime);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    const hh = String(d.getHours()).padStart(2, "0");
-    const mm = String(d.getMinutes()).padStart(2, "0");
+  // ⭐ Convert "YYYY-MM-DD" → "DD/MM/YYYY"
+  const formatDate = (date) => {
+    if (!date) return "--";
+    const [y, m, d] = date.split("-");
+    return `${d}/${m}/${y}`;
+  };
 
-    return `${year}-${month}-${day} ${hh}:${mm}`;
+  // ⭐ Combine date + time → "DD/MM/YYYY HH:mm"
+  const formatDateTime = (date, time) => {
+    if (!date || !time) return "--";
+    return `${formatDate(date)} ${time}`;
+  };
+
+  // ⭐ Pick latest actual timestamp
+  const getTimelineTime = () => {
+    if (request.updatedDate && request.updatedTime)
+      return formatDateTime(request.updatedDate, request.updatedTime);
+
+    if (request.createdDate && request.createdTime)
+      return formatDateTime(request.createdDate, request.createdTime);
+
+    return "--";
   };
 
   useEffect(() => {
@@ -44,7 +57,7 @@ export default function ViewRequestsCustomer({ requestId, closeModal }) {
 
   if (!request) return null;
 
-  const currentIndex = steps.findIndex(s => s.key === request.status);
+  const currentIndex = steps.findIndex((s) => s.key === request.status);
 
   return (
     <div className="view-modal-overlay">
@@ -58,20 +71,20 @@ export default function ViewRequestsCustomer({ requestId, closeModal }) {
           <h3 className="sub-heading">Request ID : {request.requestId}</h3>
           <h3 className="sub-heading">Request Status : {request.status}</h3>
         </div>
+
         <div className="timeline-container">
           {steps.map((step, index) => (
             <div key={step.key} className="timeline-wrapper">
               <div className="timeline-item">
                 <div
-                  className={`dot ${
-                    index <= currentIndex ? "active" : ""
-                  }`}
+                  className={`dot ${index <= currentIndex ? "active" : ""}`}
                 ></div>
 
                 <div className="content">
                   <h3>{step.label}</h3>
+
                   {index === currentIndex && (
-                    <p className="date-text">{formatDateTime(request.updatedAt)}</p>
+                    <p className="date-text">{getTimelineTime()}</p>
                   )}
                 </div>
               </div>

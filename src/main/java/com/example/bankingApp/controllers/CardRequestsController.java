@@ -1,8 +1,7 @@
 package com.example.bankingApp.controllers;
 
-import com.example.bankingApp.dto.CardRequestsDto.RequestsDto;
-import com.example.bankingApp.dto.CardRequestsDto.ResponseDto;
-import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
+import com.example.bankingApp.dto.CardRequestsDto.CreationDto.RequestsDto;
+import com.example.bankingApp.dto.CardRequestsDto.CreationDto.ResponseDto;
 import com.example.bankingApp.dto.NetworkDto.NetworkResponseDto;
 import com.example.bankingApp.dto.ReviewDto.ReviewRequestsDto;
 import com.example.bankingApp.dto.ReviewDto.ReviewResponseDto;
@@ -10,7 +9,6 @@ import com.example.bankingApp.facade.CardRequestsFacade.CardRequestsFacade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

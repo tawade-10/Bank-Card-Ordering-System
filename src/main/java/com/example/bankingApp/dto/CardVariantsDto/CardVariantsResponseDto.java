@@ -1,7 +1,15 @@
     package com.example.bankingApp.dto.CardVariantsDto;
 
     import com.example.bankingApp.entity.CardRequests.CardVariant;
+    import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+    @JsonPropertyOrder({
+            "cardVariantId",
+            "cardColourFront",
+            "cardColourBack",
+            "chipImage",
+            "textColour"
+    })
     public class CardVariantsResponseDto {
 
         private Long cardVariantId;

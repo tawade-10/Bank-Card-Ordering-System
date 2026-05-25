@@ -1,5 +1,10 @@
 package com.example.bankingApp.dto.NetworkDto;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({
+        "bin"
+})
 public class NetworkResponseDto {
 
     private String bin;

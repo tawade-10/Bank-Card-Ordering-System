@@ -55,6 +55,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/cards/my-cards").hasAuthority("CUSTOMER")
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/cards/create-card").hasAuthority("ADMIN")
+                        .requestMatchers("/api/customers/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/request-card/**").authenticated()
                         .requestMatchers("/api/cards/**").authenticated()
                         .anyRequest().authenticated()

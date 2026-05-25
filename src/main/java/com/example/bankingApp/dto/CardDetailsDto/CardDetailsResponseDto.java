@@ -1,7 +1,23 @@
 package com.example.bankingApp.dto.CardDetailsDto;
 
 import com.example.bankingApp.entity.CardDetails.CardDetails;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonPropertyOrder({
+        "cardId",
+        "customerId",
+        "customerName",
+        "maskedNumber",
+        "expiry",
+        "cardTypeId",
+        "cardType",
+        "cardVariantId",
+        "cardVariant",
+        "networkId",
+        "networkName",
+        "binNumber",
+        "createdAt"
+})
 public class CardDetailsResponseDto {
 
     private Long cardId;
@@ -27,16 +43,19 @@ public class CardDetailsResponseDto {
         this.cardId = card.getCardId();
         this.customerId = card.getCustomers().getCustomerId();
         this.customerName = card.getCustomers().getCustomerName();
-        this.maskedNumber = card.getNetworkBin().getBinNumber() + "** **** **** " + card.getLast4();
+        this.maskedNumber = card.getNetworkBin().getBinNumber()
+                + "** **** **** " + card.getLast4();
         this.cardTypeId = card.getCardType().getTypeId();
         this.cardType = card.getCardType().getTypeName();
         this.cardVariantId = card.getCardVariant().getVariantId();
         this.cardVariant = card.getCardVariant().getVariantName();
-        this.expiry = String.format("%02d/%02d", card.getExpiry().getMonthValue(),
-                                                 card.getExpiry().getYear() % 100);
+        this.expiry = String.format("%02d/%02d",
+                card.getExpiry().getMonthValue(),
+                card.getExpiry().getYear() % 100
+        );
         this.networkId = card.getNetworkBin().getCardNetwork().getNetworkId();
         this.networkName = card.getNetworkBin().getCardNetwork().getNetworkName();
-        this.binNumber =card.getNetworkBin().getBinNumber();
+        this.binNumber = card.getNetworkBin().getBinNumber();
         this.createdAt = card.getCreatedAt().toString();
     }
 

@@ -1,11 +1,10 @@
 package com.example.bankingApp.service.CardRequests;
 
-import com.example.bankingApp.dto.CardRequestsDto.RequestsDto;
-import com.example.bankingApp.dto.CardRequestsDto.ResponseDto;
+import com.example.bankingApp.dto.CardRequestsDto.CreationDto.RequestsDto;
+import com.example.bankingApp.dto.CardRequestsDto.CreationDto.ResponseDto;
 import com.example.bankingApp.dto.NetworkDto.NetworkResponseDto;
 import com.example.bankingApp.dto.ReviewDto.ReviewRequestsDto;
 import com.example.bankingApp.dto.ReviewDto.ReviewResponseDto;
-import org.springframework.security.core.Authentication;
 
 import java.util.List;
 

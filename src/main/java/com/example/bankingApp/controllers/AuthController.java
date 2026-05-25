@@ -1,7 +1,7 @@
 package com.example.bankingApp.controllers;
 
-import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
-import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationRequestDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationResponseDto;
 import com.example.bankingApp.facade.AuthFacade.AuthFacade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,14 +20,14 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<CustomersResponseDto> registerCustomer(@Valid @RequestBody CustomersRequestDto customersRequestDto){
-        CustomersResponseDto registeredCustomer = authFacade.registerCustomer(customersRequestDto);
+    public ResponseEntity<CustomersCreationResponseDto> registerCustomer(@Valid @RequestBody CustomersCreationRequestDto customersCreationRequestDto){
+        CustomersCreationResponseDto registeredCustomer = authFacade.registerCustomer(customersCreationRequestDto);
         return new ResponseEntity<>(registeredCustomer, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody CustomersRequestDto customersRequestDto) {
-        Object loginCustomer = authFacade.loginCustomer(customersRequestDto);
+    public ResponseEntity<?> login(@RequestBody CustomersCreationRequestDto customersCreationRequestDto) {
+        Object loginCustomer = authFacade.loginCustomer(customersCreationRequestDto);
         return ResponseEntity.ok(loginCustomer);
     }
 

@@ -34,6 +34,24 @@ export default function TrackRequests() {
 
   const handleTabChange = (event, newValue) => setTabValue(newValue);
 
+  // ⭐ Convert YYYY-MM-DD → DD/MM/YYYY
+  const formatDate = (date) => {
+    if (!date) return "--";
+    const [y, m, d] = date.split("-");
+    return `${d}/${m}/${y}`;
+  };
+
+  // ⭐ Combine created/updated date + time
+  const formatFullDate = (req) => {
+    if (req.updatedDate && req.updatedTime) {
+      return `${formatDate(req.updatedDate)}`;
+    }
+    if (req.createdDate && req.createdTime) {
+      return `${formatDate(req.createdDate)}`;
+    }
+    return "--";
+  };
+
   const filteredRequests = requests.filter((req) => {
     if (tabValue === 1) return req.status === "PENDING_REVIEW";
     if (tabValue === 2) return req.status === "APPROVED";
@@ -56,9 +74,10 @@ export default function TrackRequests() {
 
   return (
     <div className="track-container">
-              <button className="back-btn" onClick={() => navigate("/dashboard")}>
-                ← Back
-              </button>
+      <button className="back-btn" onClick={() => navigate("/dashboard")}>
+        ← Back
+      </button>
+
       <Box sx={{ width: "100%" }}>
         <Tabs
           value={tabValue}
@@ -76,6 +95,7 @@ export default function TrackRequests() {
           <Tab label="Delivered" />
         </Tabs>
       </Box>
+
       <h2 className="track-title">Track Your Card Requests</h2>
 
       <div className="table-wrapper">
@@ -100,11 +120,13 @@ export default function TrackRequests() {
                   <td>{req.cardType}</td>
                   <td>{req.cardVariant}</td>
                   <td>{req.reason}</td>
-                  <td>
-                    <span className={`status ${req.status.toLowerCase()}`}>{req.status}</span>
-                  </td>
-                  <td>{req.localDate}</td>
 
+                  <td>
+                    <span className={`status ${req.status.toLowerCase()}`}>
+                      {req.status}
+                    </span>
+                  </td>
+                  <td>{formatFullDate(req)}</td>
                   <td>
                     <button
                       className="view-btn"

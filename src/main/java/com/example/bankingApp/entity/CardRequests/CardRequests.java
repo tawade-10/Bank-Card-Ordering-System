@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "request_card")
@@ -51,9 +52,17 @@ public class CardRequests {
     @Column(name = "message")
     private String reviewMessage;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "created_date")
+    private LocalDate createdDate;
+
+    @Column(name = "created_time")
+    private LocalTime createdTime;
+
+    @Column(name = "updated_date")
+    private LocalDate updatedDate;
+
+    @Column(name = "updated_time")
+    private LocalTime updatedTime;
 
     public Long getRequestId() {
         return requestId;
@@ -127,7 +136,19 @@ public class CardRequests {
         this.reviewMessage = reviewMessage;
     }
 
-    public LocalDateTime getUpdatedAt() {  return updatedAt; }
+    public LocalDate getCreatedDate() { return createdDate; }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public void setCreatedDate(LocalDate createdDate) { this.createdDate = createdDate; }
+
+    public LocalTime getCreatedTime() { return createdTime; }
+
+    public void setCreatedTime(LocalTime createdTime) { this.createdTime = createdTime; }
+
+    public LocalDate getUpdatedDate() { return updatedDate; }
+
+    public void setUpdatedDate(LocalDate updatedDate) { this.updatedDate = updatedDate; }
+
+    public LocalTime getUpdatedTime() { return updatedTime; }
+
+    public void setUpdatedTime(LocalTime updatedTime) { this.updatedTime = updatedTime; }
 }

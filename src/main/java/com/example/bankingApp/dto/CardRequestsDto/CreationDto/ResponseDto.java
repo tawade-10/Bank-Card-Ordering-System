@@ -1,8 +1,28 @@
-package com.example.bankingApp.dto.CardRequestsDto;
+package com.example.bankingApp.dto.CardRequestsDto.CreationDto;
 
 import com.example.bankingApp.entity.Enums.Status;
 import com.example.bankingApp.entity.CardRequests.CardRequests;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+@JsonPropertyOrder({
+        "requestId",
+        "cardTypeId",
+        "cardType",
+        "cardVariantId",
+        "cardVariant",
+        "cardNetworkId",
+        "cardNetwork",
+        "reason",
+        "status",
+        "localDate",
+        "customerId",
+        "customerName",
+        "createdDate",
+        "createdTime"
+})
 public class ResponseDto {
 
     private Long requestId;
@@ -14,10 +34,10 @@ public class ResponseDto {
     private String cardNetwork;
     private String reason;
     private Status status;
-    private String localDate;
     private Long customerId;
     private String customerName;
-    private String updatedAt;
+    private LocalDate createdDate;
+    private LocalTime createdTime;
 
     public ResponseDto(CardRequests cardRequests) {
         this.requestId = cardRequests.getRequestId();
@@ -29,10 +49,10 @@ public class ResponseDto {
         this.cardNetwork = cardRequests.getCardNetwork().getNetworkName();
         this.reason = cardRequests.getReason().getReasonName();
         this.status = cardRequests.getStatus();
-        this.localDate = cardRequests.getLocalDate().toString();
         this.customerId = cardRequests.getCustomers().getCustomerId();
         this.customerName = cardRequests.getCustomers().getCustomerName();
-        this.updatedAt = cardRequests.getUpdatedAt().toString();
+        this.createdDate = cardRequests.getCreatedDate();
+        this.createdTime = cardRequests.getCreatedTime();
     }
 
     public ResponseDto() {}
@@ -109,14 +129,6 @@ public class ResponseDto {
         this.status = status;
     }
 
-    public String getLocalDate() {
-        return localDate;
-    }
-
-    public void setLocalDate(String localDate) {
-        this.localDate = localDate;
-    }
-
     public Long getCustomerId() {
         return customerId;
     }
@@ -133,11 +145,19 @@ public class ResponseDto {
         this.customerName = customerName;
     }
 
-    public String getUpdatedAt() {
-        return updatedAt;
+    public LocalDate getCreatedDate() {
+        return createdDate;
     }
 
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(LocalTime createdTime) {
+        this.createdTime = createdTime;
     }
 }

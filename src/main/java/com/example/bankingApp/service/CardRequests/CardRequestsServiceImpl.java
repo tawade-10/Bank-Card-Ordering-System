@@ -1,7 +1,7 @@
 package com.example.bankingApp.service.CardRequests;
 
-import com.example.bankingApp.dto.CardRequestsDto.RequestsDto;
-import com.example.bankingApp.dto.CardRequestsDto.ResponseDto;
+import com.example.bankingApp.dto.CardRequestsDto.CreationDto.RequestsDto;
+import com.example.bankingApp.dto.CardRequestsDto.CreationDto.ResponseDto;
 import com.example.bankingApp.dto.NetworkDto.NetworkResponseDto;
 import com.example.bankingApp.dto.ReviewDto.ReviewRequestsDto;
 import com.example.bankingApp.dto.ReviewDto.ReviewResponseDto;
@@ -12,6 +12,7 @@ import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.repository.CardRequests.*;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
 import com.example.bankingApp.service.Notification.NotificationService;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -19,8 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,7 +95,8 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         request.setReason(reason);
         request.setNetworkBin(networkBin);
         request.setStatus(Status.PENDING_REVIEW);
-        request.setLocalDate(LocalDate.now());
+        request.setCreatedDate(LocalDate.now());
+        request.setCreatedTime(LocalTime.now());
         request.setCustomers(customer);
 
         CardRequests saved = cardRequestsRepo.save(request);
@@ -169,6 +171,8 @@ public class CardRequestsServiceImpl implements CardRequestsService {
 
         request.setStatus(reviewRequestsDto.getStatus());
         request.setReviewMessage(reviewRequestsDto.getReviewMessage());
+        request.setUpdatedDate(LocalDate.now());
+        request.setUpdatedTime(LocalTime.now());
         CardRequests saved = cardRequestsRepo.save(request);
 
         notificationService.sendNotification(request.getCustomers().getCustomerId(),
@@ -214,6 +218,8 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         }
 
         request.setStatus(next);
+        request.setUpdatedDate(LocalDate.now());
+        request.setUpdatedTime(LocalTime.now());
         return new ReviewResponseDto(cardRequestsRepo.save(request));
     }
 }

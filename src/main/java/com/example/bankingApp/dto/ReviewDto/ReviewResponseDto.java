@@ -2,8 +2,18 @@ package com.example.bankingApp.dto.ReviewDto;
 
 import com.example.bankingApp.entity.CardRequests.CardRequests;
 import com.example.bankingApp.entity.Enums.Status;
-import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+@JsonPropertyOrder({
+        "requestId",
+        "status",
+        "reviewMessage",
+        "updatedDate",
+        "updatedTime"
+})
 public class ReviewResponseDto {
 
     private Long requestId;
@@ -12,13 +22,16 @@ public class ReviewResponseDto {
 
     private String reviewMessage;
 
-    private String updatedAt;
+    private LocalDate updatedDate;
+
+    private LocalTime updatedTime;
 
     public ReviewResponseDto(CardRequests cardRequests) {
         this.requestId = cardRequests.getRequestId();
         this.status = cardRequests.getStatus();
         this.reviewMessage = cardRequests.getReviewMessage();
-        this.updatedAt = cardRequests.getUpdatedAt().toString();
+        this.updatedDate = cardRequests.getUpdatedDate();
+        this.updatedTime = cardRequests.getUpdatedTime();
     }
 
     public ReviewResponseDto() {
@@ -48,11 +61,19 @@ public class ReviewResponseDto {
         this.reviewMessage = reviewMessage;
     }
 
-    public String getUpdatedAt() {
-        return updatedAt;
+    public LocalDate getUpdatedDate() {
+        return updatedDate;
     }
 
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdatedDate(LocalDate updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public LocalTime getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setUpdatedTime(LocalTime updatedTime) {
+        this.updatedTime = updatedTime;
     }
 }

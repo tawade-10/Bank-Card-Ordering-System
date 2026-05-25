@@ -5,8 +5,8 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-import com.example.bankingApp.dto.CustomersDto.CustomersRequestDto;
-import com.example.bankingApp.dto.CustomersDto.CustomersResponseDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationRequestDto;
+import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationResponseDto;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.Enums.Roles;
 
@@ -38,7 +38,7 @@ class CustomerServiceImplTest {
     @Test
     void createCustomer_Successful() {
 
-        CustomersRequestDto dto = new CustomersRequestDto();
+        CustomersCreationRequestDto dto = new CustomersCreationRequestDto();
         dto.setCustomerName("SHUBHAM");
         dto.setEmail("shubham10@gmail.com");
         dto.setPassword("shubham10");
@@ -54,7 +54,7 @@ class CustomerServiceImplTest {
 
         when(customersRepo.save(any(Customers.class))).thenReturn(saved);
 
-        CustomersResponseDto response = authServiceImpl.registerCustomer(dto);
+        CustomersCreationResponseDto response = authServiceImpl.registerCustomer(dto);
 
         assertNotNull(response);
         assertEquals("SHUBHAM", response.getCustomerName());
@@ -66,7 +66,7 @@ class CustomerServiceImplTest {
     @Test
     void createCustomerAlreadyExists_ReturnsExistingCustomer(){
 
-        CustomersRequestDto dto = new CustomersRequestDto();
+        CustomersCreationRequestDto dto = new CustomersCreationRequestDto();
         dto.setCustomerName("SHUBHAM");
         dto.setEmail("shubham10@gmail.com");
         dto.setPassword("shubham10");
@@ -79,7 +79,7 @@ class CustomerServiceImplTest {
 
         when(customersRepo.findByEmail("shubham10@gmail.com")).thenReturn(Optional.of(saved));
 
-        CustomersResponseDto response = authServiceImpl.registerCustomer(dto);
+        CustomersCreationResponseDto response = authServiceImpl.registerCustomer(dto);
 
         assertNotNull(response);
         assertEquals("SHUBHAM", response.getCustomerName());
@@ -91,7 +91,7 @@ class CustomerServiceImplTest {
     @Test
     void createCustomerNull_ThrowsException(){
 
-        CustomersRequestDto dto = new CustomersRequestDto();
+        CustomersCreationRequestDto dto = new CustomersCreationRequestDto();
         dto.setCustomerName(null);
         dto.setEmail("shubham10@gmail.com");
         dto.setPassword("shubham10");

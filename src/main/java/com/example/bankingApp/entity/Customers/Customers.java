@@ -33,6 +33,12 @@ public class Customers{
     @Column(name = "created_time")
     private LocalTime createdTime;
 
+    @Column(name = "updated_date")
+    private LocalDate updatedDate;
+
+    @Column(name = "updated_time")
+    private LocalTime updatedTime;
+
     public Long getCustomerId() {
         return customerId;
     }
@@ -88,4 +94,12 @@ public class Customers{
     public void setCreatedTime(LocalTime createdTime) {
         this.createdTime = createdTime;
     }
+
+    public LocalDate getUpdatedDate() { return updatedDate; }
+
+    public void setUpdatedDate(LocalDate updatedDate) { this.updatedDate = updatedDate; }
+
+    public LocalTime getUpdatedTime() { return updatedTime; }
+
+    public void setUpdatedTime(LocalTime updatedTime) { this.updatedTime = updatedTime; }
 }
