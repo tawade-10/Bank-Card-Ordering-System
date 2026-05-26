@@ -53,7 +53,7 @@ public class AuthFacadeImpl implements AuthFacade {
             CustomUserDetails customerDetails = (CustomUserDetails) auth.getPrincipal();
             Long userId = customerDetails.getCustomers().getCustomerId();
             String customerName = customerDetails.getCustomers().getCustomerName();
-            notificationService.sendNotification(
+            notificationService.createNotification(
                     userId,
                     "Login Successful",
                     "Welcome back, " + customerName + "!",
@@ -71,7 +71,7 @@ public class AuthFacadeImpl implements AuthFacade {
         } catch (Exception ex) {
             customersRepo.findByEmail(customersCreationRequestDto.getEmail())
                     .ifPresent(c -> {
-                        notificationService.sendNotification(
+                        notificationService.createNotification(
                                 c.getCustomerId(),
                                 "Login Failed",
                                 "Incorrect Email or Password",

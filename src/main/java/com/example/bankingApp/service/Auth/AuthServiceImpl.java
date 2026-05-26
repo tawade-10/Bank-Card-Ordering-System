@@ -58,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
         customer.setCreatedTime(LocalTime.now());
         Customers savedCustomer = customersRepo.save(customer);
 
-        notificationService.sendNotification(
+        notificationService.createNotification(
                 savedCustomer.getCustomerId(),
                 "Registration Successful",
                 "Welcome to our banking system!",

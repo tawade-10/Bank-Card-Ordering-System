@@ -17,7 +17,14 @@ export default function Notifications() {
 
     connectWebSocket(customerId, (newNotification) => {
       console.log("📩 New WebSocket notification:", newNotification);
-      setAlerts((prev) => [newNotification, ...prev]);
+
+      setAlerts((prev) => {
+        const exists = prev.find((a) => a.id === newNotification.id);
+        if (exists) {
+          return prev.map((a) => (a.id === newNotification.id ? newNotification : a));
+        }
+        return [newNotification, ...prev];
+      });
     });
 
   }, [customerId]);
@@ -28,23 +35,27 @@ export default function Notifications() {
   };
 
   return (
-    <div className="notification-wrapper">
-      <IoNotificationsOutline
-        size={28}
-        className="notification-icon"
-        onClick={() => setOpen(!open)}
-      />
+    <div className="notif-container">
+      <div className="notif-icon-wrapper" onClick={() => setOpen(!open)}>
+        <IoNotificationsOutline className="notif-icon" />
+
+        {alerts.some((a) => !a.read) && (
+          <span className="notif-badge">{alerts.filter((a) => !a.read).length}</span>
+        )}
+      </div>
 
       {open && (
-        <div className="notification-container">
+        <div className="notif-dropdown">
+          <div className="notif-title">Notifications</div>
+
           {alerts.length === 0 ? (
-            <p>No notifications yet</p>
+            <p className="notif-empty">No notifications yet</p>
           ) : (
             alerts.map((n) => (
-              <div className="notification-item" key={n.id}>
-                <strong>{n.title}</strong>
-                <p>{n.message}</p>
-                <small>{new Date(n.createdAt).toLocaleString()}</small>
+              <div className="notif-card" key={n.id}>
+                <p className="notif-text"><strong>{n.title}</strong></p>
+                <p className="notif-text">{n.message}</p>
+                <small>{new Date(n.updatedAt).toLocaleString()}</small>
               </div>
             ))
           )}

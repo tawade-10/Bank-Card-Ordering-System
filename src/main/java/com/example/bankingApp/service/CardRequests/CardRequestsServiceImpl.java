@@ -175,10 +175,12 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         request.setUpdatedTime(LocalTime.now());
         CardRequests saved = cardRequestsRepo.save(request);
 
-        notificationService.sendNotification(request.getCustomers().getCustomerId(),
+        notificationService.createNotification(request.getCustomers().getCustomerId(),
                 "Card Request Update",
                 "Your card request has been " + request.getStatus() +
-                        ". Reason: " + request.getReviewMessage()
+                        ". Reason: " + request.getReviewMessage(),
+                "CARD_REQUEST",
+                request.getCustomers().getCustomerId()
         );
         return new ReviewResponseDto(saved);
     }

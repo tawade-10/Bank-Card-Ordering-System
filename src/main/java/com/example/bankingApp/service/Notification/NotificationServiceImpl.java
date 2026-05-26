@@ -1,71 +1,87 @@
 package com.example.bankingApp.service.Notification;
 
-import com.example.bankingApp.entity.Notification.Notification;
+import com.example.bankingApp.entity.Customers.Customers;
+import com.example.bankingApp.entity.Notification.Notifications;
+import com.example.bankingApp.repository.Customers.CustomersRepo;
 import com.example.bankingApp.repository.Notification.NotificationRepo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class NotificationServiceImpl implements NotificationService{
+public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepo notificationRepo;
     private final SimpMessagingTemplate messagingTemplate;
+    private final CustomersRepo customersRepo;
 
-    public NotificationServiceImpl(NotificationRepo notificationRepo, SimpMessagingTemplate messagingTemplate) {
+    public NotificationServiceImpl(NotificationRepo notificationRepo, SimpMessagingTemplate messagingTemplate, CustomersRepo customersRepo) {
         this.notificationRepo = notificationRepo;
         this.messagingTemplate = messagingTemplate;
+        this.customersRepo = customersRepo;
     }
 
-    @Override
-    public Notification sendNotification(Long userId, String title, String message) {
-        Notification notification = new Notification(userId, title, message, "GENERAL", null);
-        notificationRepo.save(notification);
-        messagingTemplate.convertAndSend("/topic/notifications/" + userId, notification);
-        return notification;
-    }
+    public Notifications createNotification(Long customerId, String title,
+                                            String message, String type, Long referenceId) {
 
-    @Override
-    public Notification sendNotification(Long userId, String title, String message,
-                                         String type, Long referenceId) {
+        Customers customer = customersRepo.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
 
-        Notification existing = notificationRepo
-                .findByUserIdAndTypeAndReferenceId(userId, type, referenceId)
-                .orElse(null);
+        Optional<Notifications> existing = notificationRepo
+                .findByCustomerCustomerIdAndTypeAndReferenceId(customerId, type, referenceId);
 
-        if (existing != null) {
-            existing.setMessage(message);
-            existing.setTitle(title);
-            existing.setRead(false);
-            existing.setUpdatedAt(LocalDateTime.now());
-            notificationRepo.save(existing);
-            messagingTemplate.convertAndSend("/topic/notifications/" + userId, existing);
-            return existing;
+        Notifications n;
+
+        if (existing.isPresent()) {
+            n = existing.get();
+            n.setMessage(message);
+            n.setTitle(title);
+            n.setUpdatedAt(LocalDateTime.now());
+        } else {
+            n = new Notifications();
+            n.setCustomer(customer);
+            n.setTitle(title);
+            n.setMessage(message);
+            n.setType(type);
+            n.setReferenceId(referenceId);
+            n.setCreatedAt(LocalDateTime.now());
+            n.setUpdatedAt(LocalDateTime.now());
         }
 
-        Notification notification = new Notification(userId, title, message, type, referenceId);
-        notificationRepo.save(notification);
-        messagingTemplate.convertAndSend("/topic/notifications/" + userId, notification);
-        return notification;
+        Notifications saved = notificationRepo.save(n);
+        messagingTemplate.convertAndSend(
+                "/topic/notifications/" + customerId,
+                saved
+        );
+        return saved;
     }
 
     @Override
-    public List<Notification> getUserNotifications(Long userId) {
-        return notificationRepo.findByUserIdOrderByUpdatedAtDesc(userId);
+    public List<Notifications> getUserNotifications(Long customerId, String type) {
+
+        Customers customer = customersRepo.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        return notificationRepo.findByCustomerCustomerIdAndTypeOrderByCreatedAtDesc(
+                customerId,
+                type
+        );
     }
 
     @Override
     public void markAsRead(Long id) {
-        notificationRepo.findById(id).ifPresent(notification -> {
-            notification.setRead(true);
-            notificationRepo.save(notification);
-        });
+        Notifications notification = notificationRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Notification not found"));
+
+        notification.setRead(true);
+        notificationRepo.save(notification);
     }
 
     @Override
-    public Notification getLatestNotification(Long userId) {
-        return notificationRepo.findTopByUserIdOrderByUpdatedAtDesc(userId);
+    public Notifications getLatestNotification(Long customerId) {
+        return notificationRepo.findTop1ByCustomerCustomerIdOrderByUpdatedAtDesc(customerId);
     }
 }

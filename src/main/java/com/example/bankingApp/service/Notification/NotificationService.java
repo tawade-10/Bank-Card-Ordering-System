@@ -1,21 +1,16 @@
 package com.example.bankingApp.service.Notification;
 
-import com.example.bankingApp.entity.Notification.Notification;
+import com.example.bankingApp.entity.Notification.Notifications;
 
 import java.util.List;
 
 public interface NotificationService {
 
-    Notification sendNotification(Long userId, String title, String message);
+    Notifications createNotification(Long customerId, String title, String message, String type, Long referenceId);
 
-    Notification sendNotification(
-            Long userId, String title, String message,
-            String type, Long referenceId
-    );
-
-    List<Notification> getUserNotifications(Long userId);
+    List<Notifications> getUserNotifications(Long customerId, String type);
 
     void markAsRead(Long id);
 
-    Notification getLatestNotification(Long userId);
+    Notifications getLatestNotification(Long customerId);
 }

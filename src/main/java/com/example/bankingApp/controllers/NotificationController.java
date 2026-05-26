@@ -1,6 +1,6 @@
 package com.example.bankingApp.controllers;
 
-import com.example.bankingApp.entity.Notification.Notification;
+import com.example.bankingApp.entity.Notification.Notifications;
 import com.example.bankingApp.service.Notification.NotificationService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,25 +16,30 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-    @GetMapping("/{userId}")
-    public List<Notification> getUserNotifications(@PathVariable Long userId) {
-        return notificationService.getUserNotifications(userId);
+    @PostMapping("/create")
+    public Notifications create(
+            @RequestParam Long customerId,
+            @RequestParam String title,
+            @RequestParam String message,
+            @RequestParam String type,
+            @RequestParam(required = false) Long referenceId
+    ){
+        return notificationService.createNotification(customerId, title, message, type, referenceId);
     }
 
-    @PatchMapping("/read/{id}")
-    public String markAsRead(@PathVariable Long id) {
+    @GetMapping("/user/{customerId}")
+    public List<Notifications> getUserNotifications(@PathVariable Long customerId, String type) {
+        return notificationService.getUserNotifications(customerId,type);
+    }
+
+    @PutMapping("/read/{id}")
+    public String markRead(@PathVariable Long id){
         notificationService.markAsRead(id);
         return "Notification marked as read";
     }
 
-    @GetMapping("/notify/{userId}")
-    public String testNotify(@PathVariable Long userId) {
-        notificationService.sendNotification(userId, "Test Notification", "This is a test message!", "TEST", 1L);
-        return "Notification Sent!";
-    }
-
-    @GetMapping("/latest/{userId}")
-    public Notification getLatestNotification(@PathVariable Long userId) {
-        return notificationService.getLatestNotification(userId);
+    @GetMapping("/latest/{customerId}")
+    public Notifications getLatestNotification(Long customerId){
+        return notificationService.getLatestNotification(customerId);
     }
 }

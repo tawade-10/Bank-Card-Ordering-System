@@ -1,5 +1,6 @@
 package com.example.bankingApp.entity.Notification;
 
+import com.example.bankingApp.entity.Customers.Customers;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -10,17 +11,18 @@ import java.time.LocalDateTime;
 @Table(
         name = "notifications",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"user_id", "type", "reference_id"})
+                @UniqueConstraint(columnNames = {"customer_id", "type", "reference_id"})
         }
 )
-public class Notification {
+public class Notifications {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customers customer;
 
     @Column(nullable = false)
     private String title;
@@ -44,15 +46,19 @@ public class Notification {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public Notification() {}
-
-    public Notification(Long userId, String title, String message, String type, Long referenceId) {
-        this.userId = userId;
+    public Notifications(Long id, Customers customer, String title, String message, String type, Long referenceId, boolean isRead, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.customer = customer;
         this.title = title;
         this.message = message;
         this.type = type;
         this.referenceId = referenceId;
+        this.isRead = isRead;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
+
+    public Notifications() {}
 
     public Long getId() {
         return id;
@@ -62,12 +68,12 @@ public class Notification {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Customers getCustomer() {
+        return customer;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCustomer(Customers customer) {
+        this.customer = customer;
     }
 
     public String getTitle() {

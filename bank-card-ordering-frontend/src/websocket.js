@@ -3,39 +3,30 @@ import { Client } from "@stomp/stompjs";
 
 let stompClient = null;
 
-export const connectWebSocket = (userId, onNotification) => {
-    const socketUrl = "http://localhost:8080/ws";
+export const connectWebSocket = (customerId, onNotification) => {
+  const socketUrl = "http://localhost:8080/ws";
 
-    stompClient = new Client({
-        webSocketFactory: () => new SockJS(socketUrl),
-        reconnectDelay: 3000,
+  stompClient = new Client({
+    webSocketFactory: () => new SockJS(socketUrl),
+    reconnectDelay: 3000,
 
-        debug: (str) => console.log(str),
+    onConnect: () => {
+      console.log("Connected to WebSocket");
 
-        onConnect: (frame) => {
-            console.log("🔥 STOMP Connected:", frame);
+      stompClient.subscribe(`/topic/notifications/${customerId}`, (message) => {
+        const notif = JSON.parse(message.body);
+        onNotification(notif);
+      });
+    },
 
-            // IMPORTANT FIX: Wait a tick before subscribing
-            setTimeout(() => {
-                stompClient.subscribe(`/topic/notifications/${userId}`, (msg) => {
-                    if (!msg.body) return;
-                    const notification = JSON.parse(msg.body);
-                    onNotification(notification);
-                });
-                console.log(`📡 Subscribed to /topic/notifications/${userId}`);
-            }, 50);
-        },
+    onStompError: (frame) => {
+      console.error("WebSocket error:", frame);
+    },
+  });
 
-        onStompError: (frame) => {
-            console.error("❌ STOMP Broker error:", frame.headers["message"]);
-        }
-    });
-
-    stompClient.activate();
+  stompClient.activate();
 };
 
 export const disconnectWebSocket = () => {
-    if (stompClient && stompClient.active) {
-        stompClient.deactivate();
-    }
+  if (stompClient) stompClient.deactivate();
 };

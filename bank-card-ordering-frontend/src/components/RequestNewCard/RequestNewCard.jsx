@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./RequestNewCard.css";
 
 export default function RequestNewCard() {
-
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -44,18 +44,36 @@ export default function RequestNewCard() {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/api/request-card/create-request", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + localStorage.getItem("token")
-        },
-        body: JSON.stringify(body),
-      });
+      const response = await fetch(
+        "http://localhost:8080/api/request-card/create-request",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token")
+          },
+          body: JSON.stringify(body)
+        }
+      );
 
       if (response.ok) {
         toast.success("Card Request Submitted!");
         clearForm();
+
+        const customerId = localStorage.getItem("customerId");
+
+        // ✅ SAME AS LOGIN FORM STYLE (LATEST API)
+        axios
+          .get(`http://localhost:8080/api/notification/latest/${customerId}`)
+          .then((res) => {
+            if (res.data) {
+              toast.info(res.data.message);   // 👈 LOGIN STYLE
+            }
+          })
+          .catch((err) => {
+            console.log("Notification fetch error", err);
+          });
+
         setTimeout(() => navigate("/dashboard"), 1200);
       } else {
         const errorText = await response.text();
@@ -72,10 +90,8 @@ export default function RequestNewCard() {
         <div className="form-header">Request New Card</div>
 
         <form onSubmit={handleSubmit}>
-
           <label className="label">Select Card Type:</label>
           <div className="radio-group">
-
             <label className="radio-box">
               <input
                 type="radio"
@@ -97,12 +113,10 @@ export default function RequestNewCard() {
               />
               Debit Card
             </label>
-
           </div>
 
           <label className="label">Card Variant:</label>
           <div className="radio-group">
-
             <label className="radio-box">
               <input
                 type="radio"
@@ -135,18 +149,17 @@ export default function RequestNewCard() {
               />
               Platinum
             </label>
-
           </div>
 
           <label className="label">Select Card Network:</label>
           <div className="radio-group">
-
             <label className="radio-box">
               <input
                 type="radio"
                 name="cardNetworkId"
                 value="1"
                 onChange={handleChange}
+                checked={formData.cardNetworkId === "1"}
                 checked={formData.cardNetworkId === "1"}
               />
               MasterCard
@@ -177,7 +190,6 @@ export default function RequestNewCard() {
 
           <label className="label">Reason for Request:</label>
           <select
-            id="reasonId"
             name="reasonId"
             className="styled-select"
             value={formData.reasonId}
@@ -192,9 +204,10 @@ export default function RequestNewCard() {
           </select>
 
           <div className="button-row">
-            <button type="submit" className="submit-btn">Submit</button>
+            <button type="submit" className="submit-btn">
+              Submit
+            </button>
           </div>
-
         </form>
       </div>
     </div>

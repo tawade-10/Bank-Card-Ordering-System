@@ -94,17 +94,19 @@ export default function LoginForm() {
                 localStorage.setItem("customerName", data.customerName);
                 localStorage.setItem("email", data.email);
                 localStorage.setItem("role", data.roles);
-                localStorage.setItem("userId", data.userId);
+                localStorage.setItem("customerId", data.userId);
 
-               axios
-                 .get(`http://localhost:8080/api/notification/latest/${data.userId}`)
-                 .then(res => {
-                   if (res.data) {
-                     toast.success(res.data.message);
-                   }
-                 });
+              axios
+                .get(`http://localhost:8080/api/notification/user/${data.userId}`)
+                .then(res => {
+                  const notifications = res.data;
 
-                // ✅ IMPORTANT: give time for websocket init in dashboard
+                  if (notifications && notifications.length > 0) {
+                    const latest = notifications[0];
+                    toast.success(latest.message);
+                  }
+                })
+                .catch(err => console.error("Notification fetch error:", err));
                 setTimeout(() => {
                     if (data.roles === "ADMIN") {
                         navigate("/admin/dashboard");
