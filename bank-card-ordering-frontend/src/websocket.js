@@ -2,8 +2,12 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 
 let stompClient = null;
+let isConnected = false;
 
 export const connectWebSocket = (customerId, onNotification) => {
+
+  if (isConnected && stompClient) return;
+
   const socketUrl = "http://localhost:8080/ws";
 
   stompClient = new Client({

@@ -96,17 +96,6 @@ export default function LoginForm() {
                 localStorage.setItem("role", data.roles);
                 localStorage.setItem("customerId", data.userId);
 
-              axios
-                .get(`http://localhost:8080/api/notification/user/${data.userId}`)
-                .then(res => {
-                  const notifications = res.data;
-
-                  if (notifications && notifications.length > 0) {
-                    const latest = notifications[0];
-                    toast.success(latest.message);
-                  }
-                })
-                .catch(err => console.error("Notification fetch error:", err));
                 setTimeout(() => {
                     if (data.roles === "ADMIN") {
                         navigate("/admin/dashboard");
@@ -114,7 +103,6 @@ export default function LoginForm() {
                         navigate("/dashboard");
                     }
                 }, 500);
-
             } else {
                 toast.error("Wrong Credentials!");
             }

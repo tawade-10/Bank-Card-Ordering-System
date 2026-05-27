@@ -130,7 +130,6 @@ export default function CardCreation() {
       const bin = binRes.data.bin;
       setBinNumber(bin);
 
-      // Generate card number
       const generatedCardNum = generateCardNumber(bin);
       setNumber(generatedCardNum);
 

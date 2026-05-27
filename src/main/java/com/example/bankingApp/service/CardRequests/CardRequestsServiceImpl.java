@@ -11,8 +11,7 @@ import com.example.bankingApp.entity.Enums.Status;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.repository.CardRequests.*;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
-import com.example.bankingApp.service.Notification.NotificationService;
-import org.springframework.cglib.core.Local;
+import com.example.bankingApp.service.Notifications.NotificationsService;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -41,9 +40,9 @@ public class CardRequestsServiceImpl implements CardRequestsService {
 
     private final NetworkBinRepo networkBinRepo;
 
-    private final NotificationService notificationService;
+    private final NotificationsService notificationsService;
 
-    public CardRequestsServiceImpl(CardRequestsRepo cardRequestsRepo, CustomersRepo customersRepo, CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, CardNetworkRepo cardNetworkRepo, ReasonForRequestRepo reasonForRequestRepo, NetworkBinRepo networkBinRepo, NotificationService notificationService) {
+    public CardRequestsServiceImpl(CardRequestsRepo cardRequestsRepo, CustomersRepo customersRepo, CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, CardNetworkRepo cardNetworkRepo, ReasonForRequestRepo reasonForRequestRepo, NetworkBinRepo networkBinRepo, NotificationsService notificationsService) {
         this.cardRequestsRepo = cardRequestsRepo;
         this.customersRepo = customersRepo;
         this.cardTypeRepo = cardTypeRepo;
@@ -51,7 +50,7 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         this.cardNetworkRepo = cardNetworkRepo;
         this.reasonForRequestRepo = reasonForRequestRepo;
         this.networkBinRepo = networkBinRepo;
-        this.notificationService = notificationService;
+        this.notificationsService = notificationsService;
     }
 
     @Override
@@ -175,13 +174,13 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         request.setUpdatedTime(LocalTime.now());
         CardRequests saved = cardRequestsRepo.save(request);
 
-        notificationService.createNotification(request.getCustomers().getCustomerId(),
-                "Card Request Update",
-                "Your card request has been " + request.getStatus() +
-                        ". Reason: " + request.getReviewMessage(),
-                "CARD_REQUEST",
-                request.getCustomers().getCustomerId()
-        );
+//        notificationsService.createNotification(request.getCustomers().getCustomerId(),
+//                "Card Request Update",
+//                "Your card request has been " + request.getStatus() +
+//                        ". Reason: " + request.getReviewMessage(),
+//                "CARD_REQUEST",
+//                request.getCustomers().getCustomerId()
+//        );
         return new ReviewResponseDto(saved);
     }
 

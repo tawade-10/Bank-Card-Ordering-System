@@ -4,10 +4,12 @@ import com.example.bankingApp.config.JwtService;
 import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationRequestDto;
 import com.example.bankingApp.dto.CustomersDto.CreationDto.CustomersCreationResponseDto;
 import com.example.bankingApp.dto.CustomersDto.LoginResponse;
+import com.example.bankingApp.dto.Notifications.NotificationsRequestDto;
+import com.example.bankingApp.dto.Notifications.NotificationsResponseDto;
 import com.example.bankingApp.entity.CustomUserDetails;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
 import com.example.bankingApp.service.Auth.AuthService;
-import com.example.bankingApp.service.Notification.NotificationService;
+import com.example.bankingApp.service.Notifications.NotificationsService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,17 +23,20 @@ public class AuthFacadeImpl implements AuthFacade {
     private final AuthenticationManager authenticationManager;
     private final AuthService authService;
     private final BCryptPasswordEncoder encoder;
-    private final NotificationService notificationService;
+    private final NotificationsService notificationsService;
     private final CustomersRepo customersRepo;
 
     public AuthFacadeImpl(JwtService jwtService,
                           AuthenticationManager authenticationManager,
-                          AuthService authService, BCryptPasswordEncoder encoder, NotificationService notificationService, CustomersRepo customersRepo) {
+                          AuthService authService,
+                          BCryptPasswordEncoder encoder,
+                          NotificationsService notificationsService,
+                          CustomersRepo customersRepo) {
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.authService = authService;
         this.encoder = encoder;
-        this.notificationService = notificationService;
+        this.notificationsService = notificationsService;
         this.customersRepo = customersRepo;
     }
 
@@ -50,17 +55,24 @@ public class AuthFacadeImpl implements AuthFacade {
                             customersCreationRequestDto.getPassword()
                     )
             );
+
             CustomUserDetails customerDetails = (CustomUserDetails) auth.getPrincipal();
+
             Long userId = customerDetails.getCustomers().getCustomerId();
             String customerName = customerDetails.getCustomers().getCustomerName();
-            notificationService.createNotification(
-                    userId,
-                    "Login Successful",
-                    "Welcome back, " + customerName + "!",
-                    "LOGIN_SUCCESS",
-                    userId
-            );
+
+            // Build SUCCESS notification DTO
+            NotificationsRequestDto successDto = new NotificationsRequestDto();
+            successDto.setCustomerId(userId);
+            successDto.setTitle("Login Successful");
+            successDto.setMessage("Welcome back, " + customerName + "!");
+            successDto.setType("LOGIN_SUCCESS");
+            successDto.setReferenceId(userId);
+
+            NotificationsResponseDto notification = notificationsService.createNotification(successDto);
+
             String token = jwtService.generateToken(customerDetails);
+
             return new LoginResponse(
                     token,
                     customerDetails.getCustomers().getCustomerName(),
@@ -68,17 +80,21 @@ public class AuthFacadeImpl implements AuthFacade {
                     customerDetails.getCustomers().getRoles(),
                     userId
             );
+
         } catch (Exception ex) {
+
             customersRepo.findByEmail(customersCreationRequestDto.getEmail())
                     .ifPresent(c -> {
-                        notificationService.createNotification(
-                                c.getCustomerId(),
-                                "Login Failed",
-                                "Incorrect Email or Password",
-                                "LOGIN_FAILED",
-                                c.getCustomerId()
-                        );
+                        NotificationsRequestDto failedDto = new NotificationsRequestDto();
+                        failedDto.setCustomerId(c.getCustomerId());
+                        failedDto.setTitle("Login Failed");
+                        failedDto.setMessage("Incorrect Email or Password");
+                        failedDto.setType("LOGIN_FAILED");
+                        failedDto.setReferenceId(c.getCustomerId());
+
+                        notificationsService.createNotification(failedDto);
                     });
+
             throw new RuntimeException("Invalid Credentials");
         }
     }
@@ -90,6 +106,6 @@ public class AuthFacadeImpl implements AuthFacade {
 
     @Override
     public String resetPassword(String token, String newPassword) {
-        return authService.resetPassword(token,newPassword);
+        return authService.resetPassword(token, newPassword);
     }
 }

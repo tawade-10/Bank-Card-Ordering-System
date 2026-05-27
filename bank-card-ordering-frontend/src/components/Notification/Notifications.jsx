@@ -30,8 +30,8 @@ export default function Notifications() {
   }, [customerId]);
 
   const fetchAlerts = async () => {
-    const res = await axios.get(`http://localhost:8080/api/notification/${customerId}`);
-    setAlerts(res.data);
+   const res = await axios.get(`http://localhost:8080/api/notifications/user/${customerId}`);
+   setAlerts(res.data);
   };
 
   return (

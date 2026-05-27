@@ -181,7 +181,7 @@
 //   );
 // }
 
-import React, { useEffect } from "react";
+import React, { useEffect,useRef } from "react";
 import { toast } from "react-toastify";
 import { connectWebSocket } from "../../websocket";
 import AdminDashboard from "./AdminDashboard/AdminDashboard";
@@ -189,13 +189,18 @@ import CustomerDashboard from "./CustomerDashboard/CustomerDashboard";
 
 export default function Dashboard() {
 
-     useEffect(() => {
-        const userId = localStorage.getItem("userId");
+     const connectedRef = useRef(false);
 
+     useEffect(() => {
+
+        if (connectedRef.current) return;
+            connectedRef.current = true;
+
+        const userId = localStorage.getItem("customerId");
         if (!userId) return;
 
         const client = connectWebSocket(userId, (notification) => {
-          toast.info(`${notification.title}: ${notification.message}`);
+          toast.success(`${notification.message}`);
         });
 
         return () => {

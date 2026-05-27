@@ -30,7 +30,7 @@ export default function Header() {
   useEffect(() => {
     if (!userId) return;
     axios
-      .get(`http://localhost:8080/api/notifications/${userId}`)
+      .get(`http://localhost:8080/api/notifications/user/${userId}`)
       .then((res) => {
         setNotifications(res.data);
         setUnreadCount(res.data.length);

@@ -1,4 +1,4 @@
-package com.example.bankingApp.repository.Notification;
+package com.example.bankingApp.repository.Notifications;
 
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.Notification.Notifications;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface NotificationRepo extends JpaRepository<Notifications, Long> {
+public interface NotificationsRepo extends JpaRepository<Notifications, Long> {
 
     List<Notifications> findByCustomerOrderByCreatedAtDesc(Customers customer);
 
@@ -25,4 +25,6 @@ public interface NotificationRepo extends JpaRepository<Notifications, Long> {
     );
 
     Notifications findTop1ByCustomerCustomerIdOrderByUpdatedAtDesc(Long customerId);
+
+    List<Notifications> findByCustomerCustomerIdOrderByCreatedAtDesc(Long customerId);
 }

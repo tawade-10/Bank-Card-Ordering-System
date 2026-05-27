@@ -9,6 +9,19 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
+    const formatDate = (date) => {
+      if (!date) return "--";
+      const [y, m, d] = date.split("-");
+      return `${d}/${m}/${y}`;
+    };
+
+    const formatDateTime = (date, time) => {
+      if (!date) return "--";
+      const formattedDate = formatDate(date);
+      if (!time) return formattedDate;
+      return `${formattedDate} ${time}`;
+    };
+
   useEffect(() => {
     loadRequests();
   }, []);
