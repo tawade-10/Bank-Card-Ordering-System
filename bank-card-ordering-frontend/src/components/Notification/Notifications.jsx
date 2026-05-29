@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { connectWebSocket } from "../../websocket";
+import { toast } from "react-toastify";
 import "./Notifications.css";
 
 export default function Notifications() {
@@ -9,30 +10,39 @@ export default function Notifications() {
   const [open, setOpen] = useState(false);
 
   const customerId = localStorage.getItem("customerId");
+  const socketRef = useRef(null);
+
+  const fetchRecent = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8080/api/notifications/recent-five/${customerId}`
+      );
+
+      setAlerts(res.data || []);
+    } catch (err) {
+      console.log("fetch error", err);
+    }
+  };
 
   useEffect(() => {
     if (!customerId) return;
 
-    fetchAlerts();
+    fetchRecent();
 
-    connectWebSocket(customerId, (newNotification) => {
-      console.log("📩 New WebSocket notification:", newNotification);
+    socketRef.current = connectWebSocket(customerId, (n) => {
+      toast.success(n.message);
 
       setAlerts((prev) => {
-        const exists = prev.find((a) => a.id === newNotification.id);
-        if (exists) {
-          return prev.map((a) => (a.id === newNotification.id ? newNotification : a));
-        }
-        return [newNotification, ...prev];
+        const filtered = prev.filter((x) => x.id !== n.id);
+        const updated = [n, ...filtered];
+        return updated.slice(0, 5);
       });
     });
 
+    return () => {
+      socketRef.current?.deactivate?.();
+    };
   }, [customerId]);
-
-  const fetchAlerts = async () => {
-   const res = await axios.get(`http://localhost:8080/api/notifications/user/${customerId}`);
-   setAlerts(res.data);
-  };
 
   return (
     <div className="notif-container">
@@ -40,7 +50,9 @@ export default function Notifications() {
         <IoNotificationsOutline className="notif-icon" />
 
         {alerts.some((a) => !a.read) && (
-          <span className="notif-badge">{alerts.filter((a) => !a.read).length}</span>
+          <span className="notif-badge">
+            {alerts.filter((a) => !a.read).length}
+          </span>
         )}
       </div>
 
@@ -53,9 +65,15 @@ export default function Notifications() {
           ) : (
             alerts.map((n) => (
               <div className="notif-card" key={n.id}>
-                <p className="notif-text"><strong>{n.title}</strong></p>
+                <p className="notif-text">
+                  <strong>{n.title}</strong>
+                </p>
                 <p className="notif-text">{n.message}</p>
-                <small>{new Date(n.updatedAt).toLocaleString()}</small>
+                <small>
+                  {n.updatedAt
+                    ? new Date(n.updatedAt).toLocaleString()
+                    : ""}
+                </small>
               </div>
             ))
           )}
