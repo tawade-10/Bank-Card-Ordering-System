@@ -1,0 +1,5 @@
+INSERT INTO account_type (type_name)
+VALUES
+('SAVINGS'),
+('CURRENT')
+ON CONFLICT DO NOTHING;

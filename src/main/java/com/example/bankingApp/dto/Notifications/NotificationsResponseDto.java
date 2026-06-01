@@ -1,5 +1,7 @@
 package com.example.bankingApp.dto.Notifications;
 
+import com.example.bankingApp.entity.Notification.Notifications;
+
 import java.time.LocalDateTime;
 
 public class NotificationsResponseDto {
@@ -13,15 +15,15 @@ public class NotificationsResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public NotificationsResponseDto(Long id, String title, String message, String type, Long referenceId, boolean read, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.title = title;
-        this.message = message;
-        this.type = type;
-        this.referenceId = referenceId;
-        this.read = read;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    public NotificationsResponseDto(Notifications notifications) {
+        this.id = notifications.getId();
+        this.title = notifications.getTitle();
+        this.message = notifications.getMessage();
+        this.type = notifications.getType();
+        this.referenceId = notifications.getReferenceId();
+        this.read = notifications.isRead();
+        this.createdAt = notifications.getCreatedAt();
+        this.updatedAt = notifications.getUpdatedAt();
     }
 
     public NotificationsResponseDto(){

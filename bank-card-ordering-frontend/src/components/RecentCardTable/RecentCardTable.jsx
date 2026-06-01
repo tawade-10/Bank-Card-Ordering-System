@@ -3,20 +3,18 @@ import "./RecentCardTable.css";
 
 export default function RecentCardTable({ requests }) {
 
-  // Convert YYYY-MM-DD → DD/MM/YYYY
   const formatDate = (date) => {
     if (!date) return "--";
     const [y, m, d] = date.split("-");
     return `${d}/${m}/${y}`;
   };
 
-  // Combine LocalDate + LocalTime safely
   const formatDateTime = (date, time) => {
     if (!date) return "--";
 
     const formattedDate = formatDate(date);
 
-    if (!time) return formattedDate;  // if time not present
+    if (!time) return formattedDate;
 
     return `${formattedDate} ${time}`;
   };
@@ -41,7 +39,6 @@ export default function RecentCardTable({ requests }) {
                 <td>{req.cardType}</td>
                 <td>{req.status}</td>
 
-                {/* FIXED DATE DISPLAY */}
                 <td>
                   {formatDateTime(req.createdDate)}
                 </td>

@@ -12,97 +12,116 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class NotificationsServiceImpl implements NotificationsService {
 
     private final NotificationsRepo notificationsRepo;
-    private final SimpMessagingTemplate messagingTemplate;
     private final CustomersRepo customersRepo;
+    private final SimpMessagingTemplate messagingTemplate;
 
-    public NotificationsServiceImpl(NotificationsRepo notificationsRepo,
-                                    SimpMessagingTemplate messagingTemplate,
-                                    CustomersRepo customersRepo) {
+    public NotificationsServiceImpl(
+            NotificationsRepo notificationsRepo,
+            CustomersRepo customersRepo,
+            SimpMessagingTemplate messagingTemplate
+    ) {
         this.notificationsRepo = notificationsRepo;
-        this.messagingTemplate = messagingTemplate;
         this.customersRepo = customersRepo;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @Override
-    public NotificationsResponseDto createNotification(NotificationsRequestDto notificationsRequestDto) {
+    public NotificationsResponseDto createNotifications(NotificationsRequestDto dto) {
 
-        Customers customer = customersRepo.findById(notificationsRequestDto.getCustomerId())
+        Customers customer = customersRepo.findById(dto.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
 
-        Optional<Notifications> existing =
-                notificationsRepo.findByCustomerCustomerIdAndTypeAndReferenceId(
-                        notificationsRequestDto.getCustomerId(),
-                        notificationsRequestDto.getType(),
-                        notificationsRequestDto.getReferenceId()
-                );
+        Optional<Notifications> existingOpt;
 
-        Notifications n;
+        if (dto.getType().startsWith("LOGIN")
+                || dto.getType().startsWith("REGISTER")) {
 
-        if (existing.isPresent()) {
-            n = existing.get();
-            n.setTitle(notificationsRequestDto.getTitle());
-            n.setMessage(notificationsRequestDto.getMessage());
-            n.setUpdatedAt(LocalDateTime.now());
+            existingOpt = notificationsRepo
+                    .findByCustomerCustomerIdAndType(dto.getCustomerId(), dto.getType());
         } else {
-            n = new Notifications();
-            n.setCustomer(customer);
-            n.setTitle(notificationsRequestDto.getTitle());
-            n.setMessage(notificationsRequestDto.getMessage());
-            n.setType(notificationsRequestDto.getType());
-            n.setReferenceId(notificationsRequestDto.getReferenceId());
-            n.setCreatedAt(LocalDateTime.now());
-            n.setUpdatedAt(LocalDateTime.now());
+            existingOpt = notificationsRepo
+                    .findByCustomerCustomerIdAndTypeAndReferenceId(
+                            dto.getCustomerId(),
+                            dto.getType(),
+                            dto.getReferenceId()
+                    );
         }
 
-        Notifications saved = notificationsRepo.save(n);
-
-        NotificationsResponseDto response = toResponse(saved);
-
-        messagingTemplate.convertAndSend("/topic/notifications/" + notificationsRequestDto.getCustomerId(), response);
-
+        Notifications notification;
+        if (existingOpt.isPresent()) {
+            notification = existingOpt.get();
+            notification.setTitle(dto.getTitle());
+            notification.setMessage(dto.getMessage());
+            notification.setReferenceId(dto.getReferenceId());
+            notification.setUpdatedAt(LocalDateTime.now());
+        } else {
+            notification = new Notifications();
+            notification.setCustomer(customer);
+            notification.setType(dto.getType());
+            notification.setTitle(dto.getTitle());
+            notification.setMessage(dto.getMessage());
+            notification.setReferenceId(dto.getReferenceId());
+            notification.setRead(false);
+        }
+        Notifications saved = notificationsRepo.save(notification);
+        NotificationsResponseDto response = new NotificationsResponseDto(saved);
+        messagingTemplate.convertAndSend(
+                "/topic/notifications/" + dto.getCustomerId(),
+                response
+        );
         return response;
     }
 
-
     @Override
-    public List<NotificationsResponseDto> getUserNotifications(Long customerId, String type) {
-
-        customersRepo.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
-
-        List<Notifications> list = (type == null || type.isEmpty())
-                ? notificationsRepo.findByCustomerCustomerIdOrderByCreatedAtDesc(customerId)
-                : notificationsRepo.findByCustomerCustomerIdAndTypeOrderByCreatedAtDesc(customerId, type);
-
-        return list.stream().map(this::toResponse).collect(Collectors.toList());
+    public List<NotificationsResponseDto> getAllNotificationsByUser(Long customerId) {
+        return notificationsRepo
+                .findByCustomerCustomerIdOrderByUpdatedAtDesc(customerId)
+                .stream()
+                .map(NotificationsResponseDto::new)
+                .toList();
     }
 
+    @Override
+    public List<NotificationsResponseDto> getUserNotificationsByType(Long customerId, String type) {
+        return notificationsRepo
+                .findByCustomerCustomerIdAndTypeOrderByUpdatedAtDesc(customerId, type)
+                .stream()
+                .map(NotificationsResponseDto::new)
+                .toList();
+    }
+
+    @Override
+    public NotificationsResponseDto getLatestNotification(Long customerId) {
+        return notificationsRepo
+                .findTop1ByCustomerCustomerIdOrderByUpdatedAtDesc(customerId)
+                .map(NotificationsResponseDto::new)
+                .orElse(null);
+    }
+
+    @Override
+    public List<NotificationsResponseDto> getRecentFiveNotifications(Long customerId) {
+        return notificationsRepo
+                .findTop5ByCustomerCustomerIdOrderByUpdatedAtDesc(customerId)
+                .stream()
+                .map(NotificationsResponseDto::new)
+                .toList();
+    }
 
     @Override
     public void markAsRead(Long id) {
-        Notifications n = notificationsRepo.findById(id)
+
+        Notifications notification = notificationsRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Notification not found"));
-        n.setRead(true);
-        notificationsRepo.save(n);
-    }
 
+        notification.setRead(true);
+        notification.setUpdatedAt(LocalDateTime.now());
 
-    private NotificationsResponseDto toResponse(Notifications n) {
-        return new NotificationsResponseDto(
-                n.getId(),
-                n.getTitle(),
-                n.getMessage(),
-                n.getType(),
-                n.getReferenceId(),
-                n.isRead(),
-                n.getCreatedAt(),
-                n.getUpdatedAt()
-        );
+        notificationsRepo.save(notification);
     }
 }
+

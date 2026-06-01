@@ -44,7 +44,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public CustomersCreationResponseDto registerCustomer(CustomersCreationRequestDto dto) {
 
-        Optional<Customers> existingCustomerByEmail = customersRepo.findByEmail(dto.getEmail());
+        Optional<Customers> existingCustomerByEmail =
+                customersRepo.findByEmail(dto.getEmail());
+
         if (existingCustomerByEmail.isPresent()) {
             return new CustomersCreationResponseDto(existingCustomerByEmail.get());
         }
@@ -59,17 +61,23 @@ public class AuthServiceImpl implements AuthService {
 
         Customers savedCustomer = customersRepo.save(customer);
 
-        // Build Registration Notification DTO
+        String registrationMessage = "Welcome to our banking system!";
+
         NotificationsRequestDto notificationDto = new NotificationsRequestDto();
         notificationDto.setCustomerId(savedCustomer.getCustomerId());
         notificationDto.setTitle("Registration Successful");
-        notificationDto.setMessage("Welcome to our banking system!");
-        notificationDto.setType("REGISTER");
+        notificationDto.setMessage(registrationMessage);
+        notificationDto.setType("REGISTER_SUCCESS");
         notificationDto.setReferenceId(savedCustomer.getCustomerId());
 
-        notificationsService.createNotification(notificationDto);
+        notificationsService.createNotifications(notificationDto);
 
-        return new CustomersCreationResponseDto(savedCustomer);
+        CustomersCreationResponseDto response =
+                new CustomersCreationResponseDto(savedCustomer);
+
+        response.setMessage(registrationMessage);
+
+        return response;
     }
 
     @Transactional

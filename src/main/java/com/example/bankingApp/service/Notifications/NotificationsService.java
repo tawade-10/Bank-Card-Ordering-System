@@ -7,12 +7,16 @@ import com.example.bankingApp.entity.Notification.Notifications;
 import java.util.List;
 
 public interface NotificationsService {
+    
+    NotificationsResponseDto createNotifications(NotificationsRequestDto dto);
 
-    NotificationsResponseDto createNotification(NotificationsRequestDto notificationsRequestDto);
+    List<NotificationsResponseDto> getAllNotificationsByUser(Long customerId);
 
-    List<NotificationsResponseDto> getUserNotifications(Long customerId, String type);
+    List<NotificationsResponseDto> getUserNotificationsByType(Long customerId, String type);
+
+    NotificationsResponseDto getLatestNotification(Long customerId);
+
+    List<NotificationsResponseDto> getRecentFiveNotifications(Long customerId);
 
     void markAsRead(Long id);
-
-    // Notifications getLatestNotification(Long customerId);
 }

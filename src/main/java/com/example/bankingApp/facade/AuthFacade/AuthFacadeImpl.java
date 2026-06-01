@@ -61,7 +61,6 @@ public class AuthFacadeImpl implements AuthFacade {
             Long userId = customerDetails.getCustomers().getCustomerId();
             String customerName = customerDetails.getCustomers().getCustomerName();
 
-            // Build SUCCESS notification DTO
             NotificationsRequestDto successDto = new NotificationsRequestDto();
             successDto.setCustomerId(userId);
             successDto.setTitle("Login Successful");
@@ -69,7 +68,7 @@ public class AuthFacadeImpl implements AuthFacade {
             successDto.setType("LOGIN_SUCCESS");
             successDto.setReferenceId(userId);
 
-            NotificationsResponseDto notification = notificationsService.createNotification(successDto);
+            NotificationsResponseDto notification = notificationsService.createNotifications(successDto);
 
             String token = jwtService.generateToken(customerDetails);
 
@@ -78,7 +77,8 @@ public class AuthFacadeImpl implements AuthFacade {
                     customerDetails.getCustomers().getCustomerName(),
                     customerDetails.getCustomers().getEmail(),
                     customerDetails.getCustomers().getRoles(),
-                    userId
+                    userId,
+                    notification.getMessage()
             );
 
         } catch (Exception ex) {
@@ -92,7 +92,7 @@ public class AuthFacadeImpl implements AuthFacade {
                         failedDto.setType("LOGIN_FAILED");
                         failedDto.setReferenceId(c.getCustomerId());
 
-                        notificationsService.createNotification(failedDto);
+                        notificationsService.createNotifications(failedDto);
                     });
 
             throw new RuntimeException("Invalid Credentials");

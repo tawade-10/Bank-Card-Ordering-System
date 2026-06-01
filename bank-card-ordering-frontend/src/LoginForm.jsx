@@ -90,6 +90,10 @@ export default function LoginForm() {
             if (response.ok) {
                 const data = await response.json();
 
+                if (data.message) {
+                    toast.success(data.message);
+                }
+
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("customerName", data.customerName);
                 localStorage.setItem("email", data.email);
@@ -130,12 +134,24 @@ export default function LoginForm() {
             });
 
             if (response.ok) {
-                toast.success("Signup Successful!");
+                const data = await response.json();
+
+                if (data.message) {
+                    toast.success(data.message);
+                } else {
+                    toast.success("Signup Successful!");
+                }
+
                 handleSignupReset();
-                setIsLogin(true);
+
+                setTimeout(() => {
+                    setIsLogin(true);
+                }, 1000);
+
             } else {
                 toast.error("Signup Failed!");
             }
+
         } catch (err) {
             console.log(err);
             toast.error("Something went wrong!");

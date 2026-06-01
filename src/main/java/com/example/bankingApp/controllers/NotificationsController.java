@@ -18,13 +18,28 @@ public class NotificationsController {
     }
 
     @PostMapping("/create")
-    public NotificationsResponseDto create(@RequestBody NotificationsRequestDto notificationsRequestDto) {
-        return notificationsService.createNotification(notificationsRequestDto);
+    public NotificationsResponseDto createNotifications(@RequestBody NotificationsRequestDto dto) {
+        return notificationsService.createNotifications(dto);
     }
 
     @GetMapping("/user/{customerId}")
-    public List<NotificationsResponseDto> getUserNotifications(@PathVariable Long customerId, @RequestParam(required = false) String type) {
-        return notificationsService.getUserNotifications(customerId, type);
+    public List<NotificationsResponseDto> getAllNotificationsByUser(@PathVariable Long customerId) {
+        return notificationsService.getAllNotificationsByUser(customerId);
+    }
+
+    @GetMapping("/user/{customerId}/type/{type}")
+    public List<NotificationsResponseDto> getUserNotificationsByType(@PathVariable Long customerId, @PathVariable String type) {
+        return notificationsService.getUserNotificationsByType(customerId, type);
+    }
+
+    @GetMapping("/latest/{customerId}")
+    public NotificationsResponseDto getLatestNotification(@PathVariable Long customerId) {
+        return notificationsService.getLatestNotification(customerId);
+    }
+
+    @GetMapping("/recent-five/{customerId}")
+    public List<NotificationsResponseDto> getRecentFiveNotifications(@PathVariable Long customerId) {
+        return notificationsService.getRecentFiveNotifications(customerId);
     }
 
     @PutMapping("/read/{id}")

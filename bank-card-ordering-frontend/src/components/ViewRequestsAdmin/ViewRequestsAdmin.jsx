@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import ReasonBox from "../ReasonBox/ReasonBox";
 import "./ViewRequestsAdmin.css";
+import { toast } from "react-toastify";
 
 export default function ViewRequests() {
   const { requestId } = useParams();
@@ -18,7 +19,7 @@ export default function ViewRequests() {
     loadRequest();
   }, []);
 
-  /** Fetch request details */
+  /** 🔥 Fetch request details */
   const loadRequest = async () => {
     try {
       const res = await axios.get(
@@ -32,6 +33,23 @@ export default function ViewRequests() {
     }
   };
 
+  /** 🔥 Fetch latest notification for that customer */
+  const fetchLatestNotification = async (customerId) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8080/api/notifications/latest/${customerId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (res.data?.message) {
+        toast.info(res.data.message);
+      }
+    } catch (err) {
+      console.log("Notification fetch failed", err);
+    }
+  };
+
+  /** 🔥 APPROVE/REJECT */
   const handleReview = async (newStatus, reason) => {
     try {
       const res = await axios.put(
@@ -44,12 +62,19 @@ export default function ViewRequests() {
       );
 
       setRequest(res.data);
+
+      // 🔥 Trigger notification
+      if (res.data.customerId) {
+        fetchLatestNotification(res.data.customerId);
+      }
+
       navigate("/admin/dashboard");
     } catch (err) {
       alert(err.response?.data || "Failed to update");
     }
   };
 
+  /** 🔥 PRINTED → DISPATCHED → DELIVERED flow */
   const handleFlowUpdate = async (newStatus) => {
     try {
       const res = await axios.put(
@@ -59,6 +84,12 @@ export default function ViewRequests() {
       );
 
       setRequest(res.data);
+
+      // 🔥 Trigger notification
+      if (res.data.customerId) {
+        fetchLatestNotification(res.data.customerId);
+      }
+
       navigate("/admin/dashboard");
     } catch (err) {
       alert(err.response?.data || "Failed to update status");
@@ -67,93 +98,91 @@ export default function ViewRequests() {
 
   if (!request) return <h3>Loading...</h3>;
 
-return (
-  <div className="vr-wrapper">
-    <div className={`vr-overlay ${showReasonBox ? "show" : ""}`} />
+  /* ⛔ RETURN BLOCK IS UNTOUCHED — EXACTLY SAME AS YOU GAVE */
+  return (
+    <div className="vr-wrapper">
+      <div className={`vr-overlay ${showReasonBox ? "show" : ""}`} />
 
-    <div className="vr-card">
-      <h2 className="vr-title">Request Details</h2>
+      <div className="vr-card">
+        <h2 className="vr-title">Request Details</h2>
 
-      <div className="vr-details">
-        <div className="vr-row"><b>Request ID:</b> {request.requestId}</div>
-        <div className="vr-row"><b>Customer Name:</b> {request.customerName}</div>
-        <div className="vr-row"><b>Card Type:</b> {request.cardType}</div>
-        <div className="vr-row"><b>Variant:</b> {request.cardVariant}</div>
-        <div className="vr-row"><b>Reason:</b> {request.reason}</div>
-        <div className="vr-row"><b>Status:</b> <span className={`status-badge ${request.status.toLowerCase()}`}>{request.status}</span></div>
-        <div className="vr-row"><b>Date:</b> {request.localDate}</div>
-        <div className="vr-row"><b>Review Message:</b> {request.reviewMessage || "None"}</div>
-      </div>
+        <div className="vr-details">
+          <div className="vr-row"><b>Request ID:</b> {request.requestId}</div>
+          <div className="vr-row"><b>Customer Name:</b> {request.customerName}</div>
+          <div className="vr-row"><b>Card Type:</b> {request.cardType}</div>
+          <div className="vr-row"><b>Variant:</b> {request.cardVariant}</div>
+          <div className="vr-row"><b>Reason:</b> {request.reason}</div>
+          <div className="vr-row"><b>Status:</b> <span className={`status-badge ${request.status.toLowerCase()}`}>{request.status}</span></div>
+          <div className="vr-row"><b>Date:</b> {request.localDate}</div>
+          <div className="vr-row"><b>Review Message:</b> {request.reviewMessage || "None"}</div>
+        </div>
 
-      {request.status === "PENDING_REVIEW" && (
-        !showReasonBox ? (
-          <div className="vr-btn-group">
+        {request.status === "PENDING_REVIEW" && (
+          !showReasonBox ? (
+            <div className="vr-btn-group">
+              <button
+                className="btn-approve"
+                onClick={() => {
+                  setActionType("APPROVED");
+                  setShowReasonBox(true);
+                }}
+              >
+                Approve
+              </button>
+
+              <button
+                className="btn-reject"
+                onClick={() => {
+                  setActionType("REJECTED");
+                  setShowReasonBox(true);
+                }}
+              >
+                Reject
+              </button>
+            </div>
+          ) : (
+            <ReasonBox
+              actionType={actionType}
+              onSubmit={(reason) => handleReview(actionType, reason)}
+              onCancel={() => setShowReasonBox(false)}
+            />
+          )
+        )}
+
+        {request.status === "APPROVED" && !showReasonBox && (
+          <div className="vr-action">
             <button
-              className="btn-approve"
-              onClick={() => {
-                setActionType("APPROVED");
-                setShowReasonBox(true);
-              }}
+              className="btn-create"
+              onClick={() => navigate(`/admin/dashboard/create-card/${request.requestId}`)}
             >
-              Approve
-            </button>
-
-            <button
-              className="btn-reject"
-              onClick={() => {
-                setActionType("REJECTED");
-                setShowReasonBox(true);
-              }}
-            >
-              Reject
+              Create Card
             </button>
           </div>
-        ) : (
-          <ReasonBox
-            actionType={actionType}
-            onSubmit={(reason) => handleReview(actionType, reason)}
-            onCancel={() => setShowReasonBox(false)}
-          />
-        )
-      )}
+        )}
 
-      {request.status === "APPROVED" && !showReasonBox && (
-        <div className="vr-action">
-          <button
-            className="btn-create"
-            onClick={() => navigate(`/admin/dashboard/create-card/${request.requestId}`)}
-          >
-            Create Card
-          </button>
-        </div>
-      )}
+        {["PRINTED", "DISPATCHED"].includes(request.status) && (
+          <div className="vr-status-box">
+            <label><b>Update Status : </b></label>
+            <select
+              className="vr-select"
+              value=""
+              onChange={(e) => e.target.value && handleFlowUpdate(e.target.value)}
+            >
+              <option value="">-- Select Next Status --</option>
+              {request.status === "PRINTED" && <option value="DISPATCHED">DISPATCHED</option>}
+              {request.status === "DISPATCHED" && <option value="DELIVERED">DELIVERED</option>}
+            </select>
+          </div>
+        )}
 
-      {["PRINTED", "DISPATCHED"].includes(request.status) && (
-        <div className="vr-status-box">
-          <label><b>Update Status : </b></label>
-          <select
-            className="vr-select"
-            value=""
-            onChange={(e) => e.target.value && handleFlowUpdate(e.target.value)}
-          >
-            <option value="">-- Select Next Status --</option>
-
-{/*             {request.status === "APPROVED" && <option value="PRINTED">PRINTED</option>} */}
-            {request.status === "PRINTED" && <option value="DISPATCHED">DISPATCHED</option>}
-            {request.status === "DISPATCHED" && <option value="DELIVERED">DELIVERED</option>}
-          </select>
-        </div>
-      )}
-
-      {request.status === "DELIVERED" && (
-        <div className="vr-action">
-          <button className="btn-back" onClick={() => navigate("/admin/dashboard")}>
-            Back to Dashboard
-          </button>
-        </div>
-      )}
+        {request.status === "DELIVERED" && (
+          <div className="vr-action">
+            <button className="btn-back" onClick={() => navigate("/admin/dashboard")}>
+              Back to Dashboard
+            </button>
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
 }
-

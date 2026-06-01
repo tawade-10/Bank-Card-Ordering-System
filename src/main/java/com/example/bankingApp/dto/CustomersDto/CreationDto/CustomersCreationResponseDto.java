@@ -1,5 +1,6 @@
     package com.example.bankingApp.dto.CustomersDto.CreationDto;
 
+    import com.example.bankingApp.dto.Notifications.NotificationsResponseDto;
     import com.example.bankingApp.entity.Customers.Customers;
     import com.example.bankingApp.entity.Enums.Roles;
     import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -14,6 +15,7 @@
             "roles",
             "createdDate",
             "createdTime",
+            "message"
     })
     public class CustomersCreationResponseDto {
 
@@ -29,6 +31,8 @@
 
         private LocalTime createdTime;
 
+        private String message;
+
         public CustomersCreationResponseDto(Customers customers) {
             this.customerId = customers.getCustomerId();
             this.customerName = customers.getCustomerName();
@@ -36,6 +40,10 @@
             this.roles = customers.getRoles();
             this.createdDate = customers.getCreatedDate();
             this.createdTime = customers.getCreatedTime();
+        }
+
+        public CustomersCreationResponseDto(NotificationsResponseDto notificationsResponseDto){
+            this.message = notificationsResponseDto.getMessage();
         }
 
         public Long getCustomerId() {
@@ -85,4 +93,8 @@
         public void setRoles(Roles roles) {
             this.roles = roles;
         }
+
+        public String getMessage() { return message; }
+
+        public void setMessage(String message) { this.message = message; }
     }

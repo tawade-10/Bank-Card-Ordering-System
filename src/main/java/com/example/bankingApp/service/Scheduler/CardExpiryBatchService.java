@@ -38,17 +38,15 @@ public class CardExpiryBatchService {
         YearMonth target = YearMonth.from(today.plusDays(30));
 
         List<CardDetails> expiringCards = cardDetailsRepo.findByExpiryLessThanEqual(target);
-
         if (expiringCards.isEmpty()) return;
-
         CardExpiryBatch batch = new CardExpiryBatch();
         batch.setRunDate(today);
         batch.setCardsExpiringCount(expiringCards.size());
         batchRepo.save(batch);
 
         for (CardDetails card : expiringCards) {
-
-            Optional<Notifications> existing = notificationsRepo.findByCustomerCustomerIdAndTypeAndReferenceId(
+            Optional<Notifications> existing = notificationsRepo
+                    .findByCustomerCustomerIdAndTypeAndReferenceId(
                             card.getCustomers().getCustomerId(),
                             "CARD_EXPIRY",
                             card.getCardId()
@@ -56,14 +54,11 @@ public class CardExpiryBatchService {
 
             if (existing.isPresent()) continue;
 
-            String title = "Card Expiry Reminder";
-            String msg = "Your " + card.getCardType().getTypeName() +
-                    " card will expire on " + card.getExpiry();
-
             Notifications notification = new Notifications();
             notification.setCustomer(card.getCustomers());
-            notification.setTitle(title);
-            notification.setMessage(msg);
+            notification.setTitle("Card Expiry Reminder");
+            notification.setMessage("Your " + card.getCardType().getTypeName() +
+                    " card will expire on " + card.getExpiry());
             notification.setType("CARD_EXPIRY");
             notification.setReferenceId(card.getCardId());
             notification.setCreatedAt(LocalDateTime.now());
@@ -71,19 +66,12 @@ public class CardExpiryBatchService {
 
             notificationsRepo.save(notification);
 
-            // Convert to DTO
-            NotificationsResponseDto dto = new NotificationsResponseDto(
-                    notification.getId(),
-                    notification.getTitle(),
-                    notification.getMessage(),
-                    notification.getType(),
-                    notification.getReferenceId(),
-                    notification.isRead(),
-                    notification.getCreatedAt(),
-                    notification.getUpdatedAt()
-            );
+            NotificationsResponseDto dto = new NotificationsResponseDto(notification);
 
-            messagingTemplate.convertAndSend("/topic/notifications/" + card.getCustomers().getCustomerId(), dto);
+            messagingTemplate.convertAndSend(
+                    "/topic/notifications/" + card.getCustomers().getCustomerId(),
+                    dto
+            );
         }
     }
 }

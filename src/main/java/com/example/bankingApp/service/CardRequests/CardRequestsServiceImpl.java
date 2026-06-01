@@ -3,6 +3,7 @@ package com.example.bankingApp.service.CardRequests;
 import com.example.bankingApp.dto.CardRequestsDto.CreationDto.RequestsDto;
 import com.example.bankingApp.dto.CardRequestsDto.CreationDto.ResponseDto;
 import com.example.bankingApp.dto.NetworkDto.NetworkResponseDto;
+import com.example.bankingApp.dto.Notifications.NotificationsRequestDto;
 import com.example.bankingApp.dto.ReviewDto.ReviewRequestsDto;
 import com.example.bankingApp.dto.ReviewDto.ReviewResponseDto;
 import com.example.bankingApp.entity.CardRequests.*;
@@ -100,7 +101,22 @@ public class CardRequestsServiceImpl implements CardRequestsService {
 
         CardRequests saved = cardRequestsRepo.save(request);
 
-        return new ResponseDto(saved);
+        String notificationMessage =
+                "Your Request for " + cardType.getTypeName() + " CARD has been created.";
+
+        NotificationsRequestDto cardDto = new NotificationsRequestDto();
+        cardDto.setCustomerId(customer.getCustomerId());
+        cardDto.setTitle("Card Request Created Successfully");
+        cardDto.setMessage(notificationMessage);
+        cardDto.setType("CARD_REQUEST");
+        cardDto.setReferenceId(saved.getRequestId());
+
+        notificationsService.createNotifications(cardDto);
+
+        ResponseDto response = new ResponseDto(saved);
+        response.setMessage(notificationMessage);
+
+        return response;
     }
 
     @Override
@@ -160,11 +176,13 @@ public class CardRequestsServiceImpl implements CardRequestsService {
             throw new RuntimeException("Only PENDING_REVIEW requests can be approved or rejected.");
         }
 
-        if (reviewRequestsDto.getStatus() != Status.APPROVED && reviewRequestsDto.getStatus() != Status.REJECTED) {
+        if (reviewRequestsDto.getStatus() != Status.APPROVED &&
+                reviewRequestsDto.getStatus() != Status.REJECTED) {
             throw new RuntimeException("Invalid status. Only APPROVED or REJECTED allowed here.");
         }
 
-        if (reviewRequestsDto.getReviewMessage() == null || reviewRequestsDto.getReviewMessage().trim().isEmpty()) {
+        if (reviewRequestsDto.getReviewMessage() == null ||
+                reviewRequestsDto.getReviewMessage().trim().isEmpty()) {
             throw new RuntimeException("Reason cannot be empty");
         }
 
@@ -172,15 +190,19 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         request.setReviewMessage(reviewRequestsDto.getReviewMessage());
         request.setUpdatedDate(LocalDate.now());
         request.setUpdatedTime(LocalTime.now());
+
         CardRequests saved = cardRequestsRepo.save(request);
 
-//        notificationsService.createNotification(request.getCustomers().getCustomerId(),
-//                "Card Request Update",
-//                "Your card request has been " + request.getStatus() +
-//                        ". Reason: " + request.getReviewMessage(),
-//                "CARD_REQUEST",
-//                request.getCustomers().getCustomerId()
-//        );
+        NotificationsRequestDto cardDto = new NotificationsRequestDto();
+        cardDto.setCustomerId(request.getCustomers().getCustomerId());
+        cardDto.setTitle("Card Request Reviewed");
+        cardDto.setMessage("Your Request for " + request.getCardType().getTypeName() +
+                        " card has been " + reviewRequestsDto.getStatus());
+        cardDto.setType("CARD_REQUEST");
+        cardDto.setReferenceId(saved.getRequestId());
+
+        notificationsService.createNotifications(cardDto);
+
         return new ReviewResponseDto(saved);
     }
 

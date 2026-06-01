@@ -1,5 +1,6 @@
 package com.example.bankingApp.entity.CardDetails;
 
+import com.example.bankingApp.entity.CardRequests.CardRequests;
 import com.example.bankingApp.entity.CardRequests.NetworkBin;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.CardRequests.CardType;
@@ -49,6 +50,10 @@ public class CardDetails {
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
+    @OneToOne
+    @JoinColumn(name = "request_id", unique = true)
+    private CardRequests cardRequest;
 
     public Long getCardId() {
         return cardId;
@@ -123,4 +128,8 @@ public class CardDetails {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    public CardRequests getCardRequest() { return cardRequest; }
+
+    public void setCardRequest(CardRequests cardRequest) { this.cardRequest = cardRequest; }
 }

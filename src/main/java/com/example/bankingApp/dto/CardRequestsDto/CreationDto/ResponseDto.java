@@ -1,5 +1,6 @@
 package com.example.bankingApp.dto.CardRequestsDto.CreationDto;
 
+import com.example.bankingApp.dto.Notifications.NotificationsResponseDto;
 import com.example.bankingApp.entity.Enums.Status;
 import com.example.bankingApp.entity.CardRequests.CardRequests;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -38,6 +39,7 @@ public class ResponseDto {
     private String customerName;
     private LocalDate createdDate;
     private LocalTime createdTime;
+    private String message;
 
     public ResponseDto(CardRequests cardRequests) {
         this.requestId = cardRequests.getRequestId();
@@ -53,6 +55,10 @@ public class ResponseDto {
         this.customerName = cardRequests.getCustomers().getCustomerName();
         this.createdDate = cardRequests.getCreatedDate();
         this.createdTime = cardRequests.getCreatedTime();
+    }
+
+    public ResponseDto(NotificationsResponseDto notificationsResponseDto){
+        this.message = notificationsResponseDto.getMessage();
     }
 
     public ResponseDto() {}
@@ -160,4 +166,8 @@ public class ResponseDto {
     public void setCreatedTime(LocalTime createdTime) {
         this.createdTime = createdTime;
     }
+
+    public String getMessage() { return message; }
+
+    public void setMessage(String message) { this.message = message; }
 }

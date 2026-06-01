@@ -1,7 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { IoNotificationsOutline } from "react-icons/io5";
-import { connectWebSocket } from "../../websocket";
+import {
+  connectWebSocket,
+  disconnectWebSocket
+} from "../../websocket";
 import { toast } from "react-toastify";
 import "./Notifications.css";
 
@@ -10,7 +13,6 @@ export default function Notifications() {
   const [open, setOpen] = useState(false);
 
   const customerId = localStorage.getItem("customerId");
-  const socketRef = useRef(null);
 
   const fetchRecent = async () => {
     try {
@@ -18,9 +20,9 @@ export default function Notifications() {
         `http://localhost:8080/api/notifications/recent-five/${customerId}`
       );
 
-      setAlerts(res.data || []);
+      setAlerts((res.data || []).slice(0, 5));
     } catch (err) {
-      console.log("fetch error", err);
+      console.log("Notification fetch error:", err);
     }
   };
 
@@ -29,49 +31,73 @@ export default function Notifications() {
 
     fetchRecent();
 
-    socketRef.current = connectWebSocket(customerId, (n) => {
-      toast.success(n.message);
+    connectWebSocket(customerId, (notification) => {
+      toast.success(notification.message);
 
       setAlerts((prev) => {
-        const filtered = prev.filter((x) => x.id !== n.id);
-        const updated = [n, ...filtered];
-        return updated.slice(0, 5);
+        const filtered = prev.filter(
+          (item) => item.id !== notification.id
+        );
+
+        return [notification, ...filtered].slice(0, 5);
       });
     });
 
     return () => {
-      socketRef.current?.deactivate?.();
+      disconnectWebSocket();
     };
   }, [customerId]);
 
+  const unreadCount = alerts.filter(
+    (notification) => !notification.read
+  ).length;
+
   return (
     <div className="notif-container">
-      <div className="notif-icon-wrapper" onClick={() => setOpen(!open)}>
+      <div
+        className="notif-icon-wrapper"
+        onClick={() => setOpen(!open)}
+      >
         <IoNotificationsOutline className="notif-icon" />
 
-        {alerts.some((a) => !a.read) && (
+        {unreadCount > 0 && (
           <span className="notif-badge">
-            {alerts.filter((a) => !a.read).length}
+            {unreadCount}
           </span>
         )}
       </div>
 
       {open && (
         <div className="notif-dropdown">
-          <div className="notif-title">Notifications</div>
+          <div className="notif-title">
+            Recent Notifications
+          </div>
 
           {alerts.length === 0 ? (
-            <p className="notif-empty">No notifications yet</p>
+            <p className="notif-empty">
+              No notifications available
+            </p>
           ) : (
-            alerts.map((n) => (
-              <div className="notif-card" key={n.id}>
-                <p className="notif-text">
-                  <strong>{n.title}</strong>
+            alerts.map((notification) => (
+              <div
+                className={`notif-card ${
+                  !notification.read ? "unread" : ""
+                }`}
+                key={notification.id}
+              >
+                <p className="notif-heading">
+                  {notification.title}
                 </p>
-                <p className="notif-text">{n.message}</p>
-                <small>
-                  {n.updatedAt
-                    ? new Date(n.updatedAt).toLocaleString()
+
+                <p className="notif-message">
+                  {notification.message}
+                </p>
+
+                <small className="notif-time">
+                  {notification.updatedAt
+                    ? new Date(
+                        notification.updatedAt
+                      ).toLocaleString()
                     : ""}
                 </small>
               </div>

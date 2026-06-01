@@ -57,23 +57,12 @@ export default function RequestNewCard() {
       );
 
       if (response.ok) {
-        toast.success("Card Request Submitted!");
+          const data = await response.json();
+//               if (data.message) {
+//                   toast.success(data.message);
+//               }
         clearForm();
-
         const customerId = localStorage.getItem("customerId");
-
-        // ✅ SAME AS LOGIN FORM STYLE (LATEST API)
-        axios
-          .get(`http://localhost:8080/api/notification/latest/${customerId}`)
-          .then((res) => {
-            if (res.data) {
-              toast.info(res.data.message);   // 👈 LOGIN STYLE
-            }
-          })
-          .catch((err) => {
-            console.log("Notification fetch error", err);
-          });
-
         setTimeout(() => navigate("/dashboard"), 1200);
       } else {
         const errorText = await response.text();
@@ -159,7 +148,6 @@ export default function RequestNewCard() {
                 name="cardNetworkId"
                 value="1"
                 onChange={handleChange}
-                checked={formData.cardNetworkId === "1"}
                 checked={formData.cardNetworkId === "1"}
               />
               MasterCard

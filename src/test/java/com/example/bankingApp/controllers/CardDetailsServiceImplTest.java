@@ -82,16 +82,14 @@ public class CardDetailsServiceImplTest {
         dto.setRequestId(1L);
         dto.setCardType(2L);
         dto.setCardVariant(3L);
-        dto.setCardNumber("6483573593522541");  // 16 digits
+        dto.setCardNumber("6483573593522541");
         dto.setExpiry("03/30");
         dto.setCvv("624");
 
-        // --- Mock Customer ---
         Customers customer = new Customers();
         customer.setCustomerId(10L);
         customer.setCustomerName("Shubham");
 
-        // --- Mock NetworkBin ---
         CardNetwork network = new CardNetwork();
         network.setNetworkId(99L);
         network.setNetworkName("VISA");
@@ -101,7 +99,6 @@ public class CardDetailsServiceImplTest {
         bin.setBinNumber("648357");
         bin.setCardNetwork(network);
 
-        // --- Mock CardRequest ---
         CardRequests request = new CardRequests();
         request.setRequestId(1L);
         request.setCustomers(customer);
@@ -109,7 +106,6 @@ public class CardDetailsServiceImplTest {
 
         when(cardRequestsRepo.findById(1L)).thenReturn(Optional.of(request));
 
-        // --- Mock CardType ---
         CardType type = new CardType();
         type.setTypeId(2L);
         type.setTypeName("DEBIT");

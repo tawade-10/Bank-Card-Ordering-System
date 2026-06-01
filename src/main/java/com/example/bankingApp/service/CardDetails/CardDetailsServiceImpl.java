@@ -5,6 +5,7 @@ import com.example.bankingApp.dto.CardDetailsDto.CardDetailsRequestDto;
 import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.dto.CardVariantsDto.CardVariantsResponseDto;
 import com.example.bankingApp.dto.CardsStatusSummaryResponse.CardsStatusSummaryResponse;
+import com.example.bankingApp.dto.Notifications.NotificationsRequestDto;
 import com.example.bankingApp.entity.CardDetails.CardDetails;
 import com.example.bankingApp.entity.CardRequests.CardRequests;
 import com.example.bankingApp.entity.Customers.Customers;
@@ -17,6 +18,7 @@ import com.example.bankingApp.repository.Customers.CustomersRepo;
 import com.example.bankingApp.repository.CardRequests.CardTypeRepo;
 import com.example.bankingApp.repository.CardRequests.CardVariantRepo;
 import com.example.bankingApp.service.Encryption.EncryptionService;
+import com.example.bankingApp.service.Notifications.NotificationsService;
 import jakarta.transaction.Transactional;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -42,13 +44,16 @@ public class CardDetailsServiceImpl implements CardDetailsService{
 
     private final EncryptionService encryptionService;
 
-    public CardDetailsServiceImpl(CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, CardDetailsRepo cardDetailsRepo, CustomersRepo customersRepo, CardRequestsRepo cardRequestsRepo, EncryptionService encryptionService) {
+    private final NotificationsService notificationsService;
+
+    public CardDetailsServiceImpl(CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, CardDetailsRepo cardDetailsRepo, CustomersRepo customersRepo, CardRequestsRepo cardRequestsRepo, EncryptionService encryptionService, NotificationsService notificationsService) {
         this.cardTypeRepo = cardTypeRepo;
         this.cardVariantRepo = cardVariantRepo;
         this.cardDetailsRepo = cardDetailsRepo;
         this.customersRepo = customersRepo;
         this.cardRequestsRepo = cardRequestsRepo;
         this.encryptionService = encryptionService;
+        this.notificationsService = notificationsService;
     }
 
     @Override
@@ -96,6 +101,15 @@ public class CardDetailsServiceImpl implements CardDetailsService{
         cardRequestsRepo.save(request);
 
         CardDetails saved = cardDetailsRepo.save(card);
+
+        NotificationsRequestDto cardDto = new NotificationsRequestDto();
+        cardDto.setCustomerId(customer.getCustomerId());
+        cardDto.setTitle("Card Created Successfully");
+        cardDto.setMessage("Your new " + type.getTypeName() + " card ending with " + last4 + " has been created.");
+        cardDto.setType("CARD_APPROVED");
+        cardDto.setReferenceId(saved.getCardId());
+
+        notificationsService.createNotifications(cardDto);
 
         return new CardDetailsResponseDto(saved);
     }
