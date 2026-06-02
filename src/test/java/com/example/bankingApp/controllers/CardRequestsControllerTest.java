@@ -4,7 +4,7 @@ import com.example.bankingApp.dto.CardRequestsDto.CreationDto.RequestsDto;
 import com.example.bankingApp.dto.CardRequestsDto.CreationDto.ResponseDto;
 import com.example.bankingApp.entity.CardRequests.*;
 import com.example.bankingApp.entity.Customers.Customers;
-import com.example.bankingApp.entity.Enums.Status;
+import com.example.bankingApp.entity.Enums.RequestStatus;
 import com.example.bankingApp.repository.CardRequests.*;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
 import com.example.bankingApp.service.CardRequests.CardRequestsServiceImpl;
@@ -98,7 +98,7 @@ class CardRequestsServiceImplTest {
         saved.setReason(reason);
         saved.setCardNetwork(cardNetwork);
         saved.setNetworkBin(networkBin);
-        saved.setStatus(Status.PENDING_REVIEW);
+        saved.setStatus(RequestStatus.PENDING_REVIEW);
         saved.setLocalDate(LocalDate.now());
         saved.setCustomers(customer);
 

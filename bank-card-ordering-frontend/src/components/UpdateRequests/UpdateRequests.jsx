@@ -7,7 +7,7 @@ export default function UpdateRequests() {
   const { requestId } = useParams();
   const navigate = useNavigate();
   const [request, setRequest] = useState(null);
-  const [status, setStatus] = useState("");
+  const [requestStatus, setStatus] = useState("");
   const token = localStorage.getItem("token");
 
   useEffect(() => { loadRequest(); }, []);
@@ -27,7 +27,7 @@ export default function UpdateRequests() {
   const getNextStatus = () => {
     if (!request) return [];
 
-    switch (request.status) {
+    switch (request.requestStatus) {
       case "PENDING_REVIEW":
         return ["APPROVED", "REJECTED"];
 
@@ -48,22 +48,22 @@ export default function UpdateRequests() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!status) {
-      alert("Select a status");
+    if (!requestStatus) {
+      alert("Select a requestStatus");
       return;
     }
 
     try {
-      if (request.status === "PENDING_REVIEW") {
+      if (request.requestStatus === "PENDING_REVIEW") {
         await axios.put(
           `http://localhost:8080/api/request-card/${requestId}/review`,
-          { status },
+          { requestStatus },
           { headers: { Authorization: `Bearer ${token}` } }
         );
       } else {
         await axios.put(
-          `http://localhost:8080/api/request-card/${requestId}/status`,
-          { status },
+          `http://localhost:8080/api/request-card/${requestId}/requestStatus`,
+          { requestStatus },
           { headers: { Authorization: `Bearer ${token}` } }
         );
       }
@@ -86,11 +86,11 @@ export default function UpdateRequests() {
 
         <p><b>Request ID:</b> {request.requestId}</p>
         <p><b>Customer:</b> {request.customers?.customerName}</p>
-        <p><b>Current Status:</b> {request.status}</p>
+        <p><b>Current Status:</b> {request.requestStatus}</p>
 
         <label>Update Status</label>
 
-        <select value={status} onChange={(e) => setStatus(e.target.value)}>
+        <select value={requestStatus} onChange={(e) => setStatus(e.target.value)}>
           <option value="">-- Select Status --</option>
           {getNextStatus().map((s) => (
             <option key={s} value={s}>{s}</option>

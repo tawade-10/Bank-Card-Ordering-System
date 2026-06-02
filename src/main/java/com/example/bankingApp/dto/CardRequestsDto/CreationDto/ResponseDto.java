@@ -1,7 +1,7 @@
 package com.example.bankingApp.dto.CardRequestsDto.CreationDto;
 
 import com.example.bankingApp.dto.Notifications.NotificationsResponseDto;
-import com.example.bankingApp.entity.Enums.Status;
+import com.example.bankingApp.entity.Enums.RequestStatus;
 import com.example.bankingApp.entity.CardRequests.CardRequests;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -34,7 +34,7 @@ public class ResponseDto {
     private Long cardNetworkId;
     private String cardNetwork;
     private String reason;
-    private Status status;
+    private RequestStatus requestStatus;
     private Long customerId;
     private String customerName;
     private LocalDate createdDate;
@@ -50,7 +50,7 @@ public class ResponseDto {
         this.cardNetworkId = cardRequests.getCardNetwork().getNetworkId();
         this.cardNetwork = cardRequests.getCardNetwork().getNetworkName();
         this.reason = cardRequests.getReason().getReasonName();
-        this.status = cardRequests.getStatus();
+        this.requestStatus = cardRequests.getRequestStatus();
         this.customerId = cardRequests.getCustomers().getCustomerId();
         this.customerName = cardRequests.getCustomers().getCustomerName();
         this.createdDate = cardRequests.getCreatedDate();
@@ -127,12 +127,12 @@ public class ResponseDto {
         this.reason = reason;
     }
 
-    public Status getStatus() {
-        return status;
+    public RequestStatus getRequestStatus() {
+        return requestStatus;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setRequestStatus(RequestStatus requestStatus) {
+        this.requestStatus = requestStatus;
     }
 
     public Long getCustomerId() {
@@ -167,7 +167,11 @@ public class ResponseDto {
         this.createdTime = createdTime;
     }
 
-    public String getMessage() { return message; }
+    public String getMessage() {
+        return message;
+    }
 
-    public void setMessage(String message) { this.message = message; }
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

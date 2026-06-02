@@ -123,5 +123,26 @@ public class NotificationsServiceImpl implements NotificationsService {
 
         notificationsRepo.save(notification);
     }
+
+    @Override
+    public NotificationsResponseDto updateNotification(NotificationsRequestDto notificationsRequestDto) {
+
+        Notifications notification = notificationsRepo
+                .findByCustomerCustomerIdAndTypeAndReferenceId(
+                        notificationsRequestDto.getCustomerId(),
+                        notificationsRequestDto.getType(),
+                        notificationsRequestDto.getReferenceId()
+                )
+                .orElseThrow(() -> new RuntimeException("Notification not found"));
+
+        notification.setTitle(notificationsRequestDto.getTitle());
+        notification.setMessage(notificationsRequestDto.getMessage());
+        notification.setRead(false);
+        notification.setUpdatedAt(LocalDateTime.now());
+
+        Notifications saved = notificationsRepo.save(notification);
+
+        return new NotificationsResponseDto(saved);
+    }
 }
 

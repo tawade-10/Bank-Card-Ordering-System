@@ -1,7 +1,7 @@
 package com.example.bankingApp.dto.CardRequestsDto.UpdateDto;
 
 import com.example.bankingApp.entity.CardRequests.CardRequests;
-import com.example.bankingApp.entity.Enums.Status;
+import com.example.bankingApp.entity.Enums.RequestStatus;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.time.LocalDate;
@@ -33,7 +33,7 @@ public class UpdateResponseDto {
     private Long cardNetworkId;
     private String cardNetwork;
     private String reason;
-    private Status status;
+    private RequestStatus requestStatus;
     private String localDate;
     private Long customerId;
     private String customerName;
@@ -49,7 +49,7 @@ public class UpdateResponseDto {
         this.cardNetworkId = cardRequests.getCardNetwork().getNetworkId();
         this.cardNetwork = cardRequests.getCardNetwork().getNetworkName();
         this.reason = cardRequests.getReason().getReasonName();
-        this.status = cardRequests.getStatus();
+        this.requestStatus = cardRequests.getRequestStatus();
         this.localDate = cardRequests.getLocalDate().toString();
         this.customerId = cardRequests.getCustomers().getCustomerId();
         this.customerName = cardRequests.getCustomers().getCustomerName();
@@ -123,12 +123,12 @@ public class UpdateResponseDto {
         this.reason = reason;
     }
 
-    public Status getStatus() {
-        return status;
+    public RequestStatus getRequestStatus() {
+        return requestStatus;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setRequestStatus(RequestStatus requestStatus) {
+        this.requestStatus = requestStatus;
     }
 
     public String getLocalDate() {

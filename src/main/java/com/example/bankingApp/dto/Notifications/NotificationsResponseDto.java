@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public class NotificationsResponseDto {
 
-    private Long id;
+    private Long notificationId;
     private String title;
     private String message;
     private String type;
@@ -16,7 +16,7 @@ public class NotificationsResponseDto {
     private LocalDateTime updatedAt;
 
     public NotificationsResponseDto(Notifications notifications) {
-        this.id = notifications.getId();
+        this.notificationId = notifications.getNotificationid();
         this.title = notifications.getTitle();
         this.message = notifications.getMessage();
         this.type = notifications.getType();
@@ -29,12 +29,12 @@ public class NotificationsResponseDto {
     public NotificationsResponseDto(){
     }
 
-    public Long getId() {
-        return id;
+    public Long getNotificationId() {
+        return notificationId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setNotificationId(Long notificationId) {
+        this.notificationId = notificationId;
     }
 
     public String getTitle() {

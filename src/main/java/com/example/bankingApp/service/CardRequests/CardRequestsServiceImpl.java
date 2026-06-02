@@ -8,7 +8,7 @@ import com.example.bankingApp.dto.ReviewDto.ReviewRequestsDto;
 import com.example.bankingApp.dto.ReviewDto.ReviewResponseDto;
 import com.example.bankingApp.entity.CardRequests.*;
 import com.example.bankingApp.entity.CardRequests.NetworkBin;
-import com.example.bankingApp.entity.Enums.Status;
+import com.example.bankingApp.entity.Enums.RequestStatus;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.repository.CardRequests.*;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
@@ -94,7 +94,7 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         request.setCardNetwork(cardNetwork);
         request.setReason(reason);
         request.setNetworkBin(networkBin);
-        request.setStatus(Status.PENDING_REVIEW);
+        request.setRequestStatus(RequestStatus.PENDING_REVIEW);
         request.setCreatedDate(LocalDate.now());
         request.setCreatedTime(LocalTime.now());
         request.setCustomers(customer);
@@ -172,12 +172,12 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         CardRequests request = cardRequestsRepo.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
 
-        if (request.getStatus() != Status.PENDING_REVIEW) {
+        if (request.getRequestStatus() != RequestStatus.PENDING_REVIEW) {
             throw new RuntimeException("Only PENDING_REVIEW requests can be approved or rejected.");
         }
 
-        if (reviewRequestsDto.getStatus() != Status.APPROVED &&
-                reviewRequestsDto.getStatus() != Status.REJECTED) {
+        if (reviewRequestsDto.getStatus() != RequestStatus.APPROVED &&
+                reviewRequestsDto.getStatus() != RequestStatus.REJECTED) {
             throw new RuntimeException("Invalid status. Only APPROVED or REJECTED allowed here.");
         }
 
@@ -186,7 +186,7 @@ public class CardRequestsServiceImpl implements CardRequestsService {
             throw new RuntimeException("Reason cannot be empty");
         }
 
-        request.setStatus(reviewRequestsDto.getStatus());
+        request.setRequestStatus(reviewRequestsDto.getStatus());
         request.setReviewMessage(reviewRequestsDto.getReviewMessage());
         request.setUpdatedDate(LocalDate.now());
         request.setUpdatedTime(LocalTime.now());
@@ -213,34 +213,34 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         CardRequests request = cardRequestsRepo.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
 
-        Status current = request.getStatus();
-        Status next = reviewRequestsDto.getStatus();
+        RequestStatus current = request.getRequestStatus();
+        RequestStatus next = reviewRequestsDto.getStatus();
 
-        if (current == Status.REJECTED) {
+        if (current == RequestStatus.REJECTED) {
             throw new RuntimeException("Request already rejected.");
         }
 
-        if (current == Status.PENDING_REVIEW) {
+        if (current == RequestStatus.PENDING_REVIEW) {
             throw new RuntimeException("Please review (approve/reject) the request first.");
         }
 
-        if (current == Status.APPROVED && next != Status.PRINTED) {
+        if (current == RequestStatus.APPROVED && next != RequestStatus.PRINTED) {
             throw new RuntimeException("APPROVED → PRINTED is the only valid transition.");
         }
 
-        if (current == Status.PRINTED && next != Status.DISPATCHED) {
+        if (current == RequestStatus.PRINTED && next != RequestStatus.DISPATCHED) {
             throw new RuntimeException("PRINTING → DISPATCHED only.");
         }
 
-        if (current == Status.DISPATCHED && next != Status.DELIVERED) {
+        if (current == RequestStatus.DISPATCHED && next != RequestStatus.DELIVERED) {
             throw new RuntimeException("DISPATCHED → DELIVERED only.");
         }
 
-        if (current == Status.DELIVERED) {
+        if (current == RequestStatus.DELIVERED) {
             throw new RuntimeException("Request already delivered.");
         }
 
-        request.setStatus(next);
+        request.setRequestStatus(next);
         request.setUpdatedDate(LocalDate.now());
         request.setUpdatedTime(LocalTime.now());
         return new ReviewResponseDto(cardRequestsRepo.save(request));

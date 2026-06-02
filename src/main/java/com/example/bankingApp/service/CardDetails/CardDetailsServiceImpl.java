@@ -11,7 +11,7 @@ import com.example.bankingApp.entity.CardRequests.CardRequests;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.CardRequests.CardType;
 import com.example.bankingApp.entity.CardRequests.CardVariant;
-import com.example.bankingApp.entity.Enums.Status;
+import com.example.bankingApp.entity.Enums.RequestStatus;
 import com.example.bankingApp.repository.CardDetails.CardDetailsRepo;
 import com.example.bankingApp.repository.CardRequests.CardRequestsRepo;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
@@ -97,7 +97,7 @@ public class CardDetailsServiceImpl implements CardDetailsService{
         card.setActive(true);
         card.setCreatedAt(LocalDateTime.now());
 
-        request.setStatus(Status.PRINTED);
+        request.setRequestStatus(RequestStatus.PRINTED);
         cardRequestsRepo.save(request);
 
         CardDetails saved = cardDetailsRepo.save(card);
@@ -154,13 +154,13 @@ public class CardDetailsServiceImpl implements CardDetailsService{
     @Override
     public CardsStatusSummaryResponse getCardsByStatus() {
 
-        long pending = cardRequestsRepo.countByStatus(Status.PENDING_REVIEW);
-        long approved = cardRequestsRepo.countByStatus(Status.APPROVED);
-        long rejected = cardRequestsRepo.countByStatus(Status.REJECTED);
-        long printed = cardRequestsRepo.countByStatus(Status.PRINTED);
-        long dispatched = cardRequestsRepo.countByStatus(Status.DISPATCHED);
-        long delivered = cardRequestsRepo.countByStatus(Status.DELIVERED);
-        long cancelled = cardRequestsRepo.countByStatus(Status.CANCELLED);
+        long pending = cardRequestsRepo.countByRequestStatus(RequestStatus.PENDING_REVIEW);
+        long approved = cardRequestsRepo.countByRequestStatus(RequestStatus.APPROVED);
+        long rejected = cardRequestsRepo.countByRequestStatus(RequestStatus.REJECTED);
+        long printed = cardRequestsRepo.countByRequestStatus(RequestStatus.PRINTED);
+        long dispatched = cardRequestsRepo.countByRequestStatus(RequestStatus.DISPATCHED);
+        long delivered = cardRequestsRepo.countByRequestStatus(RequestStatus.DELIVERED);
+        long cancelled = cardRequestsRepo.countByRequestStatus(RequestStatus.CANCELLED);
 
         return new CardsStatusSummaryResponse(pending,approved,rejected,printed,dispatched,delivered,cancelled);
     }

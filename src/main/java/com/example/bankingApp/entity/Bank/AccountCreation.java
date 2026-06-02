@@ -1,18 +1,22 @@
-package com.example.bankingApp.entity.Customers;
+package com.example.bankingApp.entity.Bank;
 
-import com.example.bankingApp.entity.Enums.Status;
+import com.example.bankingApp.entity.Customers.Customers;
+import com.example.bankingApp.entity.Enums.AccountStatus;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "account")
-public class Account {
+@Table(name = "account_creation")
+public class AccountCreation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountId;
+
+    @ManyToOne
+    @JoinColumn(name = "branch_id", nullable = false)
+    private Branch branch;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -27,11 +31,15 @@ public class Account {
 
     private Double balance;
 
-    private Status status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AccountStatus status;
 
-    private LocalDate createdDate;
+    private String message;
 
-    private LocalTime createdTime;
+    private LocalDateTime openedAt;
+
+    private LocalDateTime updatedAt;
 
     public Long getAccountId() {
         return accountId;
@@ -39,6 +47,14 @@ public class Account {
 
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
+    }
+
+    public Branch getBranch() {
+        return branch;
+    }
+
+    public void setBranch(Branch branch) {
+        this.branch = branch;
     }
 
     public Customers getCustomer() {
@@ -73,27 +89,35 @@ public class Account {
         this.balance = balance;
     }
 
-    public Status getStatus() {
+    public AccountStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(AccountStatus status) {
         this.status = status;
     }
 
-    public LocalDate getCreatedDate() {
-        return createdDate;
+    public LocalDateTime getOpenedAt() {
+        return openedAt;
     }
 
-    public void setCreatedDate(LocalDate createdDate) {
-        this.createdDate = createdDate;
+    public void setOpenedAt(LocalDateTime openedAt) {
+        this.openedAt = openedAt;
     }
 
-    public LocalTime getCreatedTime() {
-        return createdTime;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setCreatedTime(LocalTime createdTime) {
-        this.createdTime = createdTime;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

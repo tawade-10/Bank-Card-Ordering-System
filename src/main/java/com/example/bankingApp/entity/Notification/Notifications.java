@@ -18,7 +18,8 @@ public class Notifications {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "notification_id", unique = true)
+    private Long notificationid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
@@ -46,8 +47,8 @@ public class Notifications {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public Notifications(Long id, Customers customer, String title, String message, String type, Long referenceId, boolean isRead, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
+    public Notifications(Long notificationid, Customers customer, String title, String message, String type, Long referenceId, boolean isRead, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.notificationid = notificationid;
         this.customer = customer;
         this.title = title;
         this.message = message;
@@ -60,12 +61,12 @@ public class Notifications {
 
     public Notifications() {}
 
-    public Long getId() {
-        return id;
+    public Long getNotificationid() {
+        return notificationid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setNotificationid(Long notificationid) {
+        this.notificationid = notificationid;
     }
 
     public Customers getCustomer() {

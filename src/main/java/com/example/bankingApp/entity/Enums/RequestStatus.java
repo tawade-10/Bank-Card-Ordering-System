@@ -1,6 +1,6 @@
 package com.example.bankingApp.entity.Enums;
 
-public enum Status {
+public enum RequestStatus {
     PENDING_REVIEW,
     APPROVED,
     REJECTED,

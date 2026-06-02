@@ -1,30 +1,35 @@
 package com.example.bankingApp.dto.AccountDto;
 
-import com.example.bankingApp.entity.Customers.Account;
+import com.example.bankingApp.entity.Bank.AccountCreation;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public class AccountResponseDto {
 
     private Long accountId;
-
+    private String customerName;
+    private String accountNumber;
     private String accountType;
-
+    private String branchName;
+    private String ifscCode;
     private String status;
+    private Double balance;
+    private LocalDateTime openedAt;
+    private LocalDateTime updatedAt;
+    private String message;
 
-    private LocalDate createdDate;
-
-    private LocalTime createdTime;
-
-    private String purpose;
-
-    public AccountResponseDto(Account account){
-        this.accountId = account.getAccountId();
-        this.accountType = account.getAccountType().getTypeName();
-        this.status = account.getStatus();
-        this.createdDate = account.getCreatedDate();
-        this.createdTime = account.getCreatedTime();
+    public AccountResponseDto(AccountCreation accountCreation){
+        this.accountId = accountCreation.getAccountId();
+        this.accountNumber = accountCreation.getAccountNumber();
+        this.customerName = accountCreation.getCustomer().getCustomerName();
+        this.accountType = accountCreation.getAccountType().getTypeName();
+        this.branchName= accountCreation.getBranch().getBranchName();
+        this.ifscCode = accountCreation.getBranch().getIfscCode();
+        this.balance = accountCreation.getBalance();
+        this.status = accountCreation.getStatus().toString();
+        this.openedAt = accountCreation.getOpenedAt();
+        this.updatedAt = accountCreation.getUpdatedAt();
+        this.message = accountCreation.getMessage();
     }
 
     public Long getAccountId() {
@@ -35,12 +40,36 @@ public class AccountResponseDto {
         this.accountId = accountId;
     }
 
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
     public String getAccountType() {
         return accountType;
     }
 
     public void setAccountType(String accountType) {
         this.accountType = accountType;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 
     public String getStatus() {
@@ -51,27 +80,43 @@ public class AccountResponseDto {
         this.status = status;
     }
 
-    public LocalDate getCreatedDate() {
-        return createdDate;
+    public LocalDateTime getOpenedAt() {
+        return openedAt;
     }
 
-    public void setCreatedDate(LocalDate createdDate) {
-        this.createdDate = createdDate;
+    public void setOpenedAt(LocalDateTime openedAt) {
+        this.openedAt = openedAt;
     }
 
-    public LocalTime getCreatedTime() {
-        return createdTime;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setCreatedTime(LocalTime createdTime) {
-        this.createdTime = createdTime;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
-    public String getPurpose() {
-        return purpose;
+    public String getBranchName() {
+        return branchName;
     }
 
-    public void setPurpose(String purpose) {
-        this.purpose = purpose;
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+
+    public String getIfscCode() {
+        return ifscCode;
+    }
+
+    public void setIfscCode(String ifscCode) {
+        this.ifscCode = ifscCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

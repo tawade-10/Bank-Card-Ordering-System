@@ -1,9 +1,11 @@
 package com.example.bankingApp.facade.Account;
 
-import com.example.bankingApp.dto.AccountDto.AccountRequestDto;
+import com.example.bankingApp.dto.AccountDto.AccountCreationRequestDto;
 import com.example.bankingApp.dto.AccountDto.AccountResponseDto;
 import com.example.bankingApp.service.Account.AccountService;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AccountFacadeImpl implements AccountFacade{
 
     private final AccountService accountService;
@@ -13,7 +15,7 @@ public class AccountFacadeImpl implements AccountFacade{
     }
 
     @Override
-    public AccountResponseDto createAccount(AccountRequestDto accountRequestsDto) {
-        return accountService.createAccount(accountRequestsDto);
+    public AccountResponseDto createAccountRequest(AccountCreationRequestDto accountRequestsDto) {
+        return accountService.createAccountRequest(accountRequestsDto);
     }
 }

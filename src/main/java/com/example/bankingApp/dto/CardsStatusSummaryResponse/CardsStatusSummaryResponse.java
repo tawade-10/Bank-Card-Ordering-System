@@ -1,7 +1,5 @@
 package com.example.bankingApp.dto.CardsStatusSummaryResponse;
 
-import com.example.bankingApp.entity.Enums.Status;
-
 public class CardsStatusSummaryResponse {
 
     private long pending;

@@ -31,7 +31,6 @@ export default function CustomerDashboard() {
     return `${parts[2]}/${parts[1]}/${parts[0]}`;
   };
 
-  // Sort by updatedDate & take top 2
   const recentTwoRequests = [...requests]
     .sort((a, b) => {
       if (!a.updatedDate || !b.updatedDate) return 0;

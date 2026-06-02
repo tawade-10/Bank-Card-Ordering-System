@@ -1,4 +1,3 @@
-/* HEADER WRAPPER */
 .header-bar {
   position: fixed;
   top: 0;
@@ -19,7 +18,6 @@
   font-weight: bold;
 }
 
-/* LOGOUT BUTTON */
 .logout-btn {
   background-color: #ff4d4d;
   border: none;
@@ -35,13 +33,11 @@
   background-color: #e60000;
 }
 
-/* NOTIFICATION AREA (new, clean) */
 .notification-area {
   position: relative;
   margin-left: 1000px;
 }
 
-/* Bell Wrapper */
 .notif-wrapper {
   cursor: pointer;
   position: relative;
@@ -78,7 +74,7 @@
 .notif-dropdown {
   position: absolute;
   right: 0;
-  top: 40px; /* sits under header bar */
+  top: 40px;
   width: 260px;
   background: white;
   color: black;

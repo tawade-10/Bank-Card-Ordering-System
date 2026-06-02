@@ -53,12 +53,12 @@ export default function TrackRequests() {
   };
 
   const filteredRequests = requests.filter((req) => {
-    if (tabValue === 1) return req.status === "PENDING_REVIEW";
-    if (tabValue === 2) return req.status === "APPROVED";
-    if (tabValue === 3) return req.status === "REJECTED";
-    if (tabValue === 4) return req.status === "PRINTED";
-    if (tabValue === 5) return req.status === "DISPATCHED";
-    if (tabValue === 6) return req.status === "DELIVERED";
+    if (tabValue === 1) return req.requestStatus === "PENDING_REVIEW";
+    if (tabValue === 2) return req.requestStatus === "APPROVED";
+    if (tabValue === 3) return req.requestStatus === "REJECTED";
+    if (tabValue === 4) return req.requestStatus === "PRINTED";
+    if (tabValue === 5) return req.requestStatus === "DISPATCHED";
+    if (tabValue === 6) return req.requestStatus === "DELIVERED";
     return true;
   });
 
@@ -122,8 +122,8 @@ export default function TrackRequests() {
                   <td>{req.reason}</td>
 
                   <td>
-                    <span className={`status ${req.status.toLowerCase()}`}>
-                      {req.status}
+                    <span className={`requestStatus ${req.requestStatus.toLowerCase()}`}>
+                      {req.requestStatus}
                     </span>
                   </td>
                   <td>{formatFullDate(req)}</td>

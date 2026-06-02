@@ -1,47 +1,65 @@
 package com.example.bankingApp.service.Account;
 
-import com.example.bankingApp.dto.AccountDto.AccountRequestDto;
+import com.example.bankingApp.dto.AccountDto.AccountCreationRequestDto;
 import com.example.bankingApp.dto.AccountDto.AccountResponseDto;
 import com.example.bankingApp.dto.Notifications.NotificationsRequestDto;
+import com.example.bankingApp.entity.Bank.Branch;
 import com.example.bankingApp.entity.CustomUserDetails;
-import com.example.bankingApp.entity.Customers.Account;
-import com.example.bankingApp.entity.Customers.AccountType;
+import com.example.bankingApp.entity.Bank.AccountCreation;
+import com.example.bankingApp.entity.Bank.AccountType;
 import com.example.bankingApp.entity.Customers.Customers;
-import com.example.bankingApp.entity.Enums.Status;
-import com.example.bankingApp.repository.Customers.AccountRepo;
-import com.example.bankingApp.repository.Customers.AccountTypeRepo;
+import com.example.bankingApp.entity.Enums.AccountStatus;
+import com.example.bankingApp.repository.Bank.AccountCreationRepo;
+import com.example.bankingApp.repository.Bank.AccountTypeRepo;
+import com.example.bankingApp.repository.Bank.BranchRepo;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
 import com.example.bankingApp.service.Notifications.NotificationsService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
+@Service
 public class AccountServiceImpl implements AccountService{
 
     private final CustomersRepo customersRepo;
 
-    private final AccountRepo accountRepo;
+    private final AccountCreationRepo accountCreationRepo;
 
     private final AccountTypeRepo accountTypeRepo;
 
+    private final BranchRepo branchRepo;
+
     private final NotificationsService notificationsService;
 
-    public AccountServiceImpl(CustomersRepo customersRepo, AccountRepo accountRepo, AccountTypeRepo accountTypeRepo, NotificationsService notificationsService) {
+    public AccountServiceImpl(CustomersRepo customersRepo, AccountCreationRepo accountCreationRepo, AccountTypeRepo accountTypeRepo, BranchRepo branchRepo, NotificationsService notificationsService) {
         this.customersRepo = customersRepo;
-        this.accountRepo = accountRepo;
+        this.accountCreationRepo = accountCreationRepo;
         this.accountTypeRepo = accountTypeRepo;
+        this.branchRepo = branchRepo;
         this.notificationsService = notificationsService;
     }
 
     @Override
-    public AccountResponseDto createAccount(AccountRequestDto dto) {
+    public AccountResponseDto createAccountRequest(AccountCreationRequestDto dto) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        CustomUserDetails userDetails =
-                (CustomUserDetails) authentication.getPrincipal();
+        if (authentication == null ||
+                !authentication.isAuthenticated() ||
+                authentication.getPrincipal().equals("anonymousUser")) {
+            throw new RuntimeException("User is not authenticated");
+        }
+
+        CustomUserDetails userDetails;
+
+        if (authentication.getPrincipal() instanceof CustomUserDetails) {
+            userDetails = (CustomUserDetails) authentication.getPrincipal();
+        } else {
+            throw new RuntimeException("Invalid authentication principal: " +
+                    authentication.getPrincipal());
+        }
 
         Long customerId = userDetails.getCustomers().getCustomerId();
 
@@ -51,34 +69,35 @@ public class AccountServiceImpl implements AccountService{
         AccountType accountType = accountTypeRepo.findById(dto.getAccountTypeId())
                 .orElseThrow(() -> new RuntimeException("Invalid Account Type"));
 
-        Account account = new Account();
+        Branch branch = branchRepo.findById(dto.getBranchId())
+                .orElseThrow(() -> new RuntimeException("Invalid Branch"));
 
-        account.setCustomer(customer);
-        account.setAccountType(accountType);
+        AccountCreation accountCreation = new AccountCreation();
 
-        account.setPurpose(dto.getPurpose());
+        accountCreation.setCustomer(customer);
+        accountCreation.setAccountType(accountType);
+        accountCreation.setBranch(branch);
 
-        account.setStatus(Status.PENDING_REVIEW);
+        accountCreation.setStatus(AccountStatus.PENDING_REVIEW);
+        accountCreation.setOpenedAt(LocalDateTime.now());
+        accountCreation.setBalance(0.0);
 
-        account.setCreatedDate(LocalDate.now());
-        account.setCreatedTime(LocalTime.now());
-
-        Account savedAccount = accountRepo.save(account);
+        AccountCreation savedAccountCreation = accountCreationRepo.save(accountCreation);
 
         NotificationsRequestDto notificationDto = new NotificationsRequestDto();
 
         notificationDto.setCustomerId(customer.getCustomerId());
         notificationDto.setTitle("Account Request Submitted");
         notificationDto.setMessage(
-                "Your request for a "
-                        + accountType.getTypeName()
-                        + " account has been submitted successfully and is pending review."
+                "Your request for a " +
+                        accountType.getTypeName() +
+                        " account has been submitted successfully and is pending review."
         );
         notificationDto.setType("ACCOUNT_REQUEST");
-        notificationDto.setReferenceId(savedAccount.getAccountId());
+        notificationDto.setReferenceId(savedAccountCreation.getAccountId());
 
         notificationsService.createNotifications(notificationDto);
 
-        return new AccountResponseDto(savedAccount);
+        return new AccountResponseDto(savedAccountCreation);
     }
 }

@@ -1,6 +1,6 @@
-package com.example.bankingApp.repository.Customers;
+package com.example.bankingApp.repository.Bank;
 
-import com.example.bankingApp.entity.Customers.Transactions;
+import com.example.bankingApp.entity.Bank.Transactions;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TransactionsRepo extends JpaRepository<Transactions,Long> {

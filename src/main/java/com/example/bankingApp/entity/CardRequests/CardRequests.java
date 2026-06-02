@@ -1,12 +1,10 @@
 package com.example.bankingApp.entity.CardRequests;
 
 import com.example.bankingApp.entity.Customers.Customers;
-import com.example.bankingApp.entity.Enums.Status;
+import com.example.bankingApp.entity.Enums.RequestStatus;
 import jakarta.persistence.*;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -39,8 +37,8 @@ public class CardRequests {
     private NetworkBin networkBin;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private Status status;
+    @Column(name = "request_status")
+    private RequestStatus requestStatus;
 
     @Column(name = "date")
     private LocalDate localDate;
@@ -108,9 +106,13 @@ public class CardRequests {
         this.networkBin = networkBin;
     }
 
-    public Status getStatus() { return status; }
+    public RequestStatus getRequestStatus() {
+        return requestStatus;
+    }
 
-    public void setStatus(Status status) { this.status = status; }
+    public void setRequestStatus(RequestStatus requestStatus) {
+        this.requestStatus = requestStatus;
+    }
 
     public LocalDate getLocalDate() {
         return localDate;

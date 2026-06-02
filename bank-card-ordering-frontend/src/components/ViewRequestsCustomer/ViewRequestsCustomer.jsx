@@ -15,20 +15,17 @@ export default function ViewRequestsCustomer({ requestId, closeModal }) {
     { key: "DELIVERED", label: "Delivered" },
   ];
 
-  // ⭐ Convert "YYYY-MM-DD" → "DD/MM/YYYY"
   const formatDate = (date) => {
     if (!date) return "--";
     const [y, m, d] = date.split("-");
     return `${d}/${m}/${y}`;
   };
 
-  // ⭐ Combine date + time → "DD/MM/YYYY HH:mm"
   const formatDateTime = (date, time) => {
     if (!date || !time) return "--";
     return `${formatDate(date)} ${time}`;
   };
 
-  // ⭐ Pick latest actual timestamp
   const getTimelineTime = () => {
     if (request.updatedDate && request.updatedTime)
       return formatDateTime(request.updatedDate, request.updatedTime);
@@ -57,7 +54,7 @@ export default function ViewRequestsCustomer({ requestId, closeModal }) {
 
   if (!request) return null;
 
-  const currentIndex = steps.findIndex((s) => s.key === request.status);
+  const currentIndex = steps.findIndex((s) => s.key === request.requestStatus);
 
   return (
     <div className="view-modal-overlay">
@@ -69,7 +66,7 @@ export default function ViewRequestsCustomer({ requestId, closeModal }) {
         <div className="header-box">
           <h2 className="view-title">Request Timeline</h2>
           <h3 className="sub-heading">Request ID : {request.requestId}</h3>
-          <h3 className="sub-heading">Request Status : {request.status}</h3>
+          <h3 className="sub-heading">Request Status : {request.requestStatus}</h3>
         </div>
 
         <div className="timeline-container">

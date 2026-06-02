@@ -38,16 +38,16 @@ export default function AdminDashboard() {
   };
 
   const total = requests.length;
-  const pending = requests.filter((r) => r.status === "PENDING_REVIEW").length;
-  const approved = requests.filter((r) => r.status === "APPROVED").length;
-  const rejected = requests.filter((r) => r.status === "REJECTED").length;
-  const dispatched = requests.filter((r) => r.status === "DISPATCHED").length;
-  const delivered = requests.filter((r) => r.status === "DELIVERED").length;
+  const pending = requests.filter((r) => r.requestStatus === "PENDING_REVIEW").length;
+  const approved = requests.filter((r) => r.requestStatus === "APPROVED").length;
+  const rejected = requests.filter((r) => r.requestStatus === "REJECTED").length;
+  const dispatched = requests.filter((r) => r.requestStatus === "DISPATCHED").length;
+  const delivered = requests.filter((r) => r.requestStatus === "DELIVERED").length;
 
   const filteredRequests =
     selectedStatus === "ALL"
       ? requests
-      : requests.filter(r => r.status === selectedStatus);
+      : requests.filter(r => r.requestStatus === selectedStatus);
 
   return (
     <div className="admin-dashboard-wrapper">
@@ -105,8 +105,8 @@ export default function AdminDashboard() {
                   <td>{req.cardType}</td>
                   <td>{req.cardVariant}</td>
                   <td>{req.reason}</td>
-                  <td className={`status ${req.status.toLowerCase()}`}>
-                    {req.status}
+                  <td className={`requestStatus ${req.requestStatus.toLowerCase()}`}>
+                    {req.requestStatus}
                   </td>
                   <td>{req.localDate}</td>
                   <td>

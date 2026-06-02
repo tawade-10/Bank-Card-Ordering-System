@@ -1,9 +1,7 @@
 package com.example.bankingApp.controllers;
 
-import com.example.bankingApp.dto.AccountDto.AccountRequestDto;
+import com.example.bankingApp.dto.AccountDto.AccountCreationRequestDto;
 import com.example.bankingApp.dto.AccountDto.AccountResponseDto;
-import com.example.bankingApp.dto.CardRequestsDto.CreationDto.RequestsDto;
-import com.example.bankingApp.dto.CardRequestsDto.CreationDto.ResponseDto;
 import com.example.bankingApp.facade.Account.AccountFacade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,8 +20,8 @@ public class AccountController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<AccountResponseDto> createAccount(@Valid @RequestBody AccountRequestDto accountRequestsDto){
-        AccountResponseDto accountCreated = accountFacade.createAccount(accountRequestsDto);
+    public ResponseEntity<AccountResponseDto> createAccountRequest(@Valid @RequestBody AccountCreationRequestDto accountRequestsDto){
+        AccountResponseDto accountCreated = accountFacade.createAccountRequest(accountRequestsDto);
         return new ResponseEntity<>(accountCreated, HttpStatus.CREATED);
     }
 

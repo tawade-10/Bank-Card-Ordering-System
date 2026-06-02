@@ -1,0 +1,5 @@
+CREATE TABLE bank (
+    bank_id BIGSERIAL PRIMARY KEY,
+    bank_name VARCHAR(255) NOT NULL UNIQUE,
+    bank_code VARCHAR(20) NOT NULL UNIQUE
+);

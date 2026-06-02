@@ -1,12 +1,12 @@
 package com.example.bankingApp.dto.ReviewDto;
 
-import com.example.bankingApp.entity.Enums.Status;
+import com.example.bankingApp.entity.Enums.RequestStatus;
 import jakarta.validation.constraints.NotNull;
 
 public class ReviewRequestsDto {
 
     @NotNull(message = "Status cannot be empty")
-    private Status status;
+    private RequestStatus requestStatus;
 
     @NotNull(message = "Message cannot be empty")
     private String reviewMessage;
@@ -14,12 +14,12 @@ public class ReviewRequestsDto {
     public ReviewRequestsDto() {
     }
 
-    public Status getStatus() {
-        return status;
+    public RequestStatus getStatus() {
+        return requestStatus;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setStatus(RequestStatus requestStatus) {
+        this.requestStatus = requestStatus;
     }
 
     public String getReviewMessage() {

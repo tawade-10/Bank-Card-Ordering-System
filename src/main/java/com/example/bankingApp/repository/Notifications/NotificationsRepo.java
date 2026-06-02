@@ -25,4 +25,6 @@ public interface NotificationsRepo extends JpaRepository<Notifications, Long> {
     Optional<Notifications> findTop1ByCustomerCustomerIdOrderByUpdatedAtDesc(Long customerId);
 
     Optional<Notifications> findByCustomerCustomerIdAndType(Long customerId, String type);
+
+//    Optional<Notifications> findByCustomerCustomerIdAndTypeAndReferenceId(Long customerId, String type, Long referenceId);
 }

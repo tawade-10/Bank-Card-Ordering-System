@@ -55,7 +55,7 @@ export default function ViewRequests() {
       const res = await axios.put(
         `http://localhost:8080/api/request-card/${requestId}/review`,
         {
-          status: newStatus,
+          requestStatus: newStatus,
           reviewMessage: reason,
         },
         { headers: { Authorization: `Bearer ${token}` } }
@@ -78,8 +78,8 @@ export default function ViewRequests() {
   const handleFlowUpdate = async (newStatus) => {
     try {
       const res = await axios.put(
-        `http://localhost:8080/api/request-card/${requestId}/status`,
-        { status: newStatus },
+        `http://localhost:8080/api/request-card/${requestId}/requestStatus`,
+        { requestStatus: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -92,7 +92,7 @@ export default function ViewRequests() {
 
       navigate("/admin/dashboard");
     } catch (err) {
-      alert(err.response?.data || "Failed to update status");
+      alert(err.response?.data || "Failed to update requestStatus");
     }
   };
 
@@ -112,12 +112,12 @@ export default function ViewRequests() {
           <div className="vr-row"><b>Card Type:</b> {request.cardType}</div>
           <div className="vr-row"><b>Variant:</b> {request.cardVariant}</div>
           <div className="vr-row"><b>Reason:</b> {request.reason}</div>
-          <div className="vr-row"><b>Status:</b> <span className={`status-badge ${request.status.toLowerCase()}`}>{request.status}</span></div>
+          <div className="vr-row"><b>Status:</b> <span className={`requestStatus-badge ${request.requestStatus.toLowerCase()}`}>{request.requestStatus}</span></div>
           <div className="vr-row"><b>Date:</b> {request.localDate}</div>
           <div className="vr-row"><b>Review Message:</b> {request.reviewMessage || "None"}</div>
         </div>
 
-        {request.status === "PENDING_REVIEW" && (
+        {request.requestStatus === "PENDING_REVIEW" && (
           !showReasonBox ? (
             <div className="vr-btn-group">
               <button
@@ -149,7 +149,7 @@ export default function ViewRequests() {
           )
         )}
 
-        {request.status === "APPROVED" && !showReasonBox && (
+        {request.requestStatus === "APPROVED" && !showReasonBox && (
           <div className="vr-action">
             <button
               className="btn-create"
@@ -160,8 +160,8 @@ export default function ViewRequests() {
           </div>
         )}
 
-        {["PRINTED", "DISPATCHED"].includes(request.status) && (
-          <div className="vr-status-box">
+        {["PRINTED", "DISPATCHED"].includes(request.requestStatus) && (
+          <div className="vr-requestStatus-box">
             <label><b>Update Status : </b></label>
             <select
               className="vr-select"
@@ -169,13 +169,13 @@ export default function ViewRequests() {
               onChange={(e) => e.target.value && handleFlowUpdate(e.target.value)}
             >
               <option value="">-- Select Next Status --</option>
-              {request.status === "PRINTED" && <option value="DISPATCHED">DISPATCHED</option>}
-              {request.status === "DISPATCHED" && <option value="DELIVERED">DELIVERED</option>}
+              {request.requestStatus === "PRINTED" && <option value="DISPATCHED">DISPATCHED</option>}
+              {request.requestStatus === "DISPATCHED" && <option value="DELIVERED">DELIVERED</option>}
             </select>
           </div>
         )}
 
-        {request.status === "DELIVERED" && (
+        {request.requestStatus === "DELIVERED" && (
           <div className="vr-action">
             <button className="btn-back" onClick={() => navigate("/admin/dashboard")}>
               Back to Dashboard

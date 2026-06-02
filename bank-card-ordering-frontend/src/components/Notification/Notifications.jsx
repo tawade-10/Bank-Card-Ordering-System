@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { IoNotificationsOutline } from "react-icons/io5";
-import {
-  connectWebSocket,
-  disconnectWebSocket
-} from "../../websocket";
+import {connectWebSocket,disconnectWebSocket} from "../../websocket";
 import { toast } from "react-toastify";
 import "./Notifications.css";
 
@@ -19,8 +16,8 @@ export default function Notifications() {
       const res = await axios.get(
         `http://localhost:8080/api/notifications/recent-five/${customerId}`
       );
-
-      setAlerts((res.data || []).slice(0, 5));
+      const latestFive = (res.data || []).slice(0, 5);
+      setAlerts(latestFive);
     } catch (err) {
       console.log("Notification fetch error:", err);
     }
@@ -35,11 +32,14 @@ export default function Notifications() {
       toast.success(notification.message);
 
       setAlerts((prev) => {
-        const filtered = prev.filter(
-          (item) => item.id !== notification.id
+        const merged = [notification, ...prev];
+        const unique = merged.filter(
+          (item, index, self) =>
+            index === self.findIndex(
+              (t) => t.notificationId === item.notificationId
+            )
         );
-
-        return [notification, ...filtered].slice(0, 5);
+        return unique.slice(0, 5);
       });
     });
 
@@ -48,9 +48,7 @@ export default function Notifications() {
     };
   }, [customerId]);
 
-  const unreadCount = alerts.filter(
-    (notification) => !notification.read
-  ).length;
+  const unreadCount = alerts.filter((n) => !n.read).length;
 
   return (
     <div className="notif-container">
@@ -83,7 +81,7 @@ export default function Notifications() {
                 className={`notif-card ${
                   !notification.read ? "unread" : ""
                 }`}
-                key={notification.id}
+                key={notification.notificationId}
               >
                 <p className="notif-heading">
                   {notification.title}
@@ -95,9 +93,7 @@ export default function Notifications() {
 
                 <small className="notif-time">
                   {notification.updatedAt
-                    ? new Date(
-                        notification.updatedAt
-                      ).toLocaleString()
+                    ? new Date(notification.updatedAt).toLocaleString()
                     : ""}
                 </small>
               </div>

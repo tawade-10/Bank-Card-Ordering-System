@@ -3,6 +3,7 @@ package com.example.bankingApp.controllers;
 import com.example.bankingApp.dto.Notifications.NotificationsRequestDto;
 import com.example.bankingApp.dto.Notifications.NotificationsResponseDto;
 import com.example.bankingApp.service.Notifications.NotificationsService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +41,11 @@ public class NotificationsController {
     @GetMapping("/recent-five/{customerId}")
     public List<NotificationsResponseDto> getRecentFiveNotifications(@PathVariable Long customerId) {
         return notificationsService.getRecentFiveNotifications(customerId);
+    }
+
+    @PutMapping("/update")
+    public NotificationsResponseDto updateNotification(@RequestBody NotificationsRequestDto notificationsRequestDto) {
+        return notificationsService.updateNotification(notificationsRequestDto);
     }
 
     @PutMapping("/read/{id}")

@@ -2,7 +2,6 @@ package com.example.bankingApp.service.Notifications;
 
 import com.example.bankingApp.dto.Notifications.NotificationsRequestDto;
 import com.example.bankingApp.dto.Notifications.NotificationsResponseDto;
-import com.example.bankingApp.entity.Notification.Notifications;
 
 import java.util.List;
 
@@ -19,4 +18,6 @@ public interface NotificationsService {
     List<NotificationsResponseDto> getRecentFiveNotifications(Long customerId);
 
     void markAsRead(Long id);
+
+    NotificationsResponseDto updateNotification(NotificationsRequestDto notificationsRequestDto);
 }

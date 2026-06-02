@@ -1,7 +1,7 @@
 package com.example.bankingApp.dto.ReviewDto;
 
 import com.example.bankingApp.entity.CardRequests.CardRequests;
-import com.example.bankingApp.entity.Enums.Status;
+import com.example.bankingApp.entity.Enums.RequestStatus;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.time.LocalDate;
@@ -18,7 +18,7 @@ public class ReviewResponseDto {
 
     private Long requestId;
 
-    private Status status;
+    private RequestStatus requestStatus;
 
     private String reviewMessage;
 
@@ -28,7 +28,7 @@ public class ReviewResponseDto {
 
     public ReviewResponseDto(CardRequests cardRequests) {
         this.requestId = cardRequests.getRequestId();
-        this.status = cardRequests.getStatus();
+        this.requestStatus = cardRequests.getRequestStatus();
         this.reviewMessage = cardRequests.getReviewMessage();
         this.updatedDate = cardRequests.getUpdatedDate();
         this.updatedTime = cardRequests.getUpdatedTime();
@@ -45,12 +45,12 @@ public class ReviewResponseDto {
         this.requestId = requestId;
     }
 
-    public Status getStatus() {
-        return status;
+    public RequestStatus getStatus() {
+        return requestStatus;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setStatus(RequestStatus requestStatus) {
+        this.requestStatus = requestStatus;
     }
 
     public String getReviewMessage() {

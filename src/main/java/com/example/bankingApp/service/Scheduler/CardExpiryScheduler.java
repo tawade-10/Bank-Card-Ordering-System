@@ -14,7 +14,7 @@ public class CardExpiryScheduler {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 2 * * *", zone = "Asia/Kolkata")
+    @Scheduled(cron = "0 * * * * *", zone = "Asia/Kolkata")
     public void runDailyBatch() {
         batchService.runExpiryBatch();
         System.out.println("Card Expiry Batch every minute");

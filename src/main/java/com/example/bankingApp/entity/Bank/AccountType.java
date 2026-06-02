@@ -1,4 +1,4 @@
-package com.example.bankingApp.entity.Customers;
+package com.example.bankingApp.entity.Bank;
 
 import jakarta.persistence.*;
 

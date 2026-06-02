@@ -1,9 +1,8 @@
-package com.example.bankingApp.entity.Customers;
+package com.example.bankingApp.entity.Bank;
 
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -16,7 +15,7 @@ public class Transactions {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
-    private Account account;
+    private AccountCreation accountCreation;
 
     private String transactionType;
 
@@ -38,12 +37,12 @@ public class Transactions {
         this.transactionId = transactionId;
     }
 
-    public Account getAccount() {
-        return account;
+    public AccountCreation getAccount() {
+        return accountCreation;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setAccount(AccountCreation accountCreation) {
+        this.accountCreation = accountCreation;
     }
 
     public String getTransactionType() {

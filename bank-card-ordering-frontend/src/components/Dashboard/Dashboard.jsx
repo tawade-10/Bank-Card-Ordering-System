@@ -47,9 +47,9 @@
 //   };
 //
 //   const filteredRequests = requests.filter((req) => {
-//     if (tabValue === 1) return req.status === "PENDING";
-//     if (tabValue === 2) return req.status === "APPROVED";
-//     if (tabValue === 3) return req.status === "REJECTED";
+//     if (tabValue === 1) return req.requestStatus === "PENDING";
+//     if (tabValue === 2) return req.requestStatus === "APPROVED";
+//     if (tabValue === 3) return req.requestStatus === "REJECTED";
 //     return true;
 //   });
 //
@@ -123,7 +123,7 @@
 //                       <td>{req.cardType}</td>
 //                       <td>{req.cardVariant}</td>
 //                       <td>{req.reason}</td>
-//                       <td>{req.status}</td>
+//                       <td>{req.requestStatus}</td>
 //                       <td>{req.localDate}</td>
 //
 //                       <td>
@@ -138,7 +138,7 @@
 //                           View
 //                         </button>
 //
-//                         {req.status === "PENDING" && (
+//                         {req.requestStatus === "PENDING" && (
 //                           <button
 //                             className="update-btn"
 //                             onClick={() =>
