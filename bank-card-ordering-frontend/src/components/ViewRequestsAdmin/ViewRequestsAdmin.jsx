@@ -19,7 +19,6 @@ export default function ViewRequests() {
     loadRequest();
   }, []);
 
-  /** 🔥 Fetch request details */
   const loadRequest = async () => {
     try {
       const res = await axios.get(
@@ -33,7 +32,6 @@ export default function ViewRequests() {
     }
   };
 
-  /** 🔥 Fetch latest notification for that customer */
   const fetchLatestNotification = async (customerId) => {
     try {
       const res = await axios.get(
@@ -49,7 +47,6 @@ export default function ViewRequests() {
     }
   };
 
-  /** 🔥 APPROVE/REJECT */
   const handleReview = async (newStatus, reason) => {
     try {
       const res = await axios.put(

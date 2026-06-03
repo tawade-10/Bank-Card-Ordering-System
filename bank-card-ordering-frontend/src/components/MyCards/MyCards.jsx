@@ -60,7 +60,7 @@ export default function MyCards() {
             );
 
             return { ...card, ...res.data };
-          } catch (err) {
+          } catch {
             return card;
           }
         })
@@ -75,8 +75,6 @@ export default function MyCards() {
   };
 
   if (loading) return <div className="cards-loading">Loading cards...</div>;
-  if (cards.length === 0)
-    return <div className="cards-loading">No active cards available</div>;
 
   return (
     <div className="cards-page">
@@ -86,222 +84,241 @@ export default function MyCards() {
         <BackButton />
       </div>
 
-      <div className="cards-wrapper">
-        <div className="cards-layout">
+      {/* EMPTY STATE */}
+      {cards.length === 0 ? (
+        <div className="empty-cards-state">
+          <div className="empty-card-icon">💳</div>
+          <h2>No Cards Yet</h2>
+          <p>You don’t have any active credit or debit cards.</p>
+          <p>Once your request is approved, your cards will appear here.</p>
 
-          {/* CREDIT SECTION */}
-          <div className="card-column">
-            <h2 className="column-title">Credit Cards</h2>
+          <button
+            className="empty-action-btn"
+            onClick={() => navigate("/request-card")}
+          >
+            Request a Card
+          </button>
+        </div>
+      ) : (
+        <div className="cards-wrapper">
+          <div className="cards-layout">
 
-            {cards
-              .filter((c) => c.cardType === "CREDIT")
-              .map((card) => (
-                <div key={card.cardId} className="gpay-row">
+            {/* CREDIT SECTION */}
+            <div className="card-column">
+              <h2 className="column-title">Credit Cards</h2>
 
-                  {/* COLLAPSED ROW */}
-                  <div
-                    className="gpay-card-item"
-                    onClick={() =>
-                      setExpandedCard(
-                        expandedCard === card.cardId ? null : card.cardId
-                      )
-                    }
-                  >
-                    <img
-                      src={NETWORK_LOGOS[card.networkName]}
-                      className="gpay-thumb"
-                      alt="thumb"
-                    />
+              {cards
+                .filter((c) => c.cardType === "CREDIT")
+                .map((card) => (
+                  <div key={card.cardId} className="gpay-row">
 
-                    <div>
-                      <div className="gpay-title">
-                        {card.bankName}{card.maskedNumber}
-                      </div>
-                      <div className="gpay-sub">{card.networkName} card</div>
-                      {card.isDefault && (
-                        <div className="gpay-default">Default Tap & Pay</div>
-                      )}
-                    </div>
-                  </div>
+                    <div
+                      className="gpay-card-item"
+                      onClick={() =>
+                        setExpandedCard(
+                          expandedCard === card.cardId ? null : card.cardId
+                        )
+                      }
+                    >
+                      <img
+                        src={NETWORK_LOGOS[card.networkName]}
+                        className="gpay-thumb"
+                        alt="thumb"
+                      />
 
-                  {/* EXPANDED → SHOW YOUR FULL CARD */}
-                  {expandedCard === card.cardId && (
-                    <div className="expanded-card-area">
-                      <div className="flip-container">
-                        <div className="flip-card">
-
-                          {/* FRONT */}
-                          <div
-                            className="card front-side"
-                            style={{
-                              background: card.cardColourFront,
-                              color: card.textColour,
-                            }}
-                          >
-                            <header className="front-header">
-                              <img
-                                src={NETWORK_LOGOS[card.networkName]}
-                                className="network-logo"
-                                alt="network"
-                              />
-                              <img
-                                className="chip-image"
-                                src={getChip(card.chipImage)}
-                                alt="chip"
-                              />
-                            </header>
-
-                            <div className="card-number-real">
-                              {card.maskedNumber}
-                            </div>
-
-                            <div className="card-bottom-row">
-                              <div className="holder-info">
-                                <label>Holder Name</label>
-                                <div className="holder-name">
-                                  {card.customerName}
-                                </div>
-                              </div>
-
-                              <div className="expiry-info">
-                                <label>Valid Thru</label>
-                                <div className="expiry-date">
-                                  {card.expiry}
-                                </div>
-                              </div>
-                            </div>
+                      <div>
+                        <div className="gpay-title">
+                          {card.bankName}{card.maskedNumber}
+                        </div>
+                        <div className="gpay-sub">
+                          {card.networkName} card
+                        </div>
+                        {card.isDefault && (
+                          <div className="gpay-default">
+                            Default Tap & Pay
                           </div>
+                        )}
+                      </div>
+                    </div>
 
-                          {/* BACK */}
-                          <div
-                            className="card back-side"
-                            style={{ background: card.cardColourBack }}
-                          >
-                            <div className="magnetic-strip-top"></div>
+                    {expandedCard === card.cardId && (
+                      <div className="expanded-card-area">
+                        <div className="flip-container">
+                          <div className="flip-card">
 
-                            <div className="signature">
-                              <i>{card.cvv || "XXX"}</i>
+                            {/* FRONT */}
+                            <div
+                              className="card front-side"
+                              style={{
+                                background: card.cardColourFront,
+                                color: card.textColour,
+                              }}
+                            >
+                              <header className="front-header">
+                                <img
+                                  src={NETWORK_LOGOS[card.networkName]}
+                                  className="network-logo"
+                                  alt="network"
+                                />
+                                <img
+                                  className="chip-image"
+                                  src={getChip(card.chipImage)}
+                                  alt="chip"
+                                />
+                              </header>
+
+                              <div className="card-number-real">
+                                {card.maskedNumber}
+                              </div>
+
+                              <div className="card-bottom-row">
+                                <div className="holder-info">
+                                  <label>Holder Name</label>
+                                  <div className="holder-name">
+                                    {card.customerName}
+                                  </div>
+                                </div>
+
+                                <div className="expiry-info">
+                                  <label>Valid Thru</label>
+                                  <div className="expiry-date">
+                                    {card.expiry}
+                                  </div>
+                                </div>
+                              </div>
                             </div>
 
-                            <h5 className="description">
-                              This card is property of the issuing bank.
-                              If found, return to the nearest branch.
-                            </h5>
+                            {/* BACK */}
+                            <div
+                              className="card back-side"
+                              style={{ background: card.cardColourBack }}
+                            >
+                              <div className="magnetic-strip-top"></div>
+
+                              <div className="signature">
+                                <i>{card.cvv || "XXX"}</i>
+                              </div>
+
+                              <h5 className="description">
+                                This card is property of the issuing bank.
+                              </h5>
+                            </div>
+
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-          </div>
-
-          {/* DEBIT SECTION */}
-          <div className="card-column">
-            <h2 className="column-title">Debit Cards</h2>
-
-            {cards
-              .filter((c) => c.cardType === "DEBIT")
-              .map((card) => (
-                <div key={card.cardId} className="gpay-row">
-
-                  {/* COLLAPSED ROW */}
-                  <div
-                    className="gpay-card-item"
-                    onClick={() =>
-                      setExpandedCard(
-                        expandedCard === card.cardId ? null : card.cardId
-                      )
-                    }
-                  >
-                    <img
-                      src={NETWORK_LOGOS[card.networkName]}
-                      className="gpay-thumb"
-                      alt="thumb"
-                    />
-
-                    <div>
-                      <div className="gpay-title">
-                        {card.bankName}{card.maskedNumber}
-                      </div>
-                      <div className="gpay-sub">{card.networkName} card</div>
-                    </div>
+                    )}
                   </div>
+                ))}
+            </div>
 
-                  {/* EXPANDED CARD */}
-                  {expandedCard === card.cardId && (
-                    <div className="expanded-card-area">
-                      <div className="flip-container">
-                        <div className="flip-card">
+            {/* DEBIT SECTION */}
+            <div className="card-column">
+              <h2 className="column-title">Debit Cards</h2>
 
-                          {/* FRONT */}
-                          <div
-                            className="card front-side"
-                            style={{
-                              background: card.cardColourFront,
-                              color: card.textColour,
-                            }}
-                          >
-                            <header className="front-header">
-                              <img
-                                src={NETWORK_LOGOS[card.networkName]}
-                                className="network-logo"
-                                alt="network"
-                              />
-                              <img
-                                className="chip-image"
-                                src={getChip(card.chipImage)}
-                                alt="chip"
-                              />
-                            </header>
+              {cards
+                .filter((c) => c.cardType === "DEBIT")
+                .map((card) => (
+                  <div key={card.cardId} className="gpay-row">
 
-                            <div className="card-number-real">
-                              {card.maskedNumber}
-                            </div>
+                    <div
+                      className="gpay-card-item"
+                      onClick={() =>
+                        setExpandedCard(
+                          expandedCard === card.cardId ? null : card.cardId
+                        )
+                      }
+                    >
+                      <img
+                        src={NETWORK_LOGOS[card.networkName]}
+                        className="gpay-thumb"
+                        alt="thumb"
+                      />
 
-                            <div className="card-bottom-row">
-                              <div className="holder-info">
-                                <label>Holder Name</label>
-                                <div className="holder-name">
-                                  {card.customerName}
-                                </div>
-                              </div>
-
-                              <div className="expiry-info">
-                                <label>Valid Thru</label>
-                                <div className="expiry-date">
-                                  {card.expiry}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* BACK */}
-                          <div
-                            className="card back-side"
-                            style={{ background: card.cardColourBack }}
-                          >
-                            <div className="magnetic-strip-top"></div>
-
-                            <div className="signature">
-                              <i>{card.cvv || "XXX"}</i>
-                            </div>
-
-                            <h5 className="description">
-                              This card is property of the issuing bank.
-                              If found, return to the nearest branch.
-                            </h5>
-                          </div>
-
+                      <div>
+                        <div className="gpay-title">
+                          {card.bankName}{card.maskedNumber}
+                        </div>
+                        <div className="gpay-sub">
+                          {card.networkName} card
                         </div>
                       </div>
                     </div>
-                  )}
-                </div>
-              ))}
+
+                    {expandedCard === card.cardId && (
+                      <div className="expanded-card-area">
+                        <div className="flip-container">
+                          <div className="flip-card">
+
+                            {/* FRONT */}
+                            <div
+                              className="card front-side"
+                              style={{
+                                background: card.cardColourFront,
+                                color: card.textColour,
+                              }}
+                            >
+                              <header className="front-header">
+                                <img
+                                  src={NETWORK_LOGOS[card.networkName]}
+                                  className="network-logo"
+                                  alt="network"
+                                />
+                                <img
+                                  className="chip-image"
+                                  src={getChip(card.chipImage)}
+                                  alt="chip"
+                                />
+                              </header>
+
+                              <div className="card-number-real">
+                                {card.maskedNumber}
+                              </div>
+
+                              <div className="card-bottom-row">
+                                <div className="holder-info">
+                                  <label>Holder Name</label>
+                                  <div className="holder-name">
+                                    {card.customerName}
+                                  </div>
+                                </div>
+
+                                <div className="expiry-info">
+                                  <label>Valid Thru</label>
+                                  <div className="expiry-date">
+                                    {card.expiry}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* BACK */}
+                            <div
+                              className="card back-side"
+                              style={{ background: card.cardColourBack }}
+                            >
+                              <div className="magnetic-strip-top"></div>
+
+                              <div className="signature">
+                                <i>{card.cvv || "XXX"}</i>
+                              </div>
+
+                              <h5 className="description">
+                                This card is property of the issuing bank.
+                              </h5>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+            </div>
+
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

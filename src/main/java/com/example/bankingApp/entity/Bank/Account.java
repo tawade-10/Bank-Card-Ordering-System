@@ -7,8 +7,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "account_creation")
-public class AccountCreation {
+@Table(name = "account")
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +33,9 @@ public class AccountCreation {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AccountStatus status;
+    private AccountStatus accountStatus;
 
+    @Column(name = "message")
     private String message;
 
     private LocalDateTime openedAt;
@@ -89,12 +90,12 @@ public class AccountCreation {
         this.balance = balance;
     }
 
-    public AccountStatus getStatus() {
-        return status;
+    public AccountStatus getAccountStatus() {
+        return accountStatus;
     }
 
-    public void setStatus(AccountStatus status) {
-        this.status = status;
+    public void setAccountStatus(AccountStatus accountStatus) {
+        this.accountStatus = accountStatus;
     }
 
     public LocalDateTime getOpenedAt() {

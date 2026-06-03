@@ -1,10 +1,18 @@
 package com.example.bankingApp.facade.Account;
 
-import com.example.bankingApp.dto.AccountDto.AccountCreationRequestDto;
-import com.example.bankingApp.dto.AccountDto.AccountResponseDto;
+import com.example.bankingApp.dto.AccountDto.Creation.CreationRequestDto;
+import com.example.bankingApp.dto.AccountDto.Creation.CreationResponseDto;
+import com.example.bankingApp.dto.AccountDto.Request.AccountRequestDto;
+import com.example.bankingApp.dto.AccountDto.Request.AccountResponseDto;
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 public interface AccountFacade {
 
-    AccountResponseDto createAccountRequest(@Valid AccountCreationRequestDto accountRequestsDto);
+    AccountResponseDto createAccountRequest(@Valid AccountRequestDto accountRequestsDto);
+
+    List<AccountResponseDto> getPendingRequests();
+
+    CreationResponseDto createAccount(@Valid CreationRequestDto creationRequestDto);
 }

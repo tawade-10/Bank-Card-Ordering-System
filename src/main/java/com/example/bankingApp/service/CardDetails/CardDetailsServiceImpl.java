@@ -105,7 +105,7 @@ public class CardDetailsServiceImpl implements CardDetailsService{
         NotificationsRequestDto cardDto = new NotificationsRequestDto();
         cardDto.setCustomerId(customer.getCustomerId());
         cardDto.setTitle("Card Created Successfully");
-        cardDto.setMessage("Your new " + type.getTypeName() + " card ending with " + last4 + " has been created.");
+        cardDto.setMessage("Your new " + type.getTypeName() + " card ending with " + last4 + " has been " + request.getRequestStatus());
         cardDto.setType("CARD_APPROVED");
         cardDto.setReferenceId(saved.getCardId());
 

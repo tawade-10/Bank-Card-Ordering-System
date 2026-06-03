@@ -15,7 +15,7 @@ public class Transactions {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
-    private AccountCreation accountCreation;
+    private Account account;
 
     private String transactionType;
 
@@ -37,12 +37,12 @@ public class Transactions {
         this.transactionId = transactionId;
     }
 
-    public AccountCreation getAccount() {
-        return accountCreation;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setAccount(AccountCreation accountCreation) {
-        this.accountCreation = accountCreation;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public String getTransactionType() {

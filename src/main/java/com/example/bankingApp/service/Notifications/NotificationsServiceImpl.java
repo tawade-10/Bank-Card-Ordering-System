@@ -31,47 +31,47 @@ public class NotificationsServiceImpl implements NotificationsService {
     }
 
     @Override
-    public NotificationsResponseDto createNotifications(NotificationsRequestDto dto) {
+    public NotificationsResponseDto createNotifications(NotificationsRequestDto notificationsRequestDto) {
 
-        Customers customer = customersRepo.findById(dto.getCustomerId())
+        Customers customer = customersRepo.findById(notificationsRequestDto.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
 
         Optional<Notifications> existingOpt;
 
-        if (dto.getType().startsWith("LOGIN")
-                || dto.getType().startsWith("REGISTER")) {
+        if (notificationsRequestDto.getType().startsWith("LOGIN")
+                || notificationsRequestDto.getType().startsWith("REGISTER")) {
 
             existingOpt = notificationsRepo
-                    .findByCustomerCustomerIdAndType(dto.getCustomerId(), dto.getType());
+                    .findByCustomerCustomerIdAndType(notificationsRequestDto.getCustomerId(), notificationsRequestDto.getType());
         } else {
             existingOpt = notificationsRepo
                     .findByCustomerCustomerIdAndTypeAndReferenceId(
-                            dto.getCustomerId(),
-                            dto.getType(),
-                            dto.getReferenceId()
+                            notificationsRequestDto.getCustomerId(),
+                            notificationsRequestDto.getType(),
+                            notificationsRequestDto.getReferenceId()
                     );
         }
 
         Notifications notification;
         if (existingOpt.isPresent()) {
             notification = existingOpt.get();
-            notification.setTitle(dto.getTitle());
-            notification.setMessage(dto.getMessage());
-            notification.setReferenceId(dto.getReferenceId());
+            notification.setTitle(notificationsRequestDto.getTitle());
+            notification.setMessage(notificationsRequestDto.getMessage());
+            notification.setReferenceId(notificationsRequestDto.getReferenceId());
             notification.setUpdatedAt(LocalDateTime.now());
         } else {
             notification = new Notifications();
             notification.setCustomer(customer);
-            notification.setType(dto.getType());
-            notification.setTitle(dto.getTitle());
-            notification.setMessage(dto.getMessage());
-            notification.setReferenceId(dto.getReferenceId());
+            notification.setType(notificationsRequestDto.getType());
+            notification.setTitle(notificationsRequestDto.getTitle());
+            notification.setMessage(notificationsRequestDto.getMessage());
+            notification.setReferenceId(notificationsRequestDto.getReferenceId());
             notification.setRead(false);
         }
         Notifications saved = notificationsRepo.save(notification);
         NotificationsResponseDto response = new NotificationsResponseDto(saved);
         messagingTemplate.convertAndSend(
-                "/topic/notifications/" + dto.getCustomerId(),
+                "/topic/notifications/" + notificationsRequestDto.getCustomerId(),
                 response
         );
         return response;

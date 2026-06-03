@@ -176,8 +176,8 @@ public class CardRequestsServiceImpl implements CardRequestsService {
             throw new RuntimeException("Only PENDING_REVIEW requests can be approved or rejected.");
         }
 
-        if (reviewRequestsDto.getStatus() != RequestStatus.APPROVED &&
-                reviewRequestsDto.getStatus() != RequestStatus.REJECTED) {
+        if (reviewRequestsDto.getRequestStatus() != RequestStatus.APPROVED &&
+                reviewRequestsDto.getRequestStatus() != RequestStatus.REJECTED) {
             throw new RuntimeException("Invalid status. Only APPROVED or REJECTED allowed here.");
         }
 
@@ -186,7 +186,7 @@ public class CardRequestsServiceImpl implements CardRequestsService {
             throw new RuntimeException("Reason cannot be empty");
         }
 
-        request.setRequestStatus(reviewRequestsDto.getStatus());
+        request.setRequestStatus(reviewRequestsDto.getRequestStatus());
         request.setReviewMessage(reviewRequestsDto.getReviewMessage());
         request.setUpdatedDate(LocalDate.now());
         request.setUpdatedTime(LocalTime.now());
@@ -197,7 +197,7 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         cardDto.setCustomerId(request.getCustomers().getCustomerId());
         cardDto.setTitle("Card Request Reviewed");
         cardDto.setMessage("Your Request for " + request.getCardType().getTypeName() +
-                        " card has been " + reviewRequestsDto.getStatus());
+                        " card has been " + reviewRequestsDto.getRequestStatus());
         cardDto.setType("CARD_REQUEST");
         cardDto.setReferenceId(saved.getRequestId());
 
@@ -214,7 +214,7 @@ public class CardRequestsServiceImpl implements CardRequestsService {
                 .orElseThrow(() -> new RuntimeException("Request not found with ID: " + requestId));
 
         RequestStatus current = request.getRequestStatus();
-        RequestStatus next = reviewRequestsDto.getStatus();
+        RequestStatus next = reviewRequestsDto.getRequestStatus();
 
         if (current == RequestStatus.REJECTED) {
             throw new RuntimeException("Request already rejected.");

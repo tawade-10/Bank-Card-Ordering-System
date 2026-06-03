@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface NotificationsService {
     
-    NotificationsResponseDto createNotifications(NotificationsRequestDto dto);
+    NotificationsResponseDto createNotifications(NotificationsRequestDto notificationsRequestDto);
 
     List<NotificationsResponseDto> getAllNotificationsByUser(Long customerId);
 

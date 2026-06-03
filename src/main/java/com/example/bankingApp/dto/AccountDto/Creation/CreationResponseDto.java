@@ -1,10 +1,10 @@
-package com.example.bankingApp.dto.AccountDto;
+package com.example.bankingApp.dto.AccountDto.Creation;
 
-import com.example.bankingApp.entity.Bank.AccountCreation;
+import com.example.bankingApp.entity.Bank.Account;
 
 import java.time.LocalDateTime;
 
-public class AccountResponseDto {
+public class CreationResponseDto {
 
     private Long accountId;
     private String customerName;
@@ -18,18 +18,18 @@ public class AccountResponseDto {
     private LocalDateTime updatedAt;
     private String message;
 
-    public AccountResponseDto(AccountCreation accountCreation){
-        this.accountId = accountCreation.getAccountId();
-        this.accountNumber = accountCreation.getAccountNumber();
-        this.customerName = accountCreation.getCustomer().getCustomerName();
-        this.accountType = accountCreation.getAccountType().getTypeName();
-        this.branchName= accountCreation.getBranch().getBranchName();
-        this.ifscCode = accountCreation.getBranch().getIfscCode();
-        this.balance = accountCreation.getBalance();
-        this.status = accountCreation.getStatus().toString();
-        this.openedAt = accountCreation.getOpenedAt();
-        this.updatedAt = accountCreation.getUpdatedAt();
-        this.message = accountCreation.getMessage();
+    public CreationResponseDto(Account account) {
+        this.accountId = account.getAccountId();
+        this.customerName = account.getCustomer().getCustomerName();
+        this.accountNumber = account.getAccountNumber();
+        this.accountType = account.getAccountType().getTypeName();
+        this.branchName = account.getBranch().getBranchName();
+        this.ifscCode = account.getBranch().getIfscCode();
+        this.status = account.getAccountStatus().toString();
+        this.balance = account.getBalance();
+        this.openedAt = account.getOpenedAt();
+        this.updatedAt = account.getUpdatedAt();
+        this.message = account.getMessage();
     }
 
     public Long getAccountId() {
@@ -40,14 +40,6 @@ public class AccountResponseDto {
         this.accountId = accountId;
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
     public String getCustomerName() {
         return customerName;
     }
@@ -56,44 +48,20 @@ public class AccountResponseDto {
         this.customerName = customerName;
     }
 
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
     public String getAccountType() {
         return accountType;
     }
 
     public void setAccountType(String accountType) {
         this.accountType = accountType;
-    }
-
-    public Double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getOpenedAt() {
-        return openedAt;
-    }
-
-    public void setOpenedAt(LocalDateTime openedAt) {
-        this.openedAt = openedAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public String getBranchName() {
@@ -110,6 +78,38 @@ public class AccountResponseDto {
 
     public void setIfscCode(String ifscCode) {
         this.ifscCode = ifscCode;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
+
+    public LocalDateTime getOpenedAt() {
+        return openedAt;
+    }
+
+    public void setOpenedAt(LocalDateTime openedAt) {
+        this.openedAt = openedAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public String getMessage() {

@@ -1,12 +1,16 @@
 package com.example.bankingApp.controllers;
 
-import com.example.bankingApp.dto.AccountDto.AccountCreationRequestDto;
-import com.example.bankingApp.dto.AccountDto.AccountResponseDto;
+import com.example.bankingApp.dto.AccountDto.Creation.CreationRequestDto;
+import com.example.bankingApp.dto.AccountDto.Creation.CreationResponseDto;
+import com.example.bankingApp.dto.AccountDto.Request.AccountRequestDto;
+import com.example.bankingApp.dto.AccountDto.Request.AccountResponseDto;
 import com.example.bankingApp.facade.Account.AccountFacade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
@@ -19,10 +23,21 @@ public class AccountController {
         this.accountFacade = accountFacade;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<AccountResponseDto> createAccountRequest(@Valid @RequestBody AccountCreationRequestDto accountRequestsDto){
-        AccountResponseDto accountCreated = accountFacade.createAccountRequest(accountRequestsDto);
-        return new ResponseEntity<>(accountCreated, HttpStatus.CREATED);
+    @PostMapping("/create-request")
+    public ResponseEntity<AccountResponseDto> createAccountRequest(@Valid @RequestBody AccountRequestDto accountRequestsDto){
+        AccountResponseDto requestCreated = accountFacade.createAccountRequest(accountRequestsDto);
+        return new ResponseEntity<>(requestCreated, HttpStatus.CREATED);
     }
 
+    @GetMapping("/pending")
+    public ResponseEntity<List<AccountResponseDto>> getPendingRequests(){
+        List<AccountResponseDto> pendingRequests = accountFacade.getPendingRequests();
+        return ResponseEntity.ok(pendingRequests);
+    }
+
+    @PostMapping("/create-account")
+    public ResponseEntity<CreationResponseDto> createAccount(@Valid @RequestBody CreationRequestDto creationRequestDto){
+        CreationResponseDto accountCreated = accountFacade.createAccount(creationRequestDto);
+        return new ResponseEntity<>(accountCreated, HttpStatus.CREATED);
+    }
 }

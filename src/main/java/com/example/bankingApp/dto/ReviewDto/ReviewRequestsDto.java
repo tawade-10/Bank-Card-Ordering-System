@@ -14,11 +14,11 @@ public class ReviewRequestsDto {
     public ReviewRequestsDto() {
     }
 
-    public RequestStatus getStatus() {
+    public RequestStatus getRequestStatus() {
         return requestStatus;
     }
 
-    public void setStatus(RequestStatus requestStatus) {
+    public void setRequestStatus(RequestStatus requestStatus) {
         this.requestStatus = requestStatus;
     }
 

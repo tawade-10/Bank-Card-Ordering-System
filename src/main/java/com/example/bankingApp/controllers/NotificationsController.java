@@ -1,8 +1,10 @@
 package com.example.bankingApp.controllers;
 
+import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.dto.Notifications.NotificationsRequestDto;
 import com.example.bankingApp.dto.Notifications.NotificationsResponseDto;
 import com.example.bankingApp.service.Notifications.NotificationsService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +21,9 @@ public class NotificationsController {
     }
 
     @PostMapping("/create")
-    public NotificationsResponseDto createNotifications(@RequestBody NotificationsRequestDto dto) {
-        return notificationsService.createNotifications(dto);
+    public ResponseEntity<NotificationsResponseDto> createNotifications(@RequestBody NotificationsRequestDto notificationsRequestDto) {
+        NotificationsResponseDto notificationCreated = notificationsService.createNotifications(notificationsRequestDto);
+        return new ResponseEntity<>(notificationCreated, HttpStatus.CREATED);
     }
 
     @GetMapping("/user/{customerId}")

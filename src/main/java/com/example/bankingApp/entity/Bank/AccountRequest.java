@@ -31,6 +31,9 @@ public class AccountRequest {
     @Column(nullable = false)
     private AccountStatus status;
 
+    @Column(name = "message")
+    private String message;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -75,6 +78,14 @@ public class AccountRequest {
 
     public void setStatus(AccountStatus status) {
         this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public LocalDateTime getCreatedAt() {

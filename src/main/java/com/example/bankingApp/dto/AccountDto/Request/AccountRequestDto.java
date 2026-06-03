@@ -1,6 +1,6 @@
-package com.example.bankingApp.dto.AccountDto;
+package com.example.bankingApp.dto.AccountDto.Request;
 
-public class AccountCreationRequestDto {
+public class AccountRequestDto {
 
     private Long bankId;
 
