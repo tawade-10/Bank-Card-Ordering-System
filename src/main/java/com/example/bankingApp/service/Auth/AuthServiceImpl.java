@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
 
         Customers savedCustomer = customersRepo.save(customer);
 
-        String registrationMessage = "Welcome to our banking system!";
+        String registrationMessage = "User Registered Successfully!";
 
         NotificationsRequestDto notificationDto = new NotificationsRequestDto();
         notificationDto.setCustomerId(savedCustomer.getCustomerId());

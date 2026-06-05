@@ -21,8 +21,14 @@ public class Branch {
     @Column(name = "branch_name")
     private String branchName;
 
+    @Column(unique = true)
+    private String branchCode;
+
     @Column(name = "city")
     private String city;
+
+    @Column(nullable = false)
+    private Long nextAccountSequence = 1L;
 
     public Long getBranchId() {
         return branchId;
@@ -56,6 +62,10 @@ public class Branch {
         this.branchName = branchName;
     }
 
+    public String getBranchCode() { return branchCode; }
+
+    public void setBranchCode(String branchCode) { this.branchCode = branchCode; }
+
     public String getCity() {
         return city;
     }
@@ -63,4 +73,8 @@ public class Branch {
     public void setCity(String city) {
         this.city = city;
     }
+
+    public Long getNextAccountSequence() { return nextAccountSequence; }
+
+    public void setNextAccountSequence(Long nextAccountSequence) { this.nextAccountSequence = nextAccountSequence; }
 }

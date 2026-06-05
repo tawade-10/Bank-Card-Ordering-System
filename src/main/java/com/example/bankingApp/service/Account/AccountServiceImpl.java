@@ -17,6 +17,7 @@ import com.example.bankingApp.repository.Bank.AccountRequestRepo;
 import com.example.bankingApp.repository.Bank.AccountTypeRepo;
 import com.example.bankingApp.repository.Bank.BranchRepo;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
+import com.example.bankingApp.service.AccountNumberGenerator;
 import com.example.bankingApp.service.Notifications.NotificationsService;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
@@ -42,20 +43,22 @@ public class AccountServiceImpl implements AccountService{
 
     private final NotificationsService notificationsService;
 
-    public AccountServiceImpl(CustomersRepo customersRepo, AccountCreationRepo accountCreationRepo, AccountTypeRepo accountTypeRepo, BranchRepo branchRepo, AccountRequestRepo accountRequestRepo, NotificationsService notificationsService) {
+    private final AccountNumberGenerator accountNumberGenerator;
+
+    public AccountServiceImpl(CustomersRepo customersRepo, AccountCreationRepo accountCreationRepo, AccountTypeRepo accountTypeRepo, BranchRepo branchRepo, AccountRequestRepo accountRequestRepo, NotificationsService notificationsService, AccountNumberGenerator accountNumberGenerator) {
         this.customersRepo = customersRepo;
         this.accountCreationRepo = accountCreationRepo;
         this.accountTypeRepo = accountTypeRepo;
         this.branchRepo = branchRepo;
         this.accountRequestRepo = accountRequestRepo;
         this.notificationsService = notificationsService;
+        this.accountNumberGenerator = accountNumberGenerator;
     }
 
     @Override
     public AccountResponseDto createAccountRequest(AccountRequestDto dto) {
 
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
             throw new RuntimeException("User is not authenticated");
@@ -116,25 +119,29 @@ public class AccountServiceImpl implements AccountService{
         AccountRequest request = accountRequestRepo.findById(creationRequestDto.getRequestId())
                         .orElseThrow(() -> new RuntimeException("Request not found"));
 
-        if(request.getStatus() != AccountStatus.PENDING_REVIEW){
-            throw new RuntimeException(
-                    "Request already processed");
+        if (request.getStatus() != AccountStatus.PENDING_REVIEW) {
+            throw new RuntimeException("Request already processed");
         }
 
+        Branch branch = request.getBranch();
+
+        String accountNumber = accountNumberGenerator.generate(branch);
+
+        branchRepo.save(branch);
+
         Account account = new Account();
+
         account.setCustomer(request.getCustomer());
-        account.setBranch(request.getBranch());
+        account.setBranch(branch);
         account.setAccountType(request.getAccountType());
         account.setBalance(0.0);
         account.setAccountStatus(AccountStatus.ACTIVE);
-//        account.setAccountNumber(accountNumberGenerator());
+        account.setAccountNumber(accountNumber);
         account.setOpenedAt(LocalDateTime.now());
 
         Account savedAccount = accountCreationRepo.save(account);
 
         request.setStatus(AccountStatus.ACTIVE);
-//        request.setUpdatedDate(LocalDateTime.now());
-//        request.setUpdatedTime(LocalTime.now());
         accountRequestRepo.save(request);
 
         return new CreationResponseDto(savedAccount);

@@ -60,7 +60,6 @@ export default function ViewRequests() {
 
       setRequest(res.data);
 
-      // 🔥 Trigger notification
       if (res.data.customerId) {
         fetchLatestNotification(res.data.customerId);
       }
@@ -71,7 +70,6 @@ export default function ViewRequests() {
     }
   };
 
-  /** 🔥 PRINTED → DISPATCHED → DELIVERED flow */
   const handleFlowUpdate = async (newStatus) => {
     try {
       const res = await axios.put(
@@ -82,7 +80,6 @@ export default function ViewRequests() {
 
       setRequest(res.data);
 
-      // 🔥 Trigger notification
       if (res.data.customerId) {
         fetchLatestNotification(res.data.customerId);
       }
@@ -95,7 +92,6 @@ export default function ViewRequests() {
 
   if (!request) return <h3>Loading...</h3>;
 
-  /* ⛔ RETURN BLOCK IS UNTOUCHED — EXACTLY SAME AS YOU GAVE */
   return (
     <div className="vr-wrapper">
       <div className={`vr-overlay ${showReasonBox ? "show" : ""}`} />

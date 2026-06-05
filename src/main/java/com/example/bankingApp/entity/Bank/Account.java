@@ -22,7 +22,7 @@ public class Account {
     @JoinColumn(name = "customer_id")
     private Customers customer;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String accountNumber;
 
     @ManyToOne

@@ -87,6 +87,7 @@ public class CardDetailsServiceImpl implements CardDetailsService{
             throw new RuntimeException("Card expiry cannot be in the past");
 
         CardDetails card = new CardDetails();
+        card.setCardRequest(request);
         card.setCustomers(customer);
         card.setCardNumber(encrypted);
         card.setLast4(last4);

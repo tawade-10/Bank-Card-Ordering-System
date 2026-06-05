@@ -11,17 +11,17 @@ export default function Notifications() {
 
   const customerId = localStorage.getItem("customerId");
 
-  const fetchRecent = async () => {
-    try {
-      const res = await axios.get(
-        `http://localhost:8080/api/notifications/recent-five/${customerId}`
-      );
-      const latestFive = (res.data || []).slice(0, 5);
-      setAlerts(latestFive);
-    } catch (err) {
-      console.log("Notification fetch error:", err);
-    }
-  };
+ const fetchRecent = async () => {
+   try {
+     const res = await axios.get(
+       `http://localhost:8080/api/notifications/recent-five/${customerId}`
+     );
+
+     setAlerts((res.data || []).slice(0, 5));
+   } catch (err) {
+     console.log("Notification fetch error:", err);
+   }
+ };
 
   useEffect(() => {
     if (!customerId) return;
@@ -32,14 +32,13 @@ export default function Notifications() {
       toast.success(notification.message);
 
       setAlerts((prev) => {
-        const merged = [notification, ...prev];
-        const unique = merged.filter(
-          (item, index, self) =>
-            index === self.findIndex(
-              (t) => t.notificationId === item.notificationId
-            )
+        const exists = prev.some(
+          (n) => n.notificationId === notification.notificationId
         );
-        return unique.slice(0, 5);
+
+        if (exists) return prev;
+
+        return [notification, ...prev].slice(0, 5);
       });
     });
 
