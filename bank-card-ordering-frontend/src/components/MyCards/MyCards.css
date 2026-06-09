@@ -54,11 +54,12 @@
 }
 
 .column-title {
-  font-size: 21px;
-  font-weight: 600;
-  text-align: center;
-  color: #1e293b;
-  margin-bottom: 22px;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #0f172a;
+  text-align: left;
+  padding-left: 5px;
 }
 
 /* LIST */
@@ -85,30 +86,32 @@
 }
 
 .flip-card {
-  width: 100%;
-  max-width: 320px;
-  height: 180px;
+  width: 620px;
+  height: 390px;
   position: relative;
   transform-style: preserve-3d;
-  transition: 0.6s;
+  transition: transform 0.8s ease;
 }
 
 .flip-container:hover .flip-card {
-  transform: rotateY(180deg);
+  transform: rotateY(180deg) scale(1.02);
 }
 
 /* CARD BASE */
 .card {
   position: absolute;
-  height: 100%;
   width: 100%;
-  padding: 16px;
-  border-radius: 16px;
+  height: 100%;
+  border-radius: 24px;
+  padding: 28px;
   backface-visibility: hidden;
+  overflow: hidden;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-shadow:
+    0 20px 45px rgba(0,0,0,0.25);
 }
 
 /* FRONT SIDE */
@@ -120,8 +123,8 @@
 }
 
 .network-logo {
-  width: 50px;
-  height: 32px;
+  width: 85px;
+  height: 50px;
   object-fit: contain;
 }
 
@@ -132,11 +135,11 @@
 }
 
 .card-number-real {
-  margin: 12px 0;
   text-align: center;
-  font-size: 18px;
-  letter-spacing: 2px;
+  font-size: 32px;
   font-weight: 600;
+  letter-spacing: 5px;
+  margin-top: 30px;
 }
 
 .card-bottom-row {
@@ -147,14 +150,17 @@
 
 .holder-info label,
 .expiry-info label {
-  font-size: 7px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   opacity: 0.7;
 }
 
 .holder-name,
 .expiry-date {
-  margin-top: 3px;
-  font-size: 11px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 6px;
 }
 
 /* BACK SIDE */
@@ -163,31 +169,29 @@
 }
 
 .magnetic-strip-top {
-  position: absolute;
-  top: 12px;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 32px;
-  background: #000;
+  top: 30px;
+  height: 60px;
 }
 
 .signature {
   width: 85%;
-  height: 30px;
-  margin-top: 70px;
-  background: repeating-linear-gradient(#fff, #fff 3px, #e9e9e9 3px, #e9e9e9 9px);
+  height: 50px;
+
+  margin-top: 140px;
+
+  border-radius: 6px;
+
+  background: repeating-linear-gradient(#fff, #fff 4px, #ececec 4px, #ececec 8px);
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  border-radius: 4px;
 }
 
 .signature i {
-  background: #fff;
-  padding: 5px;
-  font-size: 11px;
-  margin-right: -15px;
+  font-size: 16px;
+  background: white;
+  padding: 8px;
+  margin-right: -20px;
 }
 
 .description {
@@ -217,18 +221,22 @@
 
 .gpay-card-item {
   display: flex;
-  gap: 14px;
   align-items: center;
-  padding: 12px 14px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  gap: 18px;
+  padding: 18px 22px;
+  background: white;
+  border-radius: 16px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all .25s ease;
+  border: 1px solid #e5e7eb;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,.05);
 }
 
 .gpay-card-item:hover {
-  background: #f5f5f5;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.12);
+  border-color: #2563eb;
 }
 
 .gpay-thumb {
@@ -252,15 +260,6 @@
   font-size: 11px;
   color: #2563eb;
   font-weight: 500;
-}
-
-/* Expanded card area */
-.expanded-card-area {
-  margin-top: 10px;
-  padding: 16px;
-  background: #fafafa;
-  border-radius: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .empty-cards-state {
@@ -319,4 +318,69 @@
   0% { transform: translateY(0px); }
   50% { transform: translateY(-6px); }
   100% { transform: translateY(0px); }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: scale(.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.card-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn .3s ease;
+}
+
+.card-modal {
+  position: relative;
+  padding: 40px;
+  border-radius: 32px;
+  background: rgba(20,20,20,0.2);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow:
+    0 40px 80px rgba(0,0,0,0.4);
+  animation: modalPop .35s ease;
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  transition: 0.2s;
+}
+
+.close-modal-btn:hover {
+  background: rgba(255,255,255,0.4);
 }

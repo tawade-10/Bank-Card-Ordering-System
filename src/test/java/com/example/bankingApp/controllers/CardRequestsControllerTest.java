@@ -98,7 +98,7 @@ class CardRequestsServiceImplTest {
         saved.setReason(reason);
         saved.setCardNetwork(cardNetwork);
         saved.setNetworkBin(networkBin);
-        saved.setStatus(RequestStatus.PENDING_REVIEW);
+        saved.setRequestStatus(RequestStatus.PENDING_REVIEW);
         saved.setLocalDate(LocalDate.now());
         saved.setCustomers(customer);
 

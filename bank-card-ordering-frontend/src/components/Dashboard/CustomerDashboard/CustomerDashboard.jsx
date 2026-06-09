@@ -47,6 +47,9 @@ export default function CustomerDashboard() {
       <h2 className="title">Customer Dashboard</h2>
 
       <div className="top-boxes">
+        <Link to="/dashboard/bank-account" className="box">
+                  Request Bank Account
+        </Link>
         <Link to="/dashboard/request-new-card" className="box">
           Request New Card
         </Link>

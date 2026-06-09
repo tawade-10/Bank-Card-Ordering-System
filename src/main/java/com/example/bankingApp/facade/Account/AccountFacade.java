@@ -15,4 +15,10 @@ public interface AccountFacade {
     List<AccountResponseDto> getPendingRequests();
 
     CreationResponseDto createAccount(@Valid CreationRequestDto creationRequestDto);
+
+    List<CreationResponseDto> getAllAccounts();
+
+    CreationResponseDto getAccountById(Long accountId);
+
+    AccountResponseDto getRequestById(Long requestId);
 }

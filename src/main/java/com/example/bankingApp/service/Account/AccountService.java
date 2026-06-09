@@ -13,4 +13,10 @@ public interface AccountService {
     List<AccountResponseDto> getPendingRequests();
 
     CreationResponseDto createAccount(CreationRequestDto creationRequestDto);
+
+    List<CreationResponseDto> getAllAccounts();
+
+    CreationResponseDto getAccountById(Long accountId);
+
+    AccountResponseDto getRequestById(Long requestId);
 }

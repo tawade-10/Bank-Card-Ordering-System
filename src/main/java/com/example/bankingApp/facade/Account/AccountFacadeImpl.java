@@ -32,4 +32,19 @@ public class AccountFacadeImpl implements AccountFacade{
     public CreationResponseDto createAccount(CreationRequestDto creationRequestDto) {
         return accountService.createAccount(creationRequestDto);
     }
+
+    @Override
+    public List<CreationResponseDto> getAllAccounts() {
+        return accountService.getAllAccounts();
+    }
+
+    @Override
+    public CreationResponseDto getAccountById(Long accountId) {
+        return accountService.getAccountById(accountId);
+    }
+
+    @Override
+    public AccountResponseDto getRequestById(Long requestId) {
+        return accountService.getRequestById(requestId);
+    }
 }

@@ -27,7 +27,7 @@ public class Branch {
     @Column(name = "city")
     private String city;
 
-    @Column(nullable = false)
+    @Column(name = "next_account_sequence", nullable = false)
     private Long nextAccountSequence = 1L;
 
     public Long getBranchId() {

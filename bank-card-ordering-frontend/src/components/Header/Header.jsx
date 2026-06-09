@@ -10,6 +10,8 @@ export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const username = localStorage.getItem("customerName");
+
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
@@ -19,58 +21,75 @@ export default function Header() {
   const isLoginPage = location.pathname === "/";
 
   useEffect(() => {
-    const refresh = () => {
-      setToken(localStorage.getItem("token"));
-    };
-
+    const refresh = () => setToken(localStorage.getItem("token"));
     window.addEventListener("login", refresh);
     return () => window.removeEventListener("login", refresh);
   }, []);
 
   useEffect(() => {
     if (!userId) return;
+
     axios
-      .get(`http://localhost:8080/api/notifications/user/${userId}`)
+      .get(`http://localhost:8080/api/notifications/recent-five/${userId}`)
       .then((res) => {
-        setNotifications(res.data);
-        setUnreadCount(res.data.length);
+        const recent = (res.data || []).slice(0, 5);
+        setNotifications(recent);
+
+        setUnreadCount(
+          recent.filter((n) => !n.read).length
+        );
       })
       .catch((err) => console.log(err));
   }, [userId]);
 
   useEffect(() => {
     if (!userId) return;
+
     const socket = new SockJS("http://localhost:8080/ws");
+
     const client = new Client({
       webSocketFactory: () => socket,
       reconnectDelay: 5000,
-      debug: (str) => console.log(str),
 
       onConnect: () => {
         client.subscribe(`/topic/notifications/${userId}`, (msg) => {
           const notif = JSON.parse(msg.body);
 
-          setNotifications((prev) => [notif, ...prev]);
+          setNotifications((prev) => {
+            const exists = prev.some(
+              (n) => n.notificationId === notif.notificationId
+            );
+
+            if (exists) {
+              return prev.map((n) =>
+                n.notificationId === notif.notificationId ? notif : n
+              ).slice(0, 5);
+            }
+
+            return [notif, ...prev].slice(0, 5);
+          });
+
           setUnreadCount((prev) => prev + 1);
         });
-      },
+      }
     });
 
     client.activate();
-
     return () => client.deactivate();
   }, [userId]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("customerId");
-    navigate("/");
+    localStorage.removeItem("customerName");
+
     setToken(null);
+    navigate("/");
   };
 
   const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-    setUnreadCount(0);
+    setDropdownOpen((prev) => !prev);
+    if (!dropdownOpen) setUnreadCount(0);
   };
 
   return (
@@ -78,38 +97,54 @@ export default function Header() {
       <div className="logo">Bank Name</div>
 
       {!isLoginPage && token && (
-        <div className="notification-area">
-          <div className="notif-wrapper" onClick={toggleDropdown}>
-            <IoNotificationsOutline size={26} className="notif-icon" />
+        <div className="right-section">
 
-            {unreadCount > 0 && (
+          {/* 🔔 NOTIFICATIONS */}
+          <div className="right-section">
+             <span className="welcome-text">
+                Welcome, <b>{username || "User"}</b>
+             </span>
+
+          <div className="notif-wrapper" onClick={toggleDropdown}>
+             <IoNotificationsOutline size={22} className="notif-icon" />
+
+          {unreadCount > 0 && (
               <span className="notif-badge">{unreadCount}</span>
+          )}
+          </div>
+
+            {dropdownOpen && (
+              <div className="notif-dropdown">
+                <h4 className="notif-title">Recent Notifications</h4>
+
+                {notifications.length === 0 ? (
+                  <p className="notif-empty">No notifications</p>
+                ) : (
+                  notifications.map((notification) => (
+                    <div
+                      key={notification.notificationId}
+                      className="notif-card"
+                    >
+                      <p className="notif-text">
+                        {notification.message}
+                      </p>
+
+                      <p className="notif-time">
+                        {notification.updatedAt
+                          ? new Date(notification.updatedAt).toLocaleString()
+                          : ""}
+                      </p>
+                    </div>
+                  ))
+                )}
+              </div>
             )}
           </div>
 
-          {dropdownOpen && (
-            <div className="notif-dropdown">
-              <h4 className="notif-title">Notifications</h4>
-
-              {notifications.length === 0 ? (
-                <p className="notif-empty">No notifications</p>
-              ) : (
-                notifications.map((n, i) => (
-                  <div key={i} className="notif-card">
-                    <p className="notif-text">{n.message}</p>
-                    <p className="notif-time">{n.time}</p>
-                  </div>
-                ))
-              )}
-            </div>
-          )}
+          <button className="logout-btn" onClick={handleLogout}>
+            Logout
+          </button>
         </div>
-      )}
-
-      {!isLoginPage && token && (
-        <button className="logout-btn" onClick={handleLogout}>
-          Logout
-        </button>
       )}
     </div>
   );

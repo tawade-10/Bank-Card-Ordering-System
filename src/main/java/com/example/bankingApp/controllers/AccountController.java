@@ -35,9 +35,27 @@ public class AccountController {
         return ResponseEntity.ok(pendingRequests);
     }
 
+    @GetMapping("/{requestId}")
+    public ResponseEntity<AccountResponseDto> getRequestById(@PathVariable Long requestId){
+        AccountResponseDto requestById = accountFacade.getRequestById(requestId);
+        return ResponseEntity.ok(requestById);
+    }
+
     @PostMapping("/create-account")
     public ResponseEntity<CreationResponseDto> createAccount(@Valid @RequestBody CreationRequestDto creationRequestDto){
         CreationResponseDto accountCreated = accountFacade.createAccount(creationRequestDto);
         return new ResponseEntity<>(accountCreated, HttpStatus.CREATED);
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<CreationResponseDto>> getAllAccounts(){
+        List<CreationResponseDto> allAccounts = accountFacade.getAllAccounts();
+        return ResponseEntity.ok(allAccounts);
+    }
+
+    @GetMapping("/{accountId}")
+    public ResponseEntity<CreationResponseDto> getAccountById(@PathVariable Long accountId){
+        CreationResponseDto accountById = accountFacade.getAccountById(accountId);
+        return ResponseEntity.ok(accountById);
     }
 }

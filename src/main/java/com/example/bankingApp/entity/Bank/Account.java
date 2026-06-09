@@ -4,6 +4,7 @@ import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.Enums.AccountStatus;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,7 +30,8 @@ public class Account {
     @JoinColumn(name = "type_id")
     private AccountType accountType;
 
-    private Double balance;
+    @Column(nullable = false)
+    private BigDecimal balance;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -82,11 +84,11 @@ public class Account {
         this.accountType = accountType;
     }
 
-    public Double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

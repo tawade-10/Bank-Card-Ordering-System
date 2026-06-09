@@ -2,6 +2,7 @@ package com.example.bankingApp.dto.AccountDto.Creation;
 
 import com.example.bankingApp.entity.Bank.Account;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class CreationResponseDto {
@@ -13,7 +14,7 @@ public class CreationResponseDto {
     private String branchName;
     private String ifscCode;
     private String status;
-    private Double balance;
+    private BigDecimal balance;
     private LocalDateTime openedAt;
     private LocalDateTime updatedAt;
     private String message;
@@ -88,11 +89,11 @@ public class CreationResponseDto {
         this.status = status;
     }
 
-    public Double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
