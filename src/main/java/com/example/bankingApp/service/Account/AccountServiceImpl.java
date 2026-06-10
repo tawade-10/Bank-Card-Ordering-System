@@ -185,5 +185,26 @@ public class AccountServiceImpl implements AccountService{
         return new AccountResponseDto(accountRequest);
     }
 
+    @Override
+    public CreationResponseDto updateAccount(Long accountId) {
+        return null;
+    }
 
+    @Override
+    public List<CreationResponseDto> getUserAccounts() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
+            throw new RuntimeException("User is not authenticated");
+        }
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        Customers customer = customersRepo.findById(userDetails.getCustomers().getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        List<Account> accounts = accountCreationRepo.findByCustomer(customer);
+        return accounts.stream().map(CreationResponseDto::new).collect(Collectors.toList());
+    }
 }

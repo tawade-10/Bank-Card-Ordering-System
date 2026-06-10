@@ -6,10 +6,15 @@ import com.example.bankingApp.dto.NetworkDto.NetworkResponseDto;
 import com.example.bankingApp.dto.Notifications.NotificationsRequestDto;
 import com.example.bankingApp.dto.ReviewDto.ReviewRequestsDto;
 import com.example.bankingApp.dto.ReviewDto.ReviewResponseDto;
+import com.example.bankingApp.entity.Bank.Account;
+import com.example.bankingApp.entity.Bank.AccountRequest;
 import com.example.bankingApp.entity.CardRequests.*;
 import com.example.bankingApp.entity.CardRequests.NetworkBin;
+import com.example.bankingApp.entity.Enums.AccountStatus;
 import com.example.bankingApp.entity.Enums.RequestStatus;
 import com.example.bankingApp.entity.Customers.Customers;
+import com.example.bankingApp.repository.Bank.AccountCreationRepo;
+import com.example.bankingApp.repository.Bank.AccountRequestRepo;
 import com.example.bankingApp.repository.CardRequests.*;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
 import com.example.bankingApp.service.Notifications.NotificationsService;
@@ -22,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,9 +47,11 @@ public class CardRequestsServiceImpl implements CardRequestsService {
 
     private final NetworkBinRepo networkBinRepo;
 
+    private final AccountCreationRepo accountCreationRepo;
+
     private final NotificationsService notificationsService;
 
-    public CardRequestsServiceImpl(CardRequestsRepo cardRequestsRepo, CustomersRepo customersRepo, CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, CardNetworkRepo cardNetworkRepo, ReasonForRequestRepo reasonForRequestRepo, NetworkBinRepo networkBinRepo, NotificationsService notificationsService) {
+    public CardRequestsServiceImpl(CardRequestsRepo cardRequestsRepo, CustomersRepo customersRepo, CardTypeRepo cardTypeRepo, CardVariantRepo cardVariantRepo, CardNetworkRepo cardNetworkRepo, ReasonForRequestRepo reasonForRequestRepo, NetworkBinRepo networkBinRepo, AccountCreationRepo accountCreationRepo, NotificationsService notificationsService) {
         this.cardRequestsRepo = cardRequestsRepo;
         this.customersRepo = customersRepo;
         this.cardTypeRepo = cardTypeRepo;
@@ -51,6 +59,7 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         this.cardNetworkRepo = cardNetworkRepo;
         this.reasonForRequestRepo = reasonForRequestRepo;
         this.networkBinRepo = networkBinRepo;
+        this.accountCreationRepo = accountCreationRepo;
         this.notificationsService = notificationsService;
     }
 
@@ -58,6 +67,7 @@ public class CardRequestsServiceImpl implements CardRequestsService {
     public ResponseDto createRequest(RequestsDto requestsDto) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new RuntimeException("User not authenticated");
         }
@@ -66,6 +76,21 @@ public class CardRequestsServiceImpl implements CardRequestsService {
 
         Customers customer = customersRepo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Customer not found for email: " + email));
+
+        boolean hasAccount = accountCreationRepo.existsByCustomer(customer);
+
+        if (!hasAccount) {
+            NotificationsRequestDto notification = new NotificationsRequestDto();
+            notification.setCustomerId(customer.getCustomerId());
+            notification.setTitle("Bank Account Required");
+            notification.setMessage("Please create a Bank Account before requesting a card.");
+            notification.setType("ACCOUNT_REQUIRED");
+            notification.setReferenceId(null);
+
+            notificationsService.createNotifications(notification);
+
+            throw new RuntimeException("Create a Bank Account first to continue!");
+        }
 
         CardType cardType = cardTypeRepo.findById(requestsDto.getCardTypeId())
                 .orElseThrow(() -> new RuntimeException("Invalid Card Type ID"));
@@ -81,12 +106,16 @@ public class CardRequestsServiceImpl implements CardRequestsService {
         Reason reason = reasonForRequestRepo.findById(requestsDto.getReasonId())
                 .orElseThrow(() -> new RuntimeException("Invalid Reason ID"));
 
-//        Optional<CardRequests> existingPending =
-//                cardRequestsRepo.findPendingRequest(customer, cardType);
-//
-//        if (existingPending.isPresent()) {
-//            throw new RuntimeException("A request for this card is already pending review.");
-//        }
+        Optional<CardRequests> existingPending =
+                cardRequestsRepo.findByCustomersAndCardTypeAndRequestStatus(
+                        customer,
+                        cardType,
+                        RequestStatus.PENDING_REVIEW
+                );
+
+        if (existingPending.isPresent()) {
+            throw new RuntimeException("You already have a pending request for this card type.");
+        }
 
         CardRequests request = new CardRequests();
         request.setCardType(cardType);
@@ -101,8 +130,7 @@ public class CardRequestsServiceImpl implements CardRequestsService {
 
         CardRequests saved = cardRequestsRepo.save(request);
 
-        String notificationMessage =
-                "Your Request for " + cardType.getTypeName() + " CARD has been created.";
+        String notificationMessage = "Your Request for " + cardType.getTypeName() + " CARD has been created.";
 
         NotificationsRequestDto cardDto = new NotificationsRequestDto();
         cardDto.setCustomerId(customer.getCustomerId());

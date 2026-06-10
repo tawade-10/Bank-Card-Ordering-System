@@ -58,4 +58,16 @@ public class AccountController {
         CreationResponseDto accountById = accountFacade.getAccountById(accountId);
         return ResponseEntity.ok(accountById);
     }
+
+    @PutMapping("/update/{accountId}")
+    public ResponseEntity<CreationResponseDto> updateAccount(@PathVariable Long accountId){
+        CreationResponseDto updatedAccount = accountFacade.updateAccount(accountId);
+        return ResponseEntity.ok(updatedAccount);
+    }
+
+    @GetMapping("/my-accounts")
+    public ResponseEntity<List<CreationResponseDto>> getUserAccounts(){
+        List<CreationResponseDto> userAccounts = accountFacade.getUserAccounts();
+        return ResponseEntity.ok(userAccounts);
+    }
 }

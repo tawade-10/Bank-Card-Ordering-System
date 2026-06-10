@@ -43,38 +43,42 @@ export default function RequestNewCard() {
       reasonId: Number(formData.reasonId)
     };
 
-    try {
-      const response = await fetch(
-        "http://localhost:8080/api/request-card/create-request",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token")
-          },
-          body: JSON.stringify(body)
-        }
-      );
-
-      if (response.ok) {
-          const data = await response.json();
-//               if (data.message) {
-//                   toast.success(data.message);
-//               }
-        clearForm();
-        const customerId = localStorage.getItem("customerId");
-        setTimeout(() => navigate("/dashboard"), 1200);
-      } else {
-        const errorText = await response.text();
-        toast.error(errorText || "Request Failed!");
-      }
-    } catch (error) {
-      toast.error("Backend not reachable!");
-    }
-  };
+   try {
+     const response = await fetch(
+       "http://localhost:8080/api/request-card/create-request",
+       {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+           Authorization: "Bearer " + localStorage.getItem("token"),
+         },
+         body: JSON.stringify(body),
+       }
+     );
+     const data = await response.json();
+     if (response.ok) {
+       toast.success(
+         data.message || "Card request submitted successfully!"
+       );
+       clearForm();
+       setTimeout(() => {
+         navigate("/dashboard");
+       }, 1200);
+     } else {
+       toast.error(
+         data.message || data.error || "Request Failed!"
+       );
+     }
+   } catch (error) {
+     toast.error("Backend not reachable!");
+   }
+}
 
   return (
     <div className="container">
+              <button className="back-btn" onClick={() => navigate("/dashboard")}>
+                ← Back
+              </button>
       <div className="form-container">
         <div className="form-header">Request New Card</div>
 

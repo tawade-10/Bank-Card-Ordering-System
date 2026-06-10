@@ -19,4 +19,8 @@ public interface AccountService {
     CreationResponseDto getAccountById(Long accountId);
 
     AccountResponseDto getRequestById(Long requestId);
+
+    CreationResponseDto updateAccount(Long accountId);
+
+    List<CreationResponseDto> getUserAccounts();
 }

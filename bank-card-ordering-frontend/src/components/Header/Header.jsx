@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Header.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { IoNotificationsOutline } from "react-icons/io5";
+import { CgProfile } from "react-icons/cg";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import axios from "axios";
@@ -92,60 +93,68 @@ export default function Header() {
     if (!dropdownOpen) setUnreadCount(0);
   };
 
-  return (
-    <div className="header-bar">
-      <div className="logo">Bank Name</div>
+return (
+  <div className="header-bar">
+    <div className="logo">Bank Name</div>
 
-      {!isLoginPage && token && (
-        <div className="right-section">
+    {!isLoginPage && token && (
+      <div className="right-section">
 
-          {/* 🔔 NOTIFICATIONS */}
-          <div className="right-section">
-             <span className="welcome-text">
-                Welcome, <b>{username || "User"}</b>
-             </span>
+        <span className="welcome-text">
+          Welcome, <b>{username || "User"}</b>
+        </span>
 
-          <div className="notif-wrapper" onClick={toggleDropdown}>
-             <IoNotificationsOutline size={22} className="notif-icon" />
+        <div className="notif-wrapper" onClick={toggleDropdown}>
+          <IoNotificationsOutline size={24} className="notif-icon" />
 
           {unreadCount > 0 && (
-              <span className="notif-badge">{unreadCount}</span>
+            <span className="notif-badge">{unreadCount}</span>
           )}
-          </div>
+        </div>
 
-            {dropdownOpen && (
-              <div className="notif-dropdown">
-                <h4 className="notif-title">Recent Notifications</h4>
+        <div
+          className="profile-wrapper"
+          onClick={() => navigate("/dashboard/profile")}
+          title="View Profile"
+        >
+          <CgProfile size={30} className="profile-icon" />
+        </div>
 
-                {notifications.length === 0 ? (
-                  <p className="notif-empty">No notifications</p>
-                ) : (
-                  notifications.map((notification) => (
-                    <div
-                      key={notification.notificationId}
-                      className="notif-card"
-                    >
-                      <p className="notif-text">
-                        {notification.message}
-                      </p>
+        {/* Notification Dropdown */}
+        {dropdownOpen && (
+          <div className="notif-dropdown">
+            <h4 className="notif-title">Recent Notifications</h4>
 
-                      <p className="notif-time">
-                        {notification.updatedAt
-                          ? new Date(notification.updatedAt).toLocaleString()
-                          : ""}
-                      </p>
-                    </div>
-                  ))
-                )}
-              </div>
+            {notifications.length === 0 ? (
+              <p className="notif-empty">No notifications</p>
+            ) : (
+              notifications.map((notification) => (
+                <div
+                  key={notification.notificationId}
+                  className="notif-card"
+                >
+                  <p className="notif-text">
+                    {notification.message}
+                  </p>
+
+                  <p className="notif-time">
+                    {notification.updatedAt
+                      ? new Date(
+                          notification.updatedAt
+                        ).toLocaleString()
+                      : ""}
+                  </p>
+                </div>
+              ))
             )}
           </div>
+        )}
 
-          <button className="logout-btn" onClick={handleLogout}>
-            Logout
-          </button>
-        </div>
-      )}
-    </div>
-  );
+        <button className="logout-btn" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
+    )}
+  </div>
+);
 }

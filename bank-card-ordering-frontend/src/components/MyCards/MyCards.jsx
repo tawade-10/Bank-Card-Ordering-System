@@ -83,27 +83,44 @@ export default function MyCards() {
      </div>
 
      {cards.length === 0 ? (
-       <div className="empty-cards-state">
-         <div className="empty-card-icon">💳</div>
+      <div className="empty-state-wrapper">
+        <div className="empty-state-card">
 
-         <h2>No Cards Yet</h2>
+          {/* floating illustration */}
+          <div className="empty-icon-wrapper">
+            <div className="floating-card">💳</div>
+          </div>
 
-         <p>You don’t have any active credit or debit cards.</p>
+          <h1 className="empty-title">No Cards Found</h1>
 
-         <p>Once your request is approved, your cards will appear here.</p>
+          <p className="empty-subtitle">
+            You don’t have any active credit or debit cards yet.
+          </p>
 
-         <button
-           className="empty-action-btn"
-           onClick={() => navigate("/request-card")}
-         >
-           Request a Card
-         </button>
-       </div>
+          <p className="empty-hint">
+            Once your request is approved by the bank, your cards will appear here automatically.
+          </p>
+
+          <button
+            className="empty-primary-btn"
+            onClick={() => navigate("/request-new-card")}
+          >
+            + Request New Card
+          </button>
+
+          <div className="empty-secondary-text">
+            Secure • Instant • Bank Approved
+          </div>
+
+        </div>
+      </div>
      ) : (
        <>
          <div className="cards-wrapper">
+                       <button className="back-btn" onClick={() => navigate("/dashboard")}>
+                             ← Back
+                           </button>
            <div className="cards-layout">
-
              {/* CREDIT CARDS */}
              <div className="card-column">
                <h2 className="column-title">Credit Cards</h2>

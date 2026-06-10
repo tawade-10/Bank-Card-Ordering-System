@@ -23,4 +23,6 @@ public interface CardRequestsRepo extends JpaRepository<CardRequests,Long> {
                                               CardType cardType);
 
     long countByRequestStatus(RequestStatus requestStatus);
+
+    Optional<CardRequests> findByCustomersAndCardTypeAndRequestStatus(Customers customer, CardType cardType, RequestStatus requestStatus);
 }

@@ -47,4 +47,14 @@ public class AccountFacadeImpl implements AccountFacade{
     public AccountResponseDto getRequestById(Long requestId) {
         return accountService.getRequestById(requestId);
     }
+
+    @Override
+    public CreationResponseDto updateAccount(Long accountId) {
+        return accountService.updateAccount(accountId);
+    }
+
+    @Override
+    public List<CreationResponseDto> getUserAccounts() {
+        return accountService.getUserAccounts();
+    }
 }
