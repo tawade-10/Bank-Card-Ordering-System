@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import "./BankAccount.css";
+import "./BankAccountForm.css";
 
-export default function BankAccount() {
+export default function BankAccountForm() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({

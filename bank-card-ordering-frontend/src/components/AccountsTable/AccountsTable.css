@@ -1,43 +1,32 @@
 .admin-dashboard-wrapper {
   width: 100%;
-  padding: 70px 70px;
+  padding: 70px;
   box-sizing: border-box;
-  background: transparent;
 }
 
-.title {
-  text-align: center;
-  margin-bottom: 25px;
-  font-size: 28px;
+.page-title {
+  font-size: 30px;
   font-weight: 700;
+  margin-bottom: 25px;
   color: #1e293b;
 }
 
-/* STATS GRID */
 .six-box-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   gap: 15px;
   margin-bottom: 25px;
 }
 
 .box {
   flex: 1;
-  min-width: 140px;
+  min-width: 180px;
   padding: 20px;
-
-  /* ❌ removed white */
-  background: transparent;
-
   border-radius: 10px;
   border: 1px solid #334155;
-
   text-align: center;
   cursor: pointer;
   transition: 0.2s;
-
-  color: #0f172a;
 }
 
 .box:hover {
@@ -46,24 +35,19 @@
 }
 
 .box h3 {
-  font-size: 28px;
   margin: 0;
+  font-size: 28px;
 }
 
 .box p {
-  font-size: 12px;
+  margin-top: 5px;
   color: #64748b;
 }
 
-/* TABLE */
 .table-box {
   width: 100%;
-  max-height: 420px;
+  max-height: 500px;
   overflow-y: auto;
-
-  /* ❌ removed white */
-  background: transparent;
-
   border-radius: 10px;
   border: 1px solid #334155;
 }
@@ -71,7 +55,6 @@
 .admin-table {
   width: 100%;
   border-collapse: collapse;
-  color: #0f172a;
 }
 
 .admin-table thead {
@@ -86,40 +69,42 @@
   padding: 12px;
   border: 1px solid #334155;
   text-align: center;
-  font-size: 14px;
 }
 
 .admin-table tbody tr:hover {
   background: rgba(148, 163, 184, 0.15);
 }
 
-/* STATUS */
-.status.pending_review { color: #f59e0b; font-weight: bold; }
-.status.approved { color: #22c55e; font-weight: bold; }
-.status.rejected { color: #ef4444; font-weight: bold; }
-.status.dispatched { color: #3b82f6; font-weight: bold; }
-.status.delivered { color: #10b981; font-weight: bold; }
+.status.pending_review {
+  color: #f59e0b;
+  font-weight: bold;
+}
+
+.status.approved {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.status.rejected {
+  color: #ef4444;
+  font-weight: bold;
+}
+
+.status.account_created {
+  color: #3b82f6;
+  font-weight: bold;
+}
 
 .view-update-btn {
   padding: 7px 15px;
+  border: none;
+  border-radius: 5px;
   background: #3b82f6;
   color: white;
-  border: none;
-  font-weight: 600;
-  border-radius: 5px;
   cursor: pointer;
+  font-weight: 600;
 }
 
 .view-update-btn:hover {
   background: #2563eb;
-}
-
-/* SCROLLBAR */
-.table-box::-webkit-scrollbar {
-  width: 8px;
-}
-
-.table-box::-webkit-scrollbar-thumb {
-  background: #475569;
-  border-radius: 4px;
 }

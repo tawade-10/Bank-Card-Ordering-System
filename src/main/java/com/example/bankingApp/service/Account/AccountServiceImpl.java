@@ -105,13 +105,9 @@ public class AccountServiceImpl implements AccountService{
         );
         notificationDto.setType("ACCOUNT_REQUEST");
         notificationDto.setReferenceId(saved.getRequestId());
-
         notificationsService.createNotifications(notificationDto);
-
         AccountResponseDto response = new AccountResponseDto(saved);
-
         response.setMessage("Account request submitted successfully.");
-
         return response;
     }
 
@@ -149,7 +145,6 @@ public class AccountServiceImpl implements AccountService{
         account.setAccountStatus(AccountStatus.ACTIVE);
         account.setOpenedAt(LocalDateTime.now());
         account.setUpdatedAt(LocalDateTime.now());
-        account.setMessage(creationRequestDto.getMessage());
 
         Account savedAccount = accountCreationRepo.save(account);
 
