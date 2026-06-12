@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import ReasonBox from "../ReasonBox/ReasonBox";
-import "./ViewRequestsAdmin.css";
+import "./ReviewAccountForm.css";
 import { toast } from "react-toastify";
 
-export default function ViewRequestsAdmin() {
+export default function ReviewAccountForm() {
   const { requestId } = useParams();
   const navigate = useNavigate();
 
