@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @JsonPropertyOrder({
-        "requestId",
+        "cardRequestId",
         "cardTypeId",
         "cardType",
         "cardVariantId",
@@ -26,7 +26,7 @@ import java.time.LocalTime;
 })
 public class ResponseDto {
 
-    private Long requestId;
+    private Long cardRequestId;
     private Long cardTypeId;
     private String cardType;
     private Long cardVariantId;
@@ -42,7 +42,7 @@ public class ResponseDto {
     private String message;
 
     public ResponseDto(CardRequests cardRequests) {
-        this.requestId = cardRequests.getRequestId();
+        this.cardRequestId = cardRequests.getRequestId();
         this.cardTypeId = cardRequests.getCardType().getTypeId();
         this.cardType = cardRequests.getCardType().getTypeName();
         this.cardVariantId = cardRequests.getCardVariant().getVariantId();
@@ -63,13 +63,9 @@ public class ResponseDto {
 
     public ResponseDto() {}
 
-    public Long getRequestId() {
-        return requestId;
-    }
+    public Long getCardRequestId() { return cardRequestId; }
 
-    public void setRequestId(Long requestId) {
-        this.requestId = requestId;
-    }
+    public void setCardRequestId(Long cardRequestId) { this.cardRequestId = cardRequestId; }
 
     public Long getCardTypeId() {
         return cardTypeId;

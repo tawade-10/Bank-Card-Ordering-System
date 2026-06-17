@@ -108,8 +108,8 @@ export default function AdminDashboard() {
             <tbody>
               {filteredRequests.length > 0 ? (
                 filteredRequests.map((req) => (
-                  <tr key={req.requestId}>
-                    <td>{req.requestId}</td>
+                  <tr key={req.cardRequestId}>
+                    <td>{req.cardRequestId}</td>
                     <td>{req.customerName}</td>
                     <td>{req.cardType}</td>
                     <td>{req.cardVariant}</td>
@@ -123,7 +123,7 @@ export default function AdminDashboard() {
                         className="view-update-btn"
                         onClick={() =>
                           navigate(
-                            `/admin/dashboard/view-request/${req.requestId}`
+                            `/admin/dashboard/view-request/${req.cardRequestId}`
                           )
                         }
                       >
@@ -141,10 +141,8 @@ export default function AdminDashboard() {
                 </tr>
               )}
             </tbody>
-
           </table>
         </div>
-
       </div>
     </AdminLayout>
   );

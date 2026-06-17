@@ -25,14 +25,13 @@ export default function AccountsTable() {
           },
         }
       );
-
       setRequests(response.data || []);
     } catch (error) {
       console.error("Error loading account requests", error);
     }
   };
 
-  const getStatus = (r) => r.requestStatus || r.status;
+  const getStatus = (r) => r.accountStatus;
 
   const total = requests.length;
 
@@ -57,8 +56,6 @@ export default function AccountsTable() {
     <AdminLayout>
       <div className="admin-dashboard-wrapper">
         <h2 className="page-title">Bank Account Requests</h2>
-
-        {/* STATS BOXES */}
         <div className="six-box-container">
           <div className="box" onClick={() => setSelectedStatus("PENDING_REVIEW")}>
             <h3>{pending}</h3>
@@ -81,7 +78,6 @@ export default function AccountsTable() {
           </div>
         </div>
 
-        {/* TABLE */}
         <div className="table-box">
           <table className="admin-table">
             <thead>
@@ -103,30 +99,28 @@ export default function AccountsTable() {
                   const status = getStatus(request);
 
                   return (
-                    <tr key={request.requestId}>
-                      <td>{request.requestId}</td>
+                    <tr key={request.accountRequestId}>
+                      <td>{request.accountRequestId}</td>
                       <td>{request.customerName}</td>
                       <td>{request.bankName}</td>
                       <td>{request.branchName}</td>
                       <td>{request.accountType}</td>
-
                       <td className={`status ${status?.toLowerCase()}`}>
                         {status}
                       </td>
-
                       <td>{request.requestDate}</td>
-
 
                       <td>
                         <button
                           className="view-update-btn"
                           onClick={() =>
                             navigate(
-                              `/admin/dashboard/view-account-request/${request.requestId}`
+                              `/admin/dashboard/view-account-request/${request.accountRequestId}`
                             )
                           }
                         >
                           View
+
                         </button>
                       </td>
                     </tr>

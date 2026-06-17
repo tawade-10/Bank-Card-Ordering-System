@@ -4,10 +4,8 @@ import com.example.bankingApp.dto.AccountDto.Creation.CreationRequestDto;
 import com.example.bankingApp.dto.AccountDto.Creation.CreationResponseDto;
 import com.example.bankingApp.dto.AccountDto.Request.AccountRequestDto;
 import com.example.bankingApp.dto.AccountDto.Request.AccountResponseDto;
-import com.example.bankingApp.dto.CardDetailsDto.CardDetailsResponseDto;
 import com.example.bankingApp.dto.Notifications.NotificationsRequestDto;
 import com.example.bankingApp.entity.Bank.*;
-import com.example.bankingApp.entity.CardDetails.CardDetails;
 import com.example.bankingApp.entity.CustomUserDetails;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.Enums.AccountStatus;
@@ -15,7 +13,6 @@ import com.example.bankingApp.repository.Bank.*;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
 import com.example.bankingApp.service.AccountNumberGenerator;
 import com.example.bankingApp.service.Notifications.NotificationsService;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -181,8 +178,17 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public CreationResponseDto updateAccount(Long accountId) {
-        return null;
+    public AccountResponseDto updateAccountStatus(Long requestId, AccountStatus accountStatus) {
+
+        AccountRequest request = accountRequestRepo
+                .findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found"));
+
+        request.setStatus(accountStatus);
+
+        accountRequestRepo.save(request);
+
+        return new AccountResponseDto(request);
     }
 
     @Override

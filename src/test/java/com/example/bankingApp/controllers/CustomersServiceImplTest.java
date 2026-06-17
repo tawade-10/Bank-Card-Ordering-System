@@ -56,32 +56,20 @@ class CustomerServiceImplTest {
         saved.setCreatedDate(LocalDate.now());
         saved.setCreatedTime(LocalTime.now());
 
-        when(customersRepo.findByEmail(dto.getEmail()))
-                .thenReturn(Optional.empty());
+        when(customersRepo.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
+        when(customersRepo.save(any(Customers.class))).thenReturn(saved);
 
-        when(customersRepo.save(any(Customers.class)))
-                .thenReturn(saved);
+        doNothing().when(notificationsServiceImpl).createNotifications(any(NotificationsRequestDto.class));
 
-        doNothing().when(notificationsServiceImpl)
-                .createNotifications(any(NotificationsRequestDto.class));
-
-        CustomersCreationResponseDto response =
-                authServiceImpl.registerCustomer(dto);
+        CustomersCreationResponseDto response = authServiceImpl.registerCustomer(dto);
 
         assertNotNull(response);
         assertEquals("SHUBHAM", response.getCustomerName());
         assertEquals("shubham10@gmail.com", response.getEmail());
-        assertEquals("User Registered Successfully!",
-                response.getMessage());
-
-        verify(customersRepo, times(1))
-                .findByEmail("shubham10@gmail.com");
-
-        verify(customersRepo, times(1))
-                .save(any(Customers.class));
-
-        verify(notificationsServiceImpl, times(1))
-                .createNotifications(any(NotificationsRequestDto.class));
+        assertEquals("User Registered Successfully!", response.getMessage());
+        verify(customersRepo, times(1)).findByEmail("shubham10@gmail.com");
+        verify(customersRepo, times(1)).save(any(Customers.class));
+        verify(notificationsServiceImpl, times(1)).createNotifications(any(NotificationsRequestDto.class));
     }
 
     @Test

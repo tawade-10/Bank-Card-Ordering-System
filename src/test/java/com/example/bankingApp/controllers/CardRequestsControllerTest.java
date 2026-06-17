@@ -5,20 +5,24 @@ import com.example.bankingApp.dto.CardRequestsDto.CreationDto.ResponseDto;
 import com.example.bankingApp.entity.CardRequests.*;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.Enums.RequestStatus;
+import com.example.bankingApp.repository.Bank.AccountCreationRepo;
 import com.example.bankingApp.repository.CardRequests.*;
 import com.example.bankingApp.repository.Customers.CustomersRepo;
 import com.example.bankingApp.service.CardRequests.CardRequestsServiceImpl;
+import com.example.bankingApp.service.Notifications.NotificationsServiceImpl;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,7 +51,13 @@ class CardRequestsServiceImplTest {
     private NetworkBinRepo networkBinRepo;
 
     @Mock
+    private AccountCreationRepo accountCreationRepo;
+
+    @Mock
     private ReasonForRequestRepo reasonForRequestRepo;
+
+    @Mock
+    private NotificationsServiceImpl notificationsServiceImpl;
 
     @InjectMocks
     private CardRequestsServiceImpl cardRequestsServiceImpl;
@@ -77,59 +87,152 @@ class CardRequestsServiceImplTest {
         dto.setReasonId(4L);
 
         Customers customer = new Customers();
+        customer.setCustomerId(10L);
+        customer.setEmail("test@gmail.com");
+
         CardType cardType = new CardType();
+        cardType.setTypeName("DEBIT");
+
         CardVariant cardVariant = new CardVariant();
         CardNetwork cardNetwork = new CardNetwork();
         NetworkBin networkBin = new NetworkBin();
         Reason reason = new Reason();
 
         when(customersRepo.findByEmail("test@gmail.com")).thenReturn(Optional.of(customer));
+        when(accountCreationRepo.existsByCustomer(customer)).thenReturn(true);
         when(cardTypeRepo.findById(1L)).thenReturn(Optional.of(cardType));
         when(cardVariantRepo.findById(2L)).thenReturn(Optional.of(cardVariant));
         when(cardNetworkRepo.findById(3L)).thenReturn(Optional.of(cardNetwork));
         when(networkBinRepo.findByCardNetwork(cardNetwork)).thenReturn(networkBin);
         when(reasonForRequestRepo.findById(4L)).thenReturn(Optional.of(reason));
+        when(cardRequestsRepo.findByCustomersAndCardTypeAndRequestStatus(
+                customer,
+                cardType,
+                RequestStatus.PENDING_REVIEW))
+                .thenReturn(Optional.empty());
 
-        // ---------- Mock Save ----------
-        CardRequests saved = new CardRequests();
-        saved.setRequestId(100L);
-        saved.setCardType(cardType);
-        saved.setCardVariant(cardVariant);
-        saved.setReason(reason);
-        saved.setCardNetwork(cardNetwork);
-        saved.setNetworkBin(networkBin);
-        saved.setRequestStatus(RequestStatus.PENDING_REVIEW);
-        saved.setLocalDate(LocalDate.now());
-        saved.setCustomers(customer);
+        CardRequests savedRequest = new CardRequests();
+        savedRequest.setRequestId(100L);
+        savedRequest.setCardType(cardType);
+        savedRequest.setCardVariant(cardVariant);
+        savedRequest.setCardNetwork(cardNetwork);
+        savedRequest.setReason(reason);
+        savedRequest.setNetworkBin(networkBin);
+        savedRequest.setRequestStatus(RequestStatus.PENDING_REVIEW);
+        savedRequest.setCustomers(customer);
 
-        when(cardRequestsRepo.save(any(CardRequests.class))).thenReturn(saved);
-
-        ResponseDto responseDto = cardRequestsServiceImpl.createRequest(dto);
-
-        assertNotNull(responseDto);
-        assertEquals(100L, responseDto.getRequestId());
+        when(cardRequestsRepo.save(any(CardRequests.class))).thenReturn(savedRequest);
+        when(notificationsServiceImpl.createNotifications(any())).thenReturn(null);
+        ResponseDto response = cardRequestsServiceImpl.createRequest(dto);
+        assertNotNull(response);
+        assertEquals(100L, response.getCardRequestId());
         verify(cardRequestsRepo, times(1)).save(any(CardRequests.class));
+        verify(notificationsServiceImpl, times(1)).createNotifications(any());
     }
 
     @Test
-    void createRequest_NullRequest_ThrowsException() {
+    void createRequest_userNotAuthenticated() {
 
+        when(authentication.isAuthenticated()).thenReturn(false);
         RequestsDto dto = new RequestsDto();
-        dto.setCardTypeId(null);
-
-        assertThrows(RuntimeException.class, () ->{
-            cardRequestsServiceImpl.createRequest(dto);
-        });
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> cardRequestsServiceImpl.createRequest(dto)
+        );
+        assertEquals("User not authenticated", ex.getMessage());
     }
 
-//    @Test
-//    void getAllRequestsSuccess(){
-//        CardRequests request1 = new CardRequests();
-//        request1.setCardType();
-//        request1.setCardVariantId(2L);
-//        request1.setCardNetworkId(3L);
-//        request1.setReasonId(4L);
-//
-//    }
+    @Test
+    void createRequest_customerNotFound() {
 
+        when(authentication.isAuthenticated()).thenReturn(true);
+        when(authentication.getName()).thenReturn("test@gmail.com");
+
+        RequestsDto dto = new RequestsDto();
+
+        when(customersRepo.findByEmail("test@gmail.com")).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> cardRequestsServiceImpl.createRequest(dto)
+        );
+
+        assertTrue(ex.getMessage().contains("Customer not found"));
+    }
+
+    @Test
+    void shouldThrowException_WhenPendingRequestAlreadyExists() {
+
+        // Arrange
+        RequestsDto dto = new RequestsDto();
+        dto.setCardTypeId(1L);
+        dto.setCardVariantId(2L);
+        dto.setCardNetworkId(3L);
+        dto.setReasonId(4L);
+
+        Customers customer = new Customers();
+        customer.setCustomerId(10L);
+        customer.setEmail("test@gmail.com");
+
+        CardType cardType = new CardType();
+        cardType.setTypeName("DEBIT");
+
+        CardRequests existingRequest = new CardRequests();
+        existingRequest.setRequestId(100L);
+
+        when(authentication.isAuthenticated()).thenReturn(true);
+        when(authentication.getName()).thenReturn("test@gmail.com");
+
+        when(customersRepo.findByEmail("test@gmail.com"))
+                .thenReturn(Optional.of(customer));
+
+        when(accountCreationRepo.existsByCustomer(customer))
+                .thenReturn(true);
+
+        when(cardTypeRepo.findById(1L))
+                .thenReturn(Optional.of(cardType));
+
+        when(cardRequestsRepo.findByCustomersAndCardTypeAndRequestStatus(
+                customer,
+                cardType,
+                RequestStatus.PENDING_REVIEW))
+                .thenReturn(Optional.of(existingRequest));
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> cardRequestsServiceImpl.createRequest(dto)
+        );
+
+        assertEquals(
+                "You already have a pending request for this card type.",
+                exception.getMessage()
+        );
+
+        verify(cardRequestsRepo, never()).save(any(CardRequests.class));
+        verify(notificationsServiceImpl, never()).createNotifications(any());
+    }
+
+    @Test
+    void createRequest_noBankAccount() {
+
+        when(authentication.isAuthenticated()).thenReturn(true);
+        when(authentication.getName()).thenReturn("test@gmail.com");
+
+        RequestsDto dto = new RequestsDto();
+
+        Customers customer = new Customers();
+        customer.setCustomerId(10L);
+
+        when(customersRepo.findByEmail("test@gmail.com")).thenReturn(Optional.of(customer));
+        when(accountCreationRepo.existsByCustomer(customer)).thenReturn(false);
+        when(notificationsServiceImpl.createNotifications(any())).thenReturn(null);
+
+        RuntimeException ex = assertThrows(
+                RuntimeException.class,
+                () -> cardRequestsServiceImpl.createRequest(dto)
+        );
+
+        assertEquals("Create a Bank Account first to continue!", ex.getMessage());
+
+        verify(notificationsServiceImpl, times(1)).createNotifications(any());
+    }
 }

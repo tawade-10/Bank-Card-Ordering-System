@@ -4,6 +4,7 @@ import com.example.bankingApp.dto.AccountDto.Creation.CreationRequestDto;
 import com.example.bankingApp.dto.AccountDto.Creation.CreationResponseDto;
 import com.example.bankingApp.dto.AccountDto.Request.AccountRequestDto;
 import com.example.bankingApp.dto.AccountDto.Request.AccountResponseDto;
+import com.example.bankingApp.entity.Enums.AccountStatus;
 import com.example.bankingApp.service.Account.AccountService;
 import org.springframework.stereotype.Component;
 
@@ -49,8 +50,8 @@ public class AccountFacadeImpl implements AccountFacade{
     }
 
     @Override
-    public CreationResponseDto updateAccount(Long accountId) {
-        return accountService.updateAccount(accountId);
+    public AccountResponseDto updateAccountStatus(Long requestId, AccountStatus accountStatus) {
+        return accountService.updateAccountStatus(requestId,accountStatus);
     }
 
     @Override

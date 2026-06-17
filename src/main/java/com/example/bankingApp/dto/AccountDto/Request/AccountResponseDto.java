@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public class AccountResponseDto {
 
-    private Long requestId;
+    private Long accountRequestId;
     private Long customerId;
     private String customerName;
     private Long bankId;
@@ -22,7 +22,7 @@ public class AccountResponseDto {
     private String message;
 
     public AccountResponseDto(AccountRequest accountRequest){
-        this.requestId = accountRequest.getRequestId();
+        this.accountRequestId = accountRequest.getRequestId();
         this.customerId = accountRequest.getCustomer().getCustomerId();
         this.customerName = accountRequest.getCustomer().getCustomerName();
         this.bankId = accountRequest.getBranch().getBank().getBankId();
@@ -37,13 +37,9 @@ public class AccountResponseDto {
         this.message = accountRequest.getMessage();
     }
 
-    public Long getRequestId() {
-        return requestId;
-    }
+    public Long getAccountRequestId() { return accountRequestId; }
 
-    public void setRequestId(Long requestId) {
-        this.requestId = requestId;
-    }
+    public void setAccountRequestId(Long accountRequestId) { this.accountRequestId = accountRequestId; }
 
     public Long getCustomerId() {
         return customerId;

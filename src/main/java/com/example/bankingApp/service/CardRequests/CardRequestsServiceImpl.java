@@ -113,9 +113,9 @@ public class CardRequestsServiceImpl implements CardRequestsService {
                         RequestStatus.PENDING_REVIEW
                 );
 
-        if (existingPending.isPresent()) {
-            throw new RuntimeException("You already have a pending request for this card type.");
-        }
+//        if (existingPending.isPresent()) {
+//            throw new RuntimeException("You already have a pending request for this card type.");
+//        }
 
         CardRequests request = new CardRequests();
         request.setCardType(cardType);

@@ -4,6 +4,7 @@ import com.example.bankingApp.dto.AccountDto.Creation.CreationRequestDto;
 import com.example.bankingApp.dto.AccountDto.Creation.CreationResponseDto;
 import com.example.bankingApp.dto.AccountDto.Request.AccountRequestDto;
 import com.example.bankingApp.dto.AccountDto.Request.AccountResponseDto;
+import com.example.bankingApp.entity.Enums.AccountStatus;
 import com.example.bankingApp.facade.Account.AccountFacade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class AccountController {
         return ResponseEntity.ok(pendingRequests);
     }
 
-    @GetMapping("/{requestId}")
+    @GetMapping("/request/{requestId}")
     public ResponseEntity<AccountResponseDto> getRequestById(@PathVariable Long requestId){
         AccountResponseDto requestById = accountFacade.getRequestById(requestId);
         return ResponseEntity.ok(requestById);
@@ -53,16 +54,16 @@ public class AccountController {
         return ResponseEntity.ok(allAccounts);
     }
 
-    @GetMapping("/{accountId}")
+    @GetMapping("/account/{accountId}")
     public ResponseEntity<CreationResponseDto> getAccountById(@PathVariable Long accountId){
         CreationResponseDto accountById = accountFacade.getAccountById(accountId);
         return ResponseEntity.ok(accountById);
     }
 
-    @PutMapping("/update/{accountId}")
-    public ResponseEntity<CreationResponseDto> updateAccount(@PathVariable Long accountId){
-        CreationResponseDto updatedAccount = accountFacade.updateAccount(accountId);
-        return ResponseEntity.ok(updatedAccount);
+    @PutMapping("/update/{requestId}")
+    public ResponseEntity<AccountResponseDto> updateAccountStatus(@PathVariable Long requestId, @RequestParam AccountStatus accountStatus) {
+        AccountResponseDto updated = accountFacade.updateAccountStatus(requestId, accountStatus);
+        return ResponseEntity.ok(updated);
     }
 
     @GetMapping("/my-accounts")
