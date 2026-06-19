@@ -76,9 +76,9 @@ export default function RequestNewCard() {
 
   return (
     <div className="container">
-              <button className="back-btn" onClick={() => navigate("/dashboard")}>
-                ← Back
-              </button>
+{/*               <button className="back-btn" onClick={() => navigate("/dashboard")}> */}
+{/*                 ← Back */}
+{/*               </button> */}
       <div className="form-container">
         <div className="form-header">Request New Card</div>
 

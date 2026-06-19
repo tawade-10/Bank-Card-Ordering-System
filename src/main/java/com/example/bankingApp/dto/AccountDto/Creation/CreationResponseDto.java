@@ -3,7 +3,8 @@ package com.example.bankingApp.dto.AccountDto.Creation;
 import com.example.bankingApp.entity.Bank.Account;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class CreationResponseDto {
 
@@ -15,8 +16,10 @@ public class CreationResponseDto {
     private String ifscCode;
     private String status;
     private BigDecimal balance;
-    private LocalDateTime openedAt;
-    private LocalDateTime updatedAt;
+    private LocalDate dateOpened;
+    private LocalTime timeOpened;
+    private LocalDate dateUpdated;
+    private LocalTime timeUpdated;
     private String message;
 
     public CreationResponseDto(Account account) {
@@ -28,8 +31,10 @@ public class CreationResponseDto {
         this.ifscCode = account.getBranch().getIfscCode();
         this.status = account.getAccountStatus().toString();
         this.balance = account.getBalance();
-        this.openedAt = account.getOpenedAt();
-        this.updatedAt = account.getUpdatedAt();
+        this.dateOpened = account.getCreatedDate();
+        this.timeOpened = account.getCreatedTime();
+        this.dateUpdated = account.getUpdatedDate();
+        this.timeUpdated = account.getUpdatedTime();
         this.message = account.getMessage();
     }
 
@@ -97,20 +102,36 @@ public class CreationResponseDto {
         this.balance = balance;
     }
 
-    public LocalDateTime getOpenedAt() {
-        return openedAt;
+    public LocalDate getDateOpened() {
+        return dateOpened;
     }
 
-    public void setOpenedAt(LocalDateTime openedAt) {
-        this.openedAt = openedAt;
+    public void setDateOpened(LocalDate dateOpened) {
+        this.dateOpened = dateOpened;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalTime getTimeOpened() {
+        return timeOpened;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setTimeOpened(LocalTime timeOpened) {
+        this.timeOpened = timeOpened;
+    }
+
+    public LocalDate getDateUpdated() {
+        return dateUpdated;
+    }
+
+    public void setDateUpdated(LocalDate dateUpdated) {
+        this.dateUpdated = dateUpdated;
+    }
+
+    public LocalTime getTimeUpdated() {
+        return timeUpdated;
+    }
+
+    public void setTimeUpdated(LocalTime timeUpdated) {
+        this.timeUpdated = timeUpdated;
     }
 
     public String getMessage() {
@@ -121,3 +142,4 @@ public class CreationResponseDto {
         this.message = message;
     }
 }
+

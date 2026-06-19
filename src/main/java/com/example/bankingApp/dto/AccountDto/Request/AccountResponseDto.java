@@ -3,7 +3,8 @@ package com.example.bankingApp.dto.AccountDto.Request;
 import com.example.bankingApp.entity.Bank.AccountRequest;
 import com.example.bankingApp.entity.Enums.AccountStatus;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class AccountResponseDto {
 
@@ -17,8 +18,10 @@ public class AccountResponseDto {
     private Long accountTypeId;
     private String accountType;
     private AccountStatus accountStatus;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDate createdDate;
+    private LocalTime createdTime;
+    private LocalDate updatedDate;
+    private LocalTime updatedTime;
     private String message;
 
     public AccountResponseDto(AccountRequest accountRequest){
@@ -32,8 +35,10 @@ public class AccountResponseDto {
         this.accountTypeId = accountRequest.getAccountType().getTypeId();
         this.accountType = accountRequest.getAccountType().getTypeName();
         this.accountStatus = accountRequest.getStatus();
-        this.createdAt = accountRequest.getCreatedAt();
-        this.updatedAt = accountRequest.getUpdatedAt();
+        this.createdDate = accountRequest.getCreatedDate();
+        this.createdTime = accountRequest.getCreatedTime();
+        this.updatedDate = accountRequest.getUpdatedDate();
+        this.updatedTime = accountRequest.getUpdatedTime();
         this.message = accountRequest.getMessage();
     }
 
@@ -113,20 +118,36 @@ public class AccountResponseDto {
         this.accountStatus = accountStatus;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDate getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalTime getCreatedTime() {
+        return createdTime;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setCreatedTime(LocalTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public LocalDate getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(LocalDate updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public LocalTime getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setUpdatedTime(LocalTime updatedTime) {
+        this.updatedTime = updatedTime;
     }
 
     public String getMessage() {

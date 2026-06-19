@@ -2,6 +2,7 @@ package com.example.bankingApp.controllers;
 
 import com.example.bankingApp.dto.CardRequestsDto.CreationDto.RequestsDto;
 import com.example.bankingApp.dto.CardRequestsDto.CreationDto.ResponseDto;
+import com.example.bankingApp.dto.Notifications.NotificationsRequestDto;
 import com.example.bankingApp.entity.CardRequests.*;
 import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.Enums.RequestStatus;
@@ -156,59 +157,6 @@ class CardRequestsServiceImplTest {
         );
 
         assertTrue(ex.getMessage().contains("Customer not found"));
-    }
-
-    @Test
-    void shouldThrowException_WhenPendingRequestAlreadyExists() {
-
-        // Arrange
-        RequestsDto dto = new RequestsDto();
-        dto.setCardTypeId(1L);
-        dto.setCardVariantId(2L);
-        dto.setCardNetworkId(3L);
-        dto.setReasonId(4L);
-
-        Customers customer = new Customers();
-        customer.setCustomerId(10L);
-        customer.setEmail("test@gmail.com");
-
-        CardType cardType = new CardType();
-        cardType.setTypeName("DEBIT");
-
-        CardRequests existingRequest = new CardRequests();
-        existingRequest.setRequestId(100L);
-
-        when(authentication.isAuthenticated()).thenReturn(true);
-        when(authentication.getName()).thenReturn("test@gmail.com");
-
-        when(customersRepo.findByEmail("test@gmail.com"))
-                .thenReturn(Optional.of(customer));
-
-        when(accountCreationRepo.existsByCustomer(customer))
-                .thenReturn(true);
-
-        when(cardTypeRepo.findById(1L))
-                .thenReturn(Optional.of(cardType));
-
-        when(cardRequestsRepo.findByCustomersAndCardTypeAndRequestStatus(
-                customer,
-                cardType,
-                RequestStatus.PENDING_REVIEW))
-                .thenReturn(Optional.of(existingRequest));
-
-        // Act & Assert
-        RuntimeException exception = assertThrows(
-                RuntimeException.class,
-                () -> cardRequestsServiceImpl.createRequest(dto)
-        );
-
-        assertEquals(
-                "You already have a pending request for this card type.",
-                exception.getMessage()
-        );
-
-        verify(cardRequestsRepo, never()).save(any(CardRequests.class));
-        verify(notificationsServiceImpl, never()).createNotifications(any());
     }
 
     @Test

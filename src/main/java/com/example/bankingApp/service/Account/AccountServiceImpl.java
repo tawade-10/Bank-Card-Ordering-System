@@ -16,9 +16,12 @@ import com.example.bankingApp.service.Notifications.NotificationsService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -86,8 +89,10 @@ public class AccountServiceImpl implements AccountService{
         request.setAccountType(accountType);
         request.setBranch(branch);
         request.setStatus(AccountStatus.PENDING_REVIEW);
-        request.setCreatedAt(LocalDateTime.now());
-        request.setUpdatedAt(LocalDateTime.now());
+        request.setCreatedDate(LocalDate.now());
+        request.setCreatedTime(LocalTime.now());
+        request.setUpdatedDate(LocalDate.now());
+        request.setUpdatedTime(LocalTime.now());
 
         AccountRequest saved = accountRequestRepo.save(request);
 
@@ -120,7 +125,7 @@ public class AccountServiceImpl implements AccountService{
         AccountRequest request = accountRequestRepo.findById(creationRequestDto.getRequestId())
                         .orElseThrow(() -> new RuntimeException("Request not found"));
 
-        if (request.getStatus() != AccountStatus.PENDING_REVIEW) {
+        if (request.getStatus() != AccountStatus.APPROVED) {
             throw new RuntimeException("Request already processed");
         }
 
@@ -140,13 +145,16 @@ public class AccountServiceImpl implements AccountService{
         account.setAccountNumber(accountNumber);
         account.setBalance(BigDecimal.valueOf(0.0));
         account.setAccountStatus(AccountStatus.ACTIVE);
-        account.setOpenedAt(LocalDateTime.now());
-        account.setUpdatedAt(LocalDateTime.now());
+        account.setCreatedDate(LocalDate.now());
+        account.setCreatedTime(LocalTime.now());
+        account.setUpdatedDate(LocalDate.now());
+        account.setUpdatedTime(LocalTime.now());
 
         Account savedAccount = accountCreationRepo.save(account);
 
         request.setStatus(AccountStatus.ACTIVE);
-        request.setUpdatedAt(LocalDateTime.now());
+        request.setUpdatedDate(LocalDate.now());
+        request.setUpdatedTime(LocalTime.now());
 
         accountRequestRepo.save(request);
 
@@ -178,13 +186,22 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
+    @Transactional
     public AccountResponseDto updateAccountStatus(Long requestId, AccountStatus accountStatus) {
 
-        AccountRequest request = accountRequestRepo
-                .findById(requestId)
+        AccountRequest request = accountRequestRepo.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found"));
 
         request.setStatus(accountStatus);
+        request.setUpdatedDate(LocalDate.now());
+        request.setUpdatedTime(LocalTime.now());
+
+        if (accountStatus == AccountStatus.APPROVED) {
+
+            CreationRequestDto creationRequestDto = new CreationRequestDto();
+            creationRequestDto.setRequestId(requestId);
+            createAccount(creationRequestDto);
+        }
 
         accountRequestRepo.save(request);
 

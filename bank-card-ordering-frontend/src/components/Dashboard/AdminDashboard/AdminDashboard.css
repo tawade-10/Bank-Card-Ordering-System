@@ -55,15 +55,11 @@
   color: #64748b;
 }
 
-/* TABLE */
 .table-box {
   width: 100%;
   max-height: 420px;
   overflow-y: auto;
-
-  /* ❌ removed white */
   background: transparent;
-
   border-radius: 10px;
   border: 1px solid #334155;
 }

@@ -17,12 +17,12 @@ import java.time.LocalTime;
         "cardNetworkId",
         "cardNetwork",
         "reason",
-        "status",
-        "localDate",
+        "requestStatus",
         "customerId",
         "customerName",
         "createdDate",
-        "createdTime"
+        "createdTime",
+        "message"
 })
 public class ResponseDto {
 

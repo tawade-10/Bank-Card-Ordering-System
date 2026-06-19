@@ -4,7 +4,8 @@ import com.example.bankingApp.entity.Customers.Customers;
 import com.example.bankingApp.entity.Enums.AccountStatus;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "account_request")
@@ -35,10 +36,16 @@ public class AccountRequest {
     private String message;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDate createdDate;
+
+    @Column(nullable = false, updatable = false)
+    private LocalTime createdTime;
 
     @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    private LocalDate updatedDate;
+
+    @Column(nullable = false)
+    private LocalTime updatedTime;
 
     public Long getRequestId() {
         return requestId;
@@ -88,19 +95,35 @@ public class AccountRequest {
         this.message = message;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDate getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalTime getCreatedTime() {
+        return createdTime;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setCreatedTime(LocalTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public LocalDate getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(LocalDate updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public LocalTime getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setUpdatedTime(LocalTime updatedTime) {
+        this.updatedTime = updatedTime;
     }
 }

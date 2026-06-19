@@ -8,15 +8,15 @@ export default function AdminSidebar() {
       <Link to="/admin/dashboard">
         Dashboard
       </Link>
-      <Link to="/admin/card-requests">
-        Card Requests
-      </Link>
+{/*       <Link to="/admin/card-requests"> */}
+{/*         Card Requests */}
+{/*       </Link> */}
       <Link to="/admin/account-requests">
         Account Requests
       </Link>
-      <Link to="/admin/customers">
-        Customers
-      </Link>
+{/*       <Link to="/admin/customers"> */}
+{/*         Customers */}
+{/*       </Link> */}
       <Link to="/">
         Logout
       </Link>

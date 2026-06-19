@@ -35,11 +35,9 @@ export default function ReviewAccountForm() {
 
   const updateStatus = async (status) => {
     try {
-      await axios.put(
-        `http://localhost:8080/api/account/update/${accountRequestId}`,
-        {
-          accountStatus: status,
-        },
+      const res = await axios.put(
+        `http://localhost:8080/api/account/update/${accountRequestId}?accountStatus=${status}`,
+        null,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -47,14 +45,17 @@ export default function ReviewAccountForm() {
         }
       );
 
-      alert(`Request ${status} successfully`);
+      setRequest(res.data);
+
+      alert(status === "APPROVED" ? "Account created successfully!"
+                                  : "Request rejected successfully!"
+      );
 
       loadRequest();
+
     } catch (err) {
       console.error(err);
-      alert(
-        err.response?.data || "Failed to update account request status"
-      );
+      alert(err.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -106,15 +107,15 @@ export default function ReviewAccountForm() {
 
           <div className="vr-row">
             <b>Created At:</b>{" "}
-            {request.createdAt
-              ? new Date(request.createdAt).toLocaleString()
+            {request.createdDate
+              ? new Date(request.createdDate).toLocaleString()
               : "-"}
           </div>
 
           <div className="vr-row">
             <b>Updated At:</b>{" "}
-            {request.updatedAt
-              ? new Date(request.updatedAt).toLocaleString()
+            {request.updatedDate
+              ? new Date(request.updatedDate).toLocaleString()
               : "-"}
           </div>
 

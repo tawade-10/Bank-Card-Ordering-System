@@ -108,7 +108,7 @@ export default function AccountsTable() {
                       <td className={`status ${status?.toLowerCase()}`}>
                         {status}
                       </td>
-                      <td>{request.requestDate}</td>
+                      <td>{request.createdDate}</td>
 
                       <td>
                         <button

@@ -117,7 +117,7 @@ export default function AdminDashboard() {
                     <td className={`status ${req.requestStatus.toLowerCase()}`}>
                       {req.requestStatus}
                     </td>
-                    <td>{req.localDate}</td>
+                    <td>{req.createdDate}</td>
                     <td>
                       <button
                         className="view-update-btn"

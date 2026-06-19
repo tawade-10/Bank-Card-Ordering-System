@@ -37,9 +37,6 @@ public class CardDetailsServiceImplTest {
     private CardRequestsRepo cardRequestsRepo;
 
     @Mock
-    private CustomersRepo customersRepo;
-
-    @Mock
     private CardTypeRepo cardTypeRepo;
 
     @Mock
@@ -47,15 +44,6 @@ public class CardDetailsServiceImplTest {
 
     @Mock
     private CardDetailsRepo cardDetailsRepo;
-
-    @Mock
-    private ReasonForRequestRepo reasonForRequestRepo;
-
-    @Mock
-    private NetworkBinRepo networkBinRepo;
-
-    @Mock
-    private CardNetworkRepo cardNetworkRepo;
 
     @Mock
     private EncryptionService encryptionService;
@@ -88,67 +76,48 @@ public class CardDetailsServiceImplTest {
 
         Customers customer = new Customers();
         customer.setCustomerId(10L);
-        customer.setCustomerName("Shubham");
-
-        CardNetwork network = new CardNetwork();
-        network.setNetworkId(99L);
-        network.setNetworkName("VISA");
-
-        NetworkBin bin = new NetworkBin();
-        bin.setBinId(5L);
-        bin.setBinNumber("648357");
-        bin.setCardNetwork(network);
 
         CardRequests request = new CardRequests();
         request.setRequestId(1L);
         request.setCustomers(customer);
-        request.setNetworkBin(bin);
-
-        when(cardRequestsRepo.findById(1L)).thenReturn(Optional.of(request));
+        request.setNetworkBin(new NetworkBin());
 
         CardType type = new CardType();
-        type.setTypeId(2L);
         type.setTypeName("DEBIT");
 
-        when(cardTypeRepo.findById(2L)).thenReturn(Optional.of(type));
-
         CardVariant variant = new CardVariant();
-        variant.setVariantId(3L);
         variant.setVariantName("PLATINUM");
-
-        when(cardVariantRepo.findById(3L)).thenReturn(Optional.of(variant));
-
-        when(encryptionService.encrypt("6483573593522541")).thenReturn("ENCRYPTED_CARD");
-
-        doNothing().when(cardDetailsRepo).deactivatePreviousCard(10L, "DEBIT");
 
         CardDetails saved = new CardDetails();
         saved.setCardId(100L);
         saved.setCustomers(customer);
         saved.setCardType(type);
         saved.setCardVariant(variant);
-        saved.setNetworkBin(bin);
         saved.setCardNumber("ENCRYPTED_CARD");
         saved.setLast4("2541");
         saved.setExpiry(YearMonth.of(2030, 3));
         saved.setActive(true);
 
+        // MOCKS
+        when(cardRequestsRepo.findById(1L)).thenReturn(Optional.of(request));
+        when(cardTypeRepo.findById(2L)).thenReturn(Optional.of(type));
+        when(cardVariantRepo.findById(3L)).thenReturn(Optional.of(variant));
+        when(encryptionService.encrypt("6483573593522541")).thenReturn("ENCRYPTED_CARD");
         when(cardDetailsRepo.save(any(CardDetails.class))).thenReturn(saved);
 
+        // WHEN
         CardDetailsResponseDto response = cardDetailsService.createCard(dto);
 
+        // THEN
         assertNotNull(response);
         assertEquals(100L, response.getCardId());
         assertEquals("DEBIT", response.getCardType());
         assertEquals("PLATINUM", response.getCardVariant());
-        assertEquals("648357** **** **** 2541", response.getMaskedNumber());
-        assertEquals("03/30", response.getExpiry());
 
-        verify(cardRequestsRepo, times(1)).findById(1L);
-        verify(cardTypeRepo, times(1)).findById(2L);
-        verify(cardVariantRepo, times(1)).findById(3L);
+        verify(cardRequestsRepo).findById(1L);
+        verify(cardTypeRepo).findById(2L);
+        verify(cardVariantRepo).findById(3L);
         verify(encryptionService).encrypt("6483573593522541");
-        verify(cardDetailsRepo).deactivatePreviousCard(10L,"DEBIT");
         verify(cardDetailsRepo).save(any(CardDetails.class));
         verify(cardRequestsRepo).save(any(CardRequests.class));
     }

@@ -113,8 +113,8 @@ export default function TrackRequests() {
           <tbody>
             {filteredRequests.length > 0 ? (
               filteredRequests.map((req) => (
-                <tr key={req.requestId}>
-                  <td>{req.requestId}</td>
+                <tr key={req.cardRequestId}>
+                  <td>{req.cardRequestId}</td>
                   <td>{req.cardType}</td>
                   <td>{req.cardVariant}</td>
                   <td>{req.reason}</td>
@@ -128,7 +128,7 @@ export default function TrackRequests() {
                   <td>
                     <button
                       className="view-btn"
-                      onClick={() => openViewModal(req.requestId)}
+                      onClick={() => openViewModal(req.cardRequestId)}
                     >
                       View
                     </button>

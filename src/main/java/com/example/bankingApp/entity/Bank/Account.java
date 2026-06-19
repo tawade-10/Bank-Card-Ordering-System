@@ -5,7 +5,8 @@ import com.example.bankingApp.entity.Enums.AccountStatus;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "account")
@@ -40,9 +41,17 @@ public class Account {
     @Column(name = "message")
     private String message;
 
-    private LocalDateTime openedAt;
+    @Column(nullable = false, updatable = false)
+    private LocalDate createdDate;
 
-    private LocalDateTime updatedAt;
+    @Column(nullable = false, updatable = false)
+    private LocalTime createdTime;
+
+    @Column(nullable = false)
+    private LocalDate updatedDate;
+
+    @Column(nullable = false)
+    private LocalTime updatedTime;
 
     public Long getAccountId() {
         return accountId;
@@ -100,20 +109,36 @@ public class Account {
         this.accountStatus = accountStatus;
     }
 
-    public LocalDateTime getOpenedAt() {
-        return openedAt;
+    public LocalDate getCreatedDate() {
+        return createdDate;
     }
 
-    public void setOpenedAt(LocalDateTime openedAt) {
-        this.openedAt = openedAt;
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalTime getCreatedTime() {
+        return createdTime;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setCreatedTime(LocalTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public LocalDate getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(LocalDate updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public LocalTime getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setUpdatedTime(LocalTime updatedTime) {
+        this.updatedTime = updatedTime;
     }
 
     public String getMessage() {

@@ -106,7 +106,7 @@ export default function ViewRequestsAdmin() {
           <div className="vr-row"><b>Variant:</b> {request.cardVariant}</div>
           <div className="vr-row"><b>Reason:</b> {request.reason}</div>
           <div className="vr-row"><b>Status:</b> <span className={`requestStatus-badge ${request.requestStatus.toLowerCase()}`}>{request.requestStatus}</span></div>
-          <div className="vr-row"><b>Date:</b> {request.localDate}</div>
+          <div className="vr-row"><b>Date:</b> {request.createdDate}</div>
           <div className="vr-row"><b>Review Message:</b> {request.reviewMessage || "None"}</div>
         </div>
 
@@ -142,11 +142,35 @@ export default function ViewRequestsAdmin() {
           )
         )}
 
+{/*         {request.requestStatus === "APPROVED" && !showReasonBox && ( */}
+{/*           <div className="vr-action"> */}
+{/*             <button */}
+{/*               className="btn-create" */}
+{/*               onClick={() => navigate(`/admin/dashboard/create-card/${request.requestId}`)} */}
+{/*             > */}
+{/*               Create Card */}
+{/*             </button> */}
+{/*           </div> */}
+{/*         )} */}
+
         {request.requestStatus === "APPROVED" && !showReasonBox && (
           <div className="vr-action">
             <button
               className="btn-create"
-              onClick={() => navigate(`/admin/dashboard/create-card/${request.requestId}`)}
+              onClick={() => {
+                console.log("REQUEST OBJECT 👉", request);
+
+                const id = request?.requestId || request?.id || request?.cardRequestId;
+
+                console.log("USING ID 👉", id);
+
+                if (!id) {
+                  alert("Request ID missing! Check backend response.");
+                  return;
+                }
+
+                navigate(`/admin/dashboard/create-card/${id}`);
+              }}
             >
               Create Card
             </button>
@@ -179,3 +203,4 @@ export default function ViewRequestsAdmin() {
     </div>
   );
 }
+

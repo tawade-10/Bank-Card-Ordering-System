@@ -34,8 +34,8 @@ export default function RecentCardTable({ requests }) {
         <tbody>
           {requests.length > 0 ? (
             requests.map((req) => (
-              <tr key={req.requestId}>
-                <td>{req.requestId}</td>
+              <tr key={req.cardRequestId}>
+                <td>{req.cardRequestId}</td>
                 <td>{req.cardType}</td>
                 <td>{req.requestStatus}</td>
 
